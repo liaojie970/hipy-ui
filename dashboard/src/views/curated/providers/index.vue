@@ -148,7 +148,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" :loading="testing" @click="handleTestForm">测试连通</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button :loading="submitLoading" type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -162,6 +162,7 @@ export default {
   name: 'CuratedProviders',
   data() {
     return {
+      submitLoading: false,
       loading: true,
       ids: [],
       total: 0,
@@ -298,13 +299,16 @@ export default {
       })
     },
     submitForm() {
+      if (this.submitLoading) return
+      this.submitLoading = true
       this.$refs['form'].validate(valid => {
-        if (!valid) return
+        if (!valid) { this.submitLoading = false; return }
         let config
         try {
           config = this.collectConfig()
         } catch (e) {
           this.msgError('配置不是合法的 JSON')
+          this.submitLoading = false
           return
         }
         const payload = Object.assign({}, this.form, {config: config})
@@ -313,13 +317,13 @@ export default {
             this.msgSuccess('修改成功')
             this.open = false
             this.getList()
-          })
+          }).finally(() => { this.submitLoading = false })
         } else {
           addProvider(payload).then(() => {
             this.msgSuccess('添加成功')
             this.open = false
             this.getList()
-          })
+          }).finally(() => { this.submitLoading = false })
         }
       })
     },

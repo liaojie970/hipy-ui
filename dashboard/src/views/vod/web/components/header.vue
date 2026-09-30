@@ -20,7 +20,7 @@
     <!-- 换源对话框 -->
     <el-dialog :title="form_title" :visible.sync="open" :width="dialogWidth" class="change_rule_dialog" append-to-body>
       <el-input v-model="siteFilter" placeholder="请输入站源名称" class="site_filter_input"></el-input>
-      <el-form ref="form" :model="form" label-width="120px" class="change_rule_form">
+      <el-form ref="form" :model="form" label-width="120px" class="change_rule_form" @submit.native.prevent>
         <div class="button-container">
           <div v-for="(site,index) in filteredSites" :key="index" :ref="site.key === form.new_site.key ? 'currentSite' : ''" class="btn-item">
             <el-button

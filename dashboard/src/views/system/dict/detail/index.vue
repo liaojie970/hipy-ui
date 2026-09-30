@@ -188,7 +188,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button :loading="submitLoading" type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -205,6 +205,7 @@ export default {
   name: 'DictData',
   data() {
     return {
+      submitLoading: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -341,8 +342,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
+      if (this.submitLoading) return
       this.$refs['form'].validate(valid => {
         if (valid) {
+          this.submitLoading = true
           this.form.dict_data_id = this.defaultDictDataId
           if (this.form.id !== undefined) {
             setDetail(this.form.id, this.form).then(response => {
@@ -351,7 +354,7 @@ export default {
                 this.open = false
                 this.getList()
               }
-            })
+            }).finally(() => { this.submitLoading = false })
           } else {
             addDetail(this.form).then(response => {
               if (response.code === 0) {
@@ -359,7 +362,7 @@ export default {
                 this.open = false
                 this.getList()
               }
-            })
+            }).finally(() => { this.submitLoading = false })
           }
         }
       })

@@ -15,7 +15,7 @@
           :rules="rules"
           size="small"
           label-width="100px"
-        >
+         @submit.native.prevent>
           <el-col :span="24">
             <el-form-item
               label="选项名"

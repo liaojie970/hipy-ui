@@ -1,6 +1,6 @@
 <template>
   <user-layout>
-    <el-form ref="forgetForm" :model="forgetForm" :rules="forgetRules">
+    <el-form ref="forgetForm" :model="forgetForm" :rules="forgetRules" @submit.native.prevent>
       <el-form-item prop="email">
         <el-input v-model="forgetForm.email" type="text" auto-complete="off" placeholder="邮箱">
           <svg-icon slot="prefix" icon-class="email" class="el-input__icon input-icon" />

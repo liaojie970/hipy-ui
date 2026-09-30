@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="mainForm" :model="form" :inline="true" label-width="68px">
+    <el-form ref="mainForm" :model="form" :inline="true" label-width="68px" @submit.native.prevent>
       <el-form-item>
         <el-button :loading="loading" type="primary" icon="el-icon-upload" size="mini" @click="dialogVisible = true" v-hasRole="['admin','opts']">
           升级数据库

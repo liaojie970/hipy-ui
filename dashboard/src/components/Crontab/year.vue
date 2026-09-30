@@ -1,5 +1,5 @@
 <template>
-	<el-form size="small">
+	<el-form size="small" @submit.native.prevent>
 		<el-form-item>
 			<el-radio :label="1" v-model='radioValue'>
 				不填，允许的通配符[, - * /]

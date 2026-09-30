@@ -10,7 +10,7 @@
       </a>
       <el-scrollbar class="right-scrollbar">
         <!-- 组件属性 -->
-        <el-form v-show="currentTab==='field' && showField" size="small" label-width="90px">
+        <el-form v-show="currentTab==='field' && showField" size="small" label-width="90px" @submit.native.prevent>
           <el-form-item v-if="activeData.changeTag" label="组件类型">
             <el-select
               v-model="activeData.tagIcon"

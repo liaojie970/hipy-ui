@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="mainForm" :model="form" label-width="68px">
+    <el-form ref="mainForm" :model="form" label-width="68px" @submit.native.prevent>
       <el-form-item label="文件直链" prop="rule_url">
         <el-col :span="18">
           <el-input v-model="form.rule_url" :disabled="false" type="textarea" :rows="1"/>

@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+  <el-form ref="form" :model="form" :rules="rules" label-width="80px" @submit.native.prevent>
     <el-form-item label="用户名" prop="username">
       <el-input v-model="form.username" placeholder="请输入昵称"/>
     </el-form-item>
