@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true">
+    <el-form :inline="true" @submit.native.prevent>
       <el-form-item label="菜单名称">
         <el-input
           v-model="queryParams.title"

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form v-show="showSearch" ref="queryForm" :model="queryParams" size="small" :inline="true" label-width="68px">
+    <el-form v-show="showSearch" ref="queryForm" :model="queryParams" size="small" :inline="true" label-width="68px" @submit.native.prevent>
       <el-form-item label="任务代号" prop="job_id">
         <el-input
           v-model="queryParams.job_id"

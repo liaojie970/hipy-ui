@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="queryForm" :model="queryParams" :inline="true">
+    <el-form ref="queryForm" :model="queryParams" :inline="true" @submit.native.prevent>
       <el-form-item label="字典名称" prop="dictType">
         <el-select v-model="queryParams.dict_data_id" size="small">
           <el-option

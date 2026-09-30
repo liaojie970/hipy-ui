@@ -1,6 +1,6 @@
 <template>
   <user-layout>
-    <el-form ref="registerForm" :model="registerForm" :rules="registerRules">
+    <el-form ref="registerForm" :model="registerForm" :rules="registerRules" @submit.native.prevent>
       <el-form-item prop="username">
         <el-input v-model="registerForm.username" type="text" auto-complete="off" placeholder="用户名">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />

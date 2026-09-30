@@ -17,7 +17,7 @@
     </el-result>
     <div v-if="isSuc">
       <div class="title">重置 <strong>{{ email }}</strong> 的密码</div>
-      <el-form ref="setPwdForm" :model="setPwdForm" :rules="setPwdRules">
+      <el-form ref="setPwdForm" :model="setPwdForm" :rules="setPwdRules" @submit.native.prevent>
         <el-form-item prop="password">
           <el-input
             v-model="setPwdForm.password"
