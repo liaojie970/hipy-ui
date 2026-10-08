@@ -194,8 +194,8 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="900px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-row>
+      <el-form ref="form" :model="form" :rules="rules" label-width="150px" label-position="left">
+        <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="名称" prop="name">
               <el-input v-model="form.name" placeholder="请输入规则名称" />
@@ -249,7 +249,7 @@
           </el-col>
 
           <el-col :span="12">
-            <el-form-item label="是否json列表" prop="is_json_list" label-width="150px">
+            <el-form-item label="是否json列表" prop="is_json_list">
               <el-switch v-model="form.is_json_list" />
             </el-form-item>
           </el-col>
@@ -261,7 +261,7 @@
           </el-col>
 
           <el-col :span="12">
-            <el-form-item label="是否为仓库跳转规则" prop="is_tap" label-width="150px">
+            <el-form-item label="是否为仓库跳转规则" prop="is_tap">
               <el-switch v-model="form.is_tap" />
             </el-form-item>
           </el-col>
@@ -309,13 +309,13 @@
           </el-col>
 
           <el-col :span="12">
-            <el-form-item label="是否白名单" prop="is_white" label-width="150px">
+            <el-form-item label="是否白名单" prop="is_white">
               <el-switch v-model="form.is_white" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
-            <el-form-item label="是否可以互动" prop="can_discuss" label-width="150px">
+            <el-form-item label="是否可以互动" prop="can_discuss">
               <el-switch v-model="form.can_discuss" />
             </el-form-item>
           </el-col>
@@ -357,7 +357,7 @@
           <el-input v-model="form.auth" placeholder="请输入..." />
         </el-form-item>
 
-        <el-form-item label="开发者上次提交时间" prop="last_active" label-width="150px">
+        <el-form-item label="开发者上次提交时间" prop="last_active">
           <div class="block">
             <el-date-picker
               v-model="form.last_active"
@@ -369,7 +369,7 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="验证过期时间" prop="auth_date_time" label-width="150px">
+        <el-form-item label="验证过期时间" prop="auth_date_time">
           <div class="block">
             <el-date-picker
               v-model="form.auth_date_time"
