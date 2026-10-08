@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { cleanQuery } from '@/utils'
 
 const api_url = '/curated/categories'
 
@@ -7,7 +8,7 @@ export function listCategories(query) {
   return request({
     url: api_url,
     method: 'get',
-    params: query
+    params: cleanQuery(query)
   })
 }
 

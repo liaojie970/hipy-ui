@@ -3,11 +3,10 @@ import request from '@/utils/request'
 // 获取字典
 export function getDicts(type) {
   return request({
-    url: "/system/dict/type/" + type,
+    url: '/system/dict/type/' + type,
     method: 'get'
   })
 }
-
 
 // 查询字典类型列表
 export function listDictData(query) {
@@ -52,10 +51,9 @@ export function delDictData(id) {
   })
 }
 
-
-export function getDictDataMaxOrderNum(){
+export function getDictDataMaxOrderNum() {
   return request({
-    url: "/system/dict/data/max-order-num",
-    method: "get"
+    url: '/system/dict/data/max-order-num',
+    method: 'get'
   })
 }

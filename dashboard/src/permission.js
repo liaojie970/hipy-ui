@@ -54,8 +54,8 @@ router.beforeEach(async(to, from, next) => {
     }
   } else {
     /* has no token*/
-    if (whiteList.indexOf(to.path) !== -1
-      || to.path.startsWith('/register-verify/') || to.path.startsWith('/forget-password/')) {
+    if (whiteList.indexOf(to.path) !== -1 ||
+      to.path.startsWith('/register-verify/') || to.path.startsWith('/forget-password/')) {
       // in the free login whitelist, go directly
       next()
     } else {

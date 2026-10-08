@@ -53,7 +53,6 @@
         />
       </el-form-item>
 
-
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -63,20 +62,20 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-has-permi="['hiker:rule:post']"
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          v-has-permi="['hiker:rule:post']"
           @click="handleAdd"
         >新增
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-has-permi="['hiker:rule:put']"
           type="success"
           icon="el-icon-edit"
           size="mini"
-          v-has-permi="['hiker:rule:put']"
           :disabled="single"
           @click="handleUpdate"
         >修改
@@ -84,10 +83,10 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasRole="['admin','opts']"
           type="danger"
           icon="el-icon-delete"
           size="mini"
-          v-hasRole="['admin','opts']"
           :disabled="multiple"
           @click="handleDelete"
         >删除
@@ -95,10 +94,10 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-has-permi="['report:excel_generate:export']"
           type="warning"
           icon="el-icon-download"
           size="mini"
-          v-has-permi="['report:excel_generate:export']"
           :disabled="multiple"
           @click="handleExport"
         >导出
@@ -107,10 +106,10 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
-      <el-table-column fixed="left" type="selection" width="55" align="center"/>
-      <el-table-column label="ID" align="center" prop="id" width="55"/>
-      <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true"/>
-      <el-table-column label="作者" align="center" prop="author" :show-overflow-tooltip="true"/>
+      <el-table-column fixed="left" type="selection" width="55" align="center" />
+      <el-table-column label="ID" align="center" prop="id" width="55" />
+      <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true" />
+      <el-table-column label="作者" align="center" prop="author" :show-overflow-tooltip="true" />
       <el-table-column label="类型" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <router-link :to="'/hiker/rule_type/' + scope.row.type_id" class="link-type">
@@ -127,32 +126,31 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="代码" align="center" prop="value" :show-overflow-tooltip="true"/>
-      <el-table-column label="链接" align="center" prop="url" :show-overflow-tooltip="true"/>
-      <el-table-column label="状态" align="center" prop="state" :show-overflow-tooltip="true"/>
-      <el-table-column label="验证" align="center" prop="auth" :show-overflow-tooltip="true"/>
-      <el-table-column label="验证过期时间" align="center" prop="auth_date_time" :show-overflow-tooltip="true"/>
-      <el-table-column label="过期" align="center" prop="time_over" :show-overflow-tooltip="true"/>
-      <el-table-column label="base值" align="center" prop="b64_value" :show-overflow-tooltip="true"/>
-      <el-table-column label="主页链接" align="center" prop="home_url" :show-overflow-tooltip="true"/>
-      <el-table-column label="图片链接" align="center" prop="pic_url" :show-overflow-tooltip="true"/>
-      <el-table-column label="是json" align="center" prop="is_json" :show-overflow-tooltip="true"/>
-      <el-table-column label="是重定向" align="center" prop="is_redirect" :show-overflow-tooltip="true"/>
-      <el-table-column label="是否为仓库跳转规则" align="center" prop="is_tap" :show-overflow-tooltip="true"/>
-      <el-table-column label="是否可以互动" align="center" prop="can_discuss" :show-overflow-tooltip="true"/>
-      <el-table-column label="是否json列表" align="center" prop="is_json_list" :show-overflow-tooltip="true"/>
-      <el-table-column label="数据类型" align="center" prop="data_type" :show-overflow-tooltip="true"/>
-      <el-table-column label="版本号" align="center" prop="version" :show-overflow-tooltip="true"/>
-      <el-table-column label="说明" align="center" prop="note" :show-overflow-tooltip="true"/>
-      <el-table-column label="点赞数" align="center" prop="good_num" :show-overflow-tooltip="true"/>
-      <el-table-column label="踩数" align="center" prop="bad_num" :show-overflow-tooltip="true"/>
-      <el-table-column label="回复数" align="center" prop="reply_num" :show-overflow-tooltip="true"/>
-      <el-table-column label="是否安全" align="center" prop="is_safe" :show-overflow-tooltip="true"/>
-      <el-table-column label="是否优质" align="center" prop="is_good" :show-overflow-tooltip="true"/>
-      <el-table-column label="是否白名单" align="center" prop="is_white" :show-overflow-tooltip="true"/>
-      <el-table-column label="风险描述" align="center" prop="not_safe_note" :show-overflow-tooltip="true"/>
-      <el-table-column label="开发者上次提交时间" align="center" prop="last_active" :show-overflow-tooltip="true"/>
-
+      <el-table-column label="代码" align="center" prop="value" :show-overflow-tooltip="true" />
+      <el-table-column label="链接" align="center" prop="url" :show-overflow-tooltip="true" />
+      <el-table-column label="状态" align="center" prop="state" :show-overflow-tooltip="true" />
+      <el-table-column label="验证" align="center" prop="auth" :show-overflow-tooltip="true" />
+      <el-table-column label="验证过期时间" align="center" prop="auth_date_time" :show-overflow-tooltip="true" />
+      <el-table-column label="过期" align="center" prop="time_over" :show-overflow-tooltip="true" />
+      <el-table-column label="base值" align="center" prop="b64_value" :show-overflow-tooltip="true" />
+      <el-table-column label="主页链接" align="center" prop="home_url" :show-overflow-tooltip="true" />
+      <el-table-column label="图片链接" align="center" prop="pic_url" :show-overflow-tooltip="true" />
+      <el-table-column label="是json" align="center" prop="is_json" :show-overflow-tooltip="true" />
+      <el-table-column label="是重定向" align="center" prop="is_redirect" :show-overflow-tooltip="true" />
+      <el-table-column label="是否为仓库跳转规则" align="center" prop="is_tap" :show-overflow-tooltip="true" />
+      <el-table-column label="是否可以互动" align="center" prop="can_discuss" :show-overflow-tooltip="true" />
+      <el-table-column label="是否json列表" align="center" prop="is_json_list" :show-overflow-tooltip="true" />
+      <el-table-column label="数据类型" align="center" prop="data_type" :show-overflow-tooltip="true" />
+      <el-table-column label="版本号" align="center" prop="version" :show-overflow-tooltip="true" />
+      <el-table-column label="说明" align="center" prop="note" :show-overflow-tooltip="true" />
+      <el-table-column label="点赞数" align="center" prop="good_num" :show-overflow-tooltip="true" />
+      <el-table-column label="踩数" align="center" prop="bad_num" :show-overflow-tooltip="true" />
+      <el-table-column label="回复数" align="center" prop="reply_num" :show-overflow-tooltip="true" />
+      <el-table-column label="是否安全" align="center" prop="is_safe" :show-overflow-tooltip="true" />
+      <el-table-column label="是否优质" align="center" prop="is_good" :show-overflow-tooltip="true" />
+      <el-table-column label="是否白名单" align="center" prop="is_white" :show-overflow-tooltip="true" />
+      <el-table-column label="风险描述" align="center" prop="not_safe_note" :show-overflow-tooltip="true" />
+      <el-table-column label="开发者上次提交时间" align="center" prop="last_active" :show-overflow-tooltip="true" />
 
       <el-table-column label="创建时间" align="center" prop="created_ts" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -167,18 +165,18 @@
       <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-has-permi="['hiker:rule:put']"
             size="mini"
             type="text"
             icon="el-icon-edit"
-            v-has-permi="['hiker:rule:put']"
             @click="handleUpdate(scope.row)"
           >修改
           </el-button>
           <el-button
+            v-hasRole="['admin','opts']"
             size="mini"
             type="text"
             icon="el-icon-delete"
-            v-hasRole="['admin','opts']"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>
@@ -195,37 +193,36 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="100%" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="900px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入规则名称"/>
+              <el-input v-model="form.name" placeholder="请输入规则名称" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="作者" prop="author">
-              <el-input v-model="form.author" placeholder="请输入规则作者"/>
+              <el-input v-model="form.author" placeholder="请输入规则作者" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="类型" prop="type_id">
-              <el-input-number v-model="form.type_id" controls-position="right" :min="0" style="width: 100%"/>
+              <el-input-number v-model="form.type_id" controls-position="right" :min="0" style="width: 100%" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="开发者" prop="dev_id">
-              <el-input-number v-model="form.dev_id" controls-position="right" :min="0" style="width: 100%"/>
+              <el-input-number v-model="form.dev_id" controls-position="right" :min="0" style="width: 100%" />
             </el-form-item>
           </el-col>
 
-
           <el-col :span="12">
             <el-form-item label="状态" prop="state">
-              <el-input v-model="form.state" placeholder="请输入..."/>
+              <el-input v-model="form.state" placeholder="请输入..." />
             </el-form-item>
           </el-col>
 
@@ -237,130 +234,127 @@
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
-                  :disabled="item.disabled">
-                </el-option>
+                  :disabled="item.disabled"
+                />
               </el-select>
 
               <!--              <drag-select :value="['规则','主题','静态文件']"></drag-select>-->
             </el-form-item>
           </el-col>
 
-
           <el-col :span="12">
             <el-form-item label="是json" prop="is_json">
-              <el-switch v-model="form.is_json"></el-switch>
+              <el-switch v-model="form.is_json" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="是否json列表" prop="is_json_list" label-width="150px">
-              <el-switch v-model="form.is_json_list"></el-switch>
+              <el-switch v-model="form.is_json_list" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="是重定向" prop="is_redirect">
-              <el-switch v-model="form.is_redirect"></el-switch>
+              <el-switch v-model="form.is_redirect" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="是否为仓库跳转规则" prop="is_tap" label-width="150px">
-              <el-switch v-model="form.is_tap"></el-switch>
+              <el-switch v-model="form.is_tap" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="过期" prop="time_over">
-              <el-switch v-model="form.time_over"></el-switch>
+              <el-switch v-model="form.time_over" />
             </el-form-item>
           </el-col>
 
-
           <el-col :span="12">
             <el-form-item label="版本号" prop="version">
-              <el-input v-model="form.version" placeholder="请输入..."/>
+              <el-input v-model="form.version" placeholder="请输入..." />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="点赞数" prop="good_num">
-              <el-input-number v-model="form.good_num" controls-position="right" :min="0" style="width: 100%"/>
+              <el-input-number v-model="form.good_num" controls-position="right" :min="0" style="width: 100%" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="踩数" prop="bad_num">
-              <el-input-number v-model="form.bad_num" controls-position="right" :min="0" style="width: 100%"/>
+              <el-input-number v-model="form.bad_num" controls-position="right" :min="0" style="width: 100%" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="回复数" prop="reply_num">
-              <el-input-number v-model="form.reply_num" controls-position="right" :min="0" style="width: 100%"/>
+              <el-input-number v-model="form.reply_num" controls-position="right" :min="0" style="width: 100%" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="是否安全" prop="is_safe">
-              <el-switch v-model="form.is_safe"></el-switch>
+              <el-switch v-model="form.is_safe" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="是否优质" prop="is_good">
-              <el-switch v-model="form.is_good"></el-switch>
+              <el-switch v-model="form.is_good" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="是否白名单" prop="is_white" label-width="150px">
-              <el-switch v-model="form.is_white"></el-switch>
+              <el-switch v-model="form.is_white" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="是否可以互动" prop="can_discuss" label-width="150px">
-              <el-switch v-model="form.can_discuss"></el-switch>
+              <el-switch v-model="form.can_discuss" />
             </el-form-item>
           </el-col>
 
         </el-row>
 
-
         <el-form-item label="base值" prop="b64_value">
-          <el-input v-model="form.b64_value" placeholder="请输入..."/>
+          <el-input v-model="form.b64_value" placeholder="请输入..." />
         </el-form-item>
 
         <el-form-item label="主页链接" prop="home_url">
-          <el-input v-model="form.home_url" placeholder="请输入..."/>
+          <el-input v-model="form.home_url" placeholder="请输入..." />
         </el-form-item>
 
         <el-form-item label="图片链接" prop="pic_url">
-          <el-input v-model="form.pic_url" placeholder="请输入..."/>
+          <el-input v-model="form.pic_url" placeholder="请输入..." />
         </el-form-item>
 
         <el-form-item label="说明" prop="note">
           <el-input
+            v-model="form.note"
             type="textarea"
             :rows="4"
             placeholder="请输入内容"
-            v-model="form.note">
-          </el-input>
+          />
 
           <!--          <markdown-editor v-model="form.note" :value="form.note"></markdown-editor>-->
         </el-form-item>
 
         <el-form-item label="代码" prop="value">
-          <json-editor :value="json_value" v-model="form.value"></json-editor>
+          <json-editor v-model="form.value" :value="json_value" />
         </el-form-item>
 
         <el-form-item label="链接" prop="url">
-          <el-input v-model="form.url" placeholder="请输入..."/>
+          <el-input v-model="form.url" placeholder="请输入..." />
         </el-form-item>
 
         <el-form-item label="验证" prop="auth">
-          <el-input v-model="form.auth" placeholder="请输入..."/>
+          <el-input v-model="form.auth" placeholder="请输入..." />
         </el-form-item>
 
         <el-form-item label="开发者上次提交时间" prop="last_active" label-width="150px">
@@ -370,8 +364,8 @@
               type="datetime"
               placeholder="选择日期时间"
               align="right"
-              :picker-options="pickerOptions">
-            </el-date-picker>
+              :picker-options="pickerOptions"
+            />
           </div>
         </el-form-item>
 
@@ -382,16 +376,15 @@
               type="datetime"
               placeholder="选择日期时间"
               align="right"
-              :picker-options="pickerOptions">
-            </el-date-picker>
+              :picker-options="pickerOptions"
+            />
           </div>
 
         </el-form-item>
 
         <el-form-item label="风险描述" prop="not_safe_note">
-          <el-input v-model="form.not_safe_note" placeholder="请输入..." type="textarea" :rows="4"/>
+          <el-input v-model="form.not_safe_note" placeholder="请输入..." type="textarea" :rows="4" />
         </el-form-item>
-
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -403,8 +396,8 @@
 </template>
 
 <script>
-import {getDicts} from '@/api/system/dict/data'
-import {searchRecords, getRecord, addRecord, setRecord, delRecord} from '@/api/hiker/rule'
+import { getDicts } from '@/api/system/dict/data'
+import { searchRecords, getRecord, addRecord, setRecord, delRecord } from '@/api/hiker/rule'
 import JsonEditor from '@/components/JsonEditor'
 import MarkdownEditor from '@/components/MarkdownEditor'
 import MDinput from '@/components/MDinput'
@@ -412,7 +405,7 @@ import DragSelect from '@/components/DragSelect'
 
 export default {
   name: 'HikerRule',
-  components: {JsonEditor, MarkdownEditor, MDinput, DragSelect},
+  components: { JsonEditor, MarkdownEditor, MDinput, DragSelect },
   data() {
     return {
       submitLoading: false,
@@ -441,59 +434,59 @@ export default {
         url: undefined,
         value: undefined,
         author: undefined,
-        dev_id: undefined,
+        dev_id: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         name: [
-          {required: true, message: '规则名称不能为空', trigger: 'blur'}
-        ],
+          { required: true, message: '规则名称不能为空', trigger: 'blur' }
+        ]
       },
       pickerOptions: {
         shortcuts: [{
           text: '今天',
           onClick(picker) {
-            picker.$emit('pick', new Date());
+            picker.$emit('pick', new Date())
           }
         }, {
           text: '昨天',
           onClick(picker) {
-            const date = new Date();
-            date.setTime(date.getTime() - 3600 * 1000 * 24);
-            picker.$emit('pick', date);
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24)
+            picker.$emit('pick', date)
           }
         }, {
           text: '一周前',
           onClick(picker) {
-            const date = new Date();
-            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', date);
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', date)
           }
         }]
       },
-      dataTypeOptions: [],
+      dataTypeOptions: []
 
     }
   },
-  created() {
-    this.getList();
-    getDicts("hiker_rule_data_type").then(response => {
-      this.dataTypeOptions = response.data.details;
-    })
-  },
   computed: {
     json_value() {
-      if(this.form.value){
+      if (this.form.value) {
         try {
           return JSON.parse(this.form.value)
-        }catch (e) {
+        } catch (e) {
           return this.form.value
         }
       }
       return {}
     }
+  },
+  created() {
+    this.getList()
+    getDicts('hiker_rule_data_type').then(response => {
+      this.dataTypeOptions = response.data.details
+    })
   },
   methods: {
     /** 查询字典类型列表 */
@@ -514,7 +507,7 @@ export default {
     reset() {
       this.form = {
         id: undefined,
-        name: undefined,
+        name: undefined
       }
       this.resetForm('form')
     },
@@ -528,14 +521,14 @@ export default {
       this.queryParams = {
         page: 1,
         page_size: 20,
-        name: undefined,
+        name: undefined
       }
       this.handleQuery()
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
-      this.form.active = true;
+      this.form.active = true
       this.open = true
       this.title = '添加规则'
     },
@@ -559,21 +552,21 @@ export default {
     handleChangIsManager(row) {
       changeIsManager(row.id, row.is_manager).then(response => {
         if (response.code === 0) {
-          this.msgSuccess("修改成功")
+          this.msgSuccess('修改成功')
         }
-        this.getList();
+        this.getList()
       })
     },
     handleChangActive(row) {
       changeActive(row.id, row.active).then(response => {
         if (response.code === 0) {
-          this.msgSuccess("修改成功")
+          this.msgSuccess('修改成功')
         }
-        this.getList();
+        this.getList()
       })
     },
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       if (this.submitLoading) return
       this.$refs['form'].validate(valid => {
         if (valid) {
@@ -581,21 +574,21 @@ export default {
           if (this.form.id !== undefined) {
             setRecord(this.form.id, this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("修改成功")
+                this.msgSuccess('修改成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("修改失败," + response.msg)
+                this.msgError('修改失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           } else {
             addRecord(this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("添加成功")
+                this.msgSuccess('添加成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("添加失败," + response.msg)
+                this.msgError('添加失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           }
@@ -609,28 +602,28 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function () {
+      }).then(function() {
         return delRecord(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function () {
+      }).catch(function() {
       })
     },
 
     /** 导出按钮操作 */
     handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所选中的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
-        return exportConfig(queryParams);
+      const queryParams = this.queryParams
+      this.$confirm('是否确认导出所选中的数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function() {
+        return exportConfig(queryParams)
       }).then(response => {
-        this.download(response.msg);
-      }).catch(function () {
-      });
+        this.download(response.msg)
+      }).catch(function() {
+      })
     }
   }
 }

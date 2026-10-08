@@ -6,8 +6,8 @@ import axios from 'axios'
 import { Notification, MessageBox, Message, Loading } from 'element-ui'
 import fileDownload from 'js-file-download'
 import { getToken } from '@/utils/auth'
-import request from "@/utils/request";
-let downloadLoadingInstance;
+import request from '@/utils/request'
+let downloadLoadingInstance
 const baseURL = process.env.VUE_APP_BASE_API
 
 // 日期格式化
@@ -85,9 +85,9 @@ export function selectDictLabel(datas, value) {
 }
 
 // 通用下载方法
-export function download(fileName, query = null,filename = null) {
+export function download(fileName, query = null, filename = null) {
   var download_url = '/report/excel_generate/' + fileName
-  downloadLoadingInstance = Loading.service({ text: "正在下载数据，请稍候", spinner: "el-icon-loading", background: "rgba(0, 0, 0, 0.7)", })
+  downloadLoadingInstance = Loading.service({ text: '正在下载数据，请稍候', spinner: 'el-icon-loading', background: 'rgba(0, 0, 0, 0.7)' })
   return request({
     url: download_url,
     method: 'get',
@@ -97,8 +97,8 @@ export function download(fileName, query = null,filename = null) {
     let file_name = response.headers['content-disposition'].split('filename=')[1].split(';')[0]
     file_name = decodeURIComponent(escape(file_name))
     console.log(file_name)
-    fileDownload(response.data, filename||file_name) // 如果用方法一 ，这里需要安装 npm install js-file-download --save ,然后引用
-    downloadLoadingInstance.close();
+    fileDownload(response.data, filename || file_name) // 如果用方法一 ，这里需要安装 npm install js-file-download --save ,然后引用
+    downloadLoadingInstance.close()
   })
 }
 
@@ -138,7 +138,7 @@ export function handleTree(data, id, parent_id, children, rootId) {
   id = id || 'id'
   parent_id = parent_id || 'parent_id'
   children = children || 'children'
-  rootId = rootId || Math.min.apply(Math, data.map(item => { return item[parent_id]; })) || 0;
+  rootId = rootId || Math.min.apply(Math, data.map(item => { return item[parent_id] })) || 0
   // 对源数据深度克隆
   const cloneData = JSON.parse(JSON.stringify(data))
   // 循环所有项

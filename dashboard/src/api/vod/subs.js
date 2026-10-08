@@ -1,8 +1,6 @@
 import request from '@/utils/request'
 
-
 const api_url = '/vods/subs'
-
 
 // 查询列表
 export function searchRecords(query) {
@@ -32,7 +30,7 @@ export function addRecord(data) {
 
 // 修改
 export function setRecord(id, data) {
-  console.log(data);
+  console.log(data)
   return request({
     url: api_url + '/' + id,
     method: 'put',

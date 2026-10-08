@@ -1,21 +1,21 @@
 <template>
   <user-layout>
-    <el-result v-if="isLoading" title="Loading..." subTitle="加载中，请稍后">
+    <el-result v-if="isLoading" title="Loading..." sub-title="加载中，请稍后">
       <template slot="icon">
-        <el-image style="width: 200px; height: 200px;" :src="loadingImg"></el-image>
+        <el-image style="width: 200px; height: 200px;" :src="loadingImg" />
       </template>
     </el-result>
-    <el-result v-if="isErr" icon="error" title="注册验证失败" :subTitle="errMsg">
+    <el-result v-if="isErr" icon="error" title="注册验证失败" :sub-title="errMsg">
       <template slot="extra">
         <el-button type="primary" size="medium" @click="backLogin">返回登录</el-button>
       </template>
     </el-result>
-    <el-result v-if="isSuc" icon="info" :title="info" subTitle="请点击下方按钮完成注册">
+    <el-result v-if="isSuc" icon="info" :title="info" sub-title="请点击下方按钮完成注册">
       <template slot="extra">
         <el-button type="success" size="medium" @click="handleConfirm">确认注册</el-button>
       </template>
     </el-result>
-    <el-result v-if="isDone" icon="success" title="注册成功" subTitle="请点击下方按钮登录">
+    <el-result v-if="isDone" icon="success" title="注册成功" sub-title="请点击下方按钮登录">
       <template slot="extra">
         <el-button type="primary" size="medium" @click="backLogin">返回登录</el-button>
       </template>
@@ -27,17 +27,17 @@
 <script>
 import loadingImg from '@/assets/images/loading.gif'
 import UserLayout from '../layout'
-import {confirmRegister, verifyRegister} from "@/api/user";
+import { confirmRegister, verifyRegister } from '@/api/user'
 
 export default {
-  name: "verify",
-  components: {UserLayout},
+  name: 'Verify',
+  components: { UserLayout },
   data() {
     return {
       loadingImg: loadingImg,
-      verifyCode: "",
-      info: "",
-      errMsg: "",
+      verifyCode: '',
+      info: '',
+      errMsg: '',
       isLoading: true,
       isSuc: false,
       isErr: false,
@@ -46,40 +46,40 @@ export default {
     }
   },
   created() {
-    this.verifyCode = this.$route.params.code;
-    this.checkVerifyCode();
+    this.verifyCode = this.$route.params.code
+    this.checkVerifyCode()
   },
   methods: {
     checkVerifyCode() {
-      if (this.verifyCode && this.verifyCode !== "") {
-        verifyRegister(this.verifyCode).then( res => {
-          this.isLoading = false;
+      if (this.verifyCode && this.verifyCode !== '') {
+        verifyRegister(this.verifyCode).then(res => {
+          this.isLoading = false
           if (res.data.code === 0) {
-            this.isSuc = true;
+            this.isSuc = true
           } else {
-            this.errMsg = res.data.msg;
-            this.isErr = true;
+            this.errMsg = res.data.msg
+            this.isErr = true
           }
         })
       }
     },
     handleConfirm() {
-      if (this.verifyCode && this.verifyCode !== "") {
-        this.isSuc = false;
-        this.isLoading = true;
+      if (this.verifyCode && this.verifyCode !== '') {
+        this.isSuc = false
+        this.isLoading = true
         confirmRegister(this.verifyCode).then(res => {
-          this.isLoading = false;
+          this.isLoading = false
           if (res.data.code === 0) {
-            this.isDone = true;
+            this.isDone = true
           } else {
-            this.errMsg = res.data.msg;
-            this.isErr = true;
+            this.errMsg = res.data.msg
+            this.isErr = true
           }
         })
       }
     },
     backLogin() {
-      this.$router.push({path: "/login"});
+      this.$router.push({ path: '/login' })
     }
   }
 }

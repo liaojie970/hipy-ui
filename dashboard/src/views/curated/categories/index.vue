@@ -12,10 +12,16 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="全部" clearable size="small"
-                   @change="handleQuery" style="width: 120px">
-          <el-option label="全部" :value="undefined"/>
-          <el-option v-for="dict in statusOptions" :key="dict.value" :label="dict.label" :value="dict.value"/>
+        <el-select
+          v-model="queryParams.status"
+          placeholder="全部"
+          clearable
+          size="small"
+          style="width: 120px"
+          @change="handleQuery"
+        >
+          <el-option label="全部" :value="undefined" />
+          <el-option v-for="dict in statusOptions" :key="dict.value" :label="dict.label" :value="dict.value" />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -26,18 +32,23 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus" size="mini"
-                   v-has-permi="['curated:category:post']" @click="handleAdd">新增分类
+        <el-button
+          v-has-permi="['curated:category:post']"
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+        >新增分类
         </el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="ID" align="center" prop="id" width="60"/>
-      <el-table-column label="分类名称" align="center" prop="name" :show-overflow-tooltip="true"/>
-      <el-table-column label="图标" align="center" prop="icon" :show-overflow-tooltip="true"/>
-      <el-table-column label="排序" align="center" prop="order_num" width="70"/>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="ID" align="center" prop="id" width="60" />
+      <el-table-column label="分类名称" align="center" prop="name" :show-overflow-tooltip="true" />
+      <el-table-column label="图标" align="center" prop="icon" :show-overflow-tooltip="true" />
+      <el-table-column label="排序" align="center" prop="order_num" width="70" />
       <el-table-column label="状态" align="center" prop="status" width="90">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'" size="mini">
@@ -45,7 +56,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
+      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" align="center" prop="created_ts" width="170">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.created_ts) }}</span>
@@ -53,11 +64,21 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" align="center" width="150" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit"
-                     v-has-permi="['curated:category:put']" @click="handleUpdate(scope.row)">修改
+          <el-button
+            v-has-permi="['curated:category:put']"
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+          >修改
           </el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete"
-                     v-hasRole="['admin','opts']" @click="handleDelete(scope.row)">删除
+          <el-button
+            v-hasRole="['admin','opts']"
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+          >删除
           </el-button>
         </template>
       </el-table-column>
@@ -75,17 +96,17 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px" @submit.native.prevent>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="如: 科普知识 / 英语启蒙 / 动画"/>
+          <el-input v-model="form.name" placeholder="如: 科普知识 / 英语启蒙 / 动画" />
         </el-form-item>
         <el-row>
           <el-col :span="12">
             <el-form-item label="图标">
-              <el-input v-model="form.icon" placeholder="可选"/>
+              <el-input v-model="form.icon" placeholder="可选" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="排序">
-              <el-input-number v-model="form.order_num" :min="0" controls-position="right"/>
+              <el-input-number v-model="form.order_num" :min="0" controls-position="right" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -96,7 +117,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="form.remark" placeholder="备注信息"/>
+          <el-input v-model="form.remark" placeholder="备注信息" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -108,8 +129,8 @@
 </template>
 
 <script>
-import {listCategories, getCategory, addCategory, setCategory, delCategory} from '@/api/curated/categories'
-import {parseTime} from '@/utils'
+import { listCategories, getCategory, addCategory, setCategory, delCategory } from '@/api/curated/categories'
+import { parseTime } from '@/utils'
 
 export default {
   name: 'CuratedCategories',
@@ -122,7 +143,7 @@ export default {
       list: [],
       title: '',
       open: false,
-      statusOptions: [{label: '启用', value: 1}, {label: '禁用', value: 0}],
+      statusOptions: [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }],
       queryParams: {
         page: 1,
         page_size: 20,
@@ -131,7 +152,7 @@ export default {
       },
       form: {},
       rules: {
-        name: [{required: true, message: '分类名称不能为空', trigger: 'blur'}]
+        name: [{ required: true, message: '分类名称不能为空', trigger: 'blur' }]
       }
     }
   },
@@ -170,7 +191,7 @@ export default {
       this.getList()
     },
     resetQuery() {
-      this.queryParams = {page: 1, page_size: 20, keyword: undefined, status: undefined}
+      this.queryParams = { page: 1, page_size: 20, keyword: undefined, status: undefined }
       this.handleQuery()
     },
     handleSelectionChange(selection) {

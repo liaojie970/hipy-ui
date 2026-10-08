@@ -1,6 +1,5 @@
 import request from '@/utils/request'
 
-
 // 查询字典数据列表
 export function listDetail(query) {
   return request({
@@ -14,14 +13,6 @@ export function listDetail(query) {
 export function getDetail(id) {
   return request({
     url: '/system/dict/detail/' + id,
-    method: 'get'
-  })
-}
-
-// 根据字典类型查询字典数据信息 用于user获取字典
-export function getDicts(dictType) {
-  return request({
-    url: '/system/dict/data/type_code/' + dictType,
     method: 'get'
   })
 }
@@ -52,10 +43,9 @@ export function delDetail(id) {
   })
 }
 
-
 export function getDetailMaxOrderNum(dictDataID) {
   return request({
-    url: "/system/dict/detail/max-order-num/" + dictDataID,
-    method: "get"
+    url: '/system/dict/detail/max-order-num/' + dictDataID,
+    method: 'get'
   })
 }

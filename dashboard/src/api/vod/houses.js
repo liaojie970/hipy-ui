@@ -2,7 +2,6 @@ import request from '@/utils/request'
 
 const api_url = '/vods/houses'
 
-
 // 获取仓库源列表
 export function listHouses(query) {
   return request({
@@ -15,9 +14,9 @@ export function listHouses(query) {
 // 从id导入源
 export function addHouses(id) {
   return request({
-    url: api_url + "/" + id,
+    url: api_url + '/' + id,
     method: 'put',
-    timeout: 60*1000
+    timeout: 60 * 1000
   })
 }
 
@@ -26,6 +25,6 @@ export function refreshHouses() {
   return request({
     url: api_url + '/refresh',
     method: 'post',
-    timeout: 60*1000
+    timeout: 60 * 1000
   })
 }

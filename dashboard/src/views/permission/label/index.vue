@@ -74,22 +74,22 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="list" >
+    <el-table v-loading="loading" :data="list">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" width="55"/>
-      <el-table-column label="标签" align="center" prop="label" :show-overflow-tooltip="true"/>
-      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" :show-overflow-tooltip="true"/>
+      <el-table-column label="编号" align="center" prop="id" width="55" />
+      <el-table-column label="标签" align="center" prop="label" :show-overflow-tooltip="true" />
+      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" align="center" prop="created_ts">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.created_ts) }}</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -160,9 +160,9 @@
 </template>
 
 <script>
-import {getDicts} from '@/api/system/dict/data'
-import {addPermLabel, listPermLabel, setPermLabel, delPermLabel, getPermLabel} from "@/api/permission/label";
-import {getRoleSelectList} from "@/api/permission/role";
+import { getDicts } from '@/api/system/dict/data'
+import { addPermLabel, listPermLabel, setPermLabel, delPermLabel, getPermLabel } from '@/api/permission/label'
+import { getRoleSelectList } from '@/api/permission/role'
 
 export default {
   name: 'Label',
@@ -201,14 +201,14 @@ export default {
       label: {
         label: [
           { required: true, message: '标签不能为空', trigger: 'blur' }
-        ],
+        ]
       }
     }
   },
   created() {
     this.getList()
-    getDicts("com_default_status").then(response => {
-      this.statusOptions = response.data.details;
+    getDicts('com_default_status').then(response => {
+      this.statusOptions = response.data.details
     })
   },
   methods: {
@@ -221,13 +221,13 @@ export default {
         this.loading = false
       }
       )
-      getRoleSelectList().then( response => {
-      this.roleOptions = response.data.roles;
-    })
+      getRoleSelectList().then(response => {
+        this.roleOptions = response.data.roles
+      })
     },
     // 字典状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {
@@ -241,7 +241,7 @@ export default {
         label: undefined,
         remark: undefined,
         status: undefined,
-        roles: this.defaultRolesId,
+        roles: this.defaultRolesId
       }
       this.resetForm('form')
     },
@@ -287,22 +287,21 @@ export default {
           if (this.form.id !== undefined) {
             setPermLabel(this.form.id, this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("角色修改成功")
+                this.msgSuccess('角色修改成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("角色修改失败," + response.msg)
+                this.msgError('角色修改失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
-
           } else {
             addPermLabel(this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("添加成功")
+                this.msgSuccess('添加成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("添加失败," + response.msg)
+                this.msgError('添加失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           }

@@ -45,20 +45,20 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-has-permi="['hiker:developer:post']"
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          v-has-permi="['hiker:developer:post']"
           @click="handleAdd"
         >新增
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-has-permi="['hiker:developer:put']"
           type="success"
           icon="el-icon-edit"
           size="mini"
-          v-has-permi="['hiker:developer:put']"
           :disabled="single"
           @click="handleUpdate"
         >修改
@@ -66,10 +66,10 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasRole="['admin','opts']"
           type="danger"
           icon="el-icon-delete"
           size="mini"
-          v-hasRole="['admin','opts']"
           :disabled="multiple"
           @click="handleDelete"
         >删除
@@ -77,10 +77,10 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-has-permi="['report:excel_generate:export']"
           type="warning"
           icon="el-icon-download"
           size="mini"
-          v-has-permi="['report:excel_generate:export']"
           :disabled="multiple"
           @click="handleExport"
         >导出
@@ -89,23 +89,23 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
-      <el-table-column fixed="left" type="selection" width="55" align="center"/>
-      <el-table-column label="ID" align="center" prop="id" width="55"/>
-      <el-table-column label="开发者账号" align="center" prop="name" :show-overflow-tooltip="true"/>
-      <el-table-column label="QQ号" align="center" prop="qq" :show-overflow-tooltip="true"/>
-      <el-table-column label="开发者密码" align="center" prop="password" :show-overflow-tooltip="true"/>
+      <el-table-column fixed="left" type="selection" width="55" align="center" />
+      <el-table-column label="ID" align="center" prop="id" width="55" />
+      <el-table-column label="开发者账号" align="center" prop="name" :show-overflow-tooltip="true" />
+      <el-table-column label="QQ号" align="center" prop="qq" :show-overflow-tooltip="true" />
+      <el-table-column label="开发者密码" align="center" prop="password" :show-overflow-tooltip="true" />
       <el-table-column label="是否超管" align="center" prop="is_manager" width="100">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.is_manager" @change="handleChangIsManager(scope.row)"></el-switch>
+          <el-switch v-model="scope.row.is_manager" @change="handleChangIsManager(scope.row)" />
         </template>
       </el-table-column>
       <el-table-column label="是否启用" align="center" prop="active" width="100">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.active" @change="handleChangActive(scope.row)"></el-switch>
+          <el-switch v-model="scope.row.active" @change="handleChangActive(scope.row)" />
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat"/>
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="创建时间" align="center" prop="created_ts" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.created_ts) }}</span>
@@ -119,18 +119,18 @@
       <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-has-permi="['hiker:developer:put']"
             size="mini"
             type="text"
             icon="el-icon-edit"
-            v-has-permi="['hiker:developer:put']"
             @click="handleUpdate(scope.row)"
           >修改
           </el-button>
           <el-button
+            v-hasRole="['admin','opts']"
             size="mini"
             type="text"
             icon="el-icon-delete"
-            v-hasRole="['admin','opts']"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>
@@ -152,19 +152,18 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="账号" prop="name">
-              <el-input v-model="form.name" placeholder="请输入开发者账号"/>
+              <el-input v-model="form.name" placeholder="请输入开发者账号" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="密码" prop="password">
-              <el-input v-model="form.password" placeholder="请输入开发者密码"/>
+              <el-input v-model="form.password" placeholder="请输入开发者密码" />
             </el-form-item>
           </el-col>
         </el-row>
 
-
         <el-form-item label="QQ" prop="qq">
-          <el-input v-model="form.qq" placeholder="请输入开发者qq"/>
+          <el-input v-model="form.qq" placeholder="请输入开发者qq" />
         </el-form-item>
 
         <el-form-item label="状态" prop="status">
@@ -181,16 +180,15 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="是否启用" prop="active">
-              <el-switch v-model="form.active"></el-switch>
+              <el-switch v-model="form.active" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否超管" prop="is_manager">
-              <el-switch v-model="form.is_manager"></el-switch>
+              <el-switch v-model="form.is_manager" />
             </el-form-item>
           </el-col>
         </el-row>
-
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -202,7 +200,7 @@
 </template>
 
 <script>
-import {getDicts} from '@/api/system/dict/data'
+import { getDicts } from '@/api/system/dict/data'
 import {
   searchRecords,
   getRecord,
@@ -247,13 +245,13 @@ export default {
       // 表单校验
       rules: {
         name: [
-          {required: true, message: '开发者账号不能为空', trigger: 'blur'}
+          { required: true, message: '开发者账号不能为空', trigger: 'blur' }
         ],
         password: [
-          {required: true, message: '开发者密码不能为空', trigger: 'blur'}
+          { required: true, message: '开发者密码不能为空', trigger: 'blur' }
         ],
         qq: [
-          {required: true, message: '开发者QQ不能为空', trigger: 'blur'}
+          { required: true, message: '开发者QQ不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -261,11 +259,11 @@ export default {
   created() {
     const devId = this.$route.params && this.$route.params.id
     if (devId) {
-      console.log('devId:', devId);
+      console.log('devId:', devId)
     }
-    this.getList();
-    getDicts("com_default_status").then(response => {
-      this.statusOptions = response.data.details;
+    this.getList()
+    getDicts('com_default_status').then(response => {
+      this.statusOptions = response.data.details
     })
   },
   methods: {
@@ -280,7 +278,7 @@ export default {
     },
     // 字典状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {
@@ -292,7 +290,7 @@ export default {
       this.form = {
         id: undefined,
         name: undefined,
-        qq: undefined,
+        qq: undefined
       }
       this.resetForm('form')
     },
@@ -343,21 +341,21 @@ export default {
     handleChangIsManager(row) {
       changeIsManager(row.id, row.is_manager).then(response => {
         if (response.code === 0) {
-          this.msgSuccess("修改成功")
+          this.msgSuccess('修改成功')
         }
-        this.getList();
+        this.getList()
       })
     },
     handleChangActive(row) {
       changeActive(row.id, row.active).then(response => {
         if (response.code === 0) {
-          this.msgSuccess("修改成功")
+          this.msgSuccess('修改成功')
         }
-        this.getList();
+        this.getList()
       })
     },
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       if (this.submitLoading) return
       this.$refs['form'].validate(valid => {
         if (valid) {
@@ -365,21 +363,21 @@ export default {
           if (this.form.id !== undefined) {
             setRecord(this.form.id, this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("修改成功")
+                this.msgSuccess('修改成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("修改失败," + response.msg)
+                this.msgError('修改失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           } else {
             addRecord(this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("添加成功")
+                this.msgSuccess('添加成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("添加失败," + response.msg)
+                this.msgError('添加失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           }
@@ -393,28 +391,28 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function () {
+      }).then(function() {
         return delRecord(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function () {
+      }).catch(function() {
       })
     },
 
     /** 导出按钮操作 */
     handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所选中的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
-        return exportConfig(queryParams);
+      const queryParams = this.queryParams
+      this.$confirm('是否确认导出所选中的数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function() {
+        return exportConfig(queryParams)
       }).then(response => {
-        this.download(response.msg);
-      }).catch(function () {
-      });
+        this.download(response.msg)
+      }).catch(function() {
+      })
     }
   }
 }

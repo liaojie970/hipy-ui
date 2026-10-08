@@ -15,7 +15,6 @@ import './styles/element-variables.scss'
 import '@/styles/index.scss' // global css
 import '@/styles/ruoyi.scss' // ruoyi css
 
-
 import App from './App'
 import store from './store'
 import router from './router'
@@ -25,28 +24,28 @@ import plugins from './plugins' // plugins
 import './assets/icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
-import {getDicts} from '@/api/system/dict/data'
-import {resetForm, selectDictLabel, download, handleTree, parseTime, addDateRange} from '@/utils/ruoyi'
-import {getFormatTime} from '@/utils/index'
+import { getDicts } from '@/api/system/dict/data'
+import { resetForm, selectDictLabel, download, handleTree, parseTime, addDateRange } from '@/utils/ruoyi'
+import { getFormatTime } from '@/utils/index'
 // 分页组件
-import Pagination from "@/components/Pagination";
+import Pagination from '@/components/Pagination'
 // 自定义表格工具组件
-import RightToolbar from "@/components/RightToolbar"
+import RightToolbar from '@/components/RightToolbar'
 // 富文本组件
-import Editor from "@/components/Editor"
+import Editor from '@/components/Editor'
 // 文件上传组件
-import FileUpload from "@/components/FileUpload"
+import FileUpload from '@/components/FileUpload'
 // 图片上传组件
-import ImageUpload from "@/components/ImageUpload"
+import ImageUpload from '@/components/ImageUpload'
 // 图片预览组件
-import ImagePreview from "@/components/ImagePreview"
+import ImagePreview from '@/components/ImagePreview'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
 
 import * as filters from './filters'
-import {getParameter} from "@/api/system/parameter"; // global filters
+import { getParameter } from '@/api/system/parameter' // global filters
 
-import VideoPlayer from 'vue-video-player/src';
+import VideoPlayer from 'vue-video-player/src'
 import 'vue-video-player/src/custom-theme.css'
 import 'video.js/dist/video-js.css'
 import 'videojs-contrib-hls'
@@ -62,15 +61,15 @@ Vue.prototype.getFormatTime = getFormatTime
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
 
-Vue.prototype.msgSuccess = function (msg) {
-  this.$message({showClose: true, message: msg, type: 'success'})
+Vue.prototype.msgSuccess = function(msg) {
+  this.$message({ showClose: true, message: msg, type: 'success' })
 }
 
-Vue.prototype.msgError = function (msg) {
-  this.$message({showClose: true, message: msg, type: 'error'})
+Vue.prototype.msgError = function(msg) {
+  this.$message({ showClose: true, message: msg, type: 'error' })
 }
 
-Vue.prototype.msgInfo = function (msg) {
+Vue.prototype.msgInfo = function(msg) {
   this.$message.info(msg)
 }
 
@@ -95,7 +94,7 @@ Vue.use(VueClipboard)
 Vue.use(VideoPlayer)
 
 Vue.use(Element, {
-  size: Cookies.get('size') || 'medium', // set element-ui default size
+  size: Cookies.get('size') || 'medium' // set element-ui default size
   // locale: enLang // 如果使用中文，无需设置，请删除
 })
 

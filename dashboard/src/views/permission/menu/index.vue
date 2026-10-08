@@ -57,17 +57,17 @@
       </el-table-column>
       <el-table-column prop="order_num" label="排序" width="60" />
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true" />
-      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="80"/>
+      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="80" />
       <el-table-column label="创建时间" align="center" prop="created_ts">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.created_ts) }}</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
@@ -180,11 +180,11 @@
 </template>
 
 <script>
-import { listMenu, getMenu, delMenu, addMenu, updateMenu, listselect, treeselect, getMaxOrderNum} from '@/api/permission/menu'
+import { listMenu, getMenu, delMenu, addMenu, updateMenu, listselect, treeselect, getMaxOrderNum } from '@/api/permission/menu'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import IconSelect from '@/components/IconSelect'
-import {getDicts} from "@/api/system/dict/data";
+import { getDicts } from '@/api/system/dict/data'
 
 export default {
   name: 'Menu',
@@ -229,8 +229,8 @@ export default {
   },
   created() {
     this.getList()
-    getDicts("com_default_status").then(response => {
-      this.statusOptions = response.data.details;
+    getDicts('com_default_status').then(response => {
+      this.statusOptions = response.data.details
     })
   },
   methods: {
@@ -242,7 +242,7 @@ export default {
     getList() {
       this.loading = true
       listMenu(this.queryParams).then(response => {
-        this.menuList = response.data.menus ?  this.handleTree(response.data.menus, "id") : [];
+        this.menuList = response.data.menus ? this.handleTree(response.data.menus, 'id') : []
         this.loading = false
       })
     },
@@ -263,12 +263,12 @@ export default {
       //   this.menuOptions = [{id: 0, title: "根目录", children: response.data.menus}]
       // })
       listselect().then(response => {
-        this.menuOptions = [{id: 0, title: "根目录", children: this.handleTree(response.data.menus, 'id')}]
+        this.menuOptions = [{ id: 0, title: '根目录', children: this.handleTree(response.data.menus, 'id') }]
       })
     },
     // 字典状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {
@@ -327,7 +327,7 @@ export default {
       })
     },
     /** 获取最大排序 */
-    handleMenuSelectChange(){
+    handleMenuSelectChange() {
       getMaxOrderNum(this.form.parent_id).then(response => {
         this.form.order_num = response.data.max_order_num + 1
       })
@@ -341,7 +341,7 @@ export default {
           if (this.form.id !== undefined) {
             updateMenu(this.form.id, this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("修改成功")
+                this.msgSuccess('修改成功')
                 this.open = false
                 this.getList()
               } else {
@@ -351,7 +351,7 @@ export default {
           } else {
             addMenu(this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("添加成功")
+                this.msgSuccess('添加成功')
                 this.open = false
                 this.getList()
               } else {
@@ -372,7 +372,7 @@ export default {
         return delMenu(row.id)
       }).then((response) => {
         this.getList()
-        this.msgSuccess("删除成功")
+        this.msgSuccess('删除成功')
       }).catch(function() {
       })
     }

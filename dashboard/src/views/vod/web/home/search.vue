@@ -5,7 +5,7 @@
 
     <videoList :videos="vodDatas" />
 
-    <div class="page-wrap" v-if="num_pages > 1">
+    <div v-if="num_pages > 1" class="page-wrap">
       <div class="page-item" :class="page === 1 ? 'disable' : ''" @click="handlePre()">上页</div>
       <div class="page-item" :class="page === num_pages ? 'disable' : ''" @click="handleNext()">下页</div>
     </div>
@@ -14,7 +14,7 @@
 <script>
 import {
   SearchApi
-} from "@/api/vod/web";
+} from '@/api/vod/web'
 
 import videoList from '@/views/vod/web/components/videoList.vue'
 export default {
@@ -25,25 +25,25 @@ export default {
       page: 1,
       num_pages: 0,
       vodDatas: [],
-      keyword: '',
+      keyword: ''
     }
   },
-  created() {
-    this.keyword = this.$route.query.keyword;
-    this.page = Number(this.$route.query.pg || 1);
-    this.getData()
-  },
   watch: {
-    '$route.query.keyword': function () {
+    '$route.query.keyword': function() {
       this.keyword = this.$route.query.keyword
     },
-    '$route.query.pg': function () {
-      this.page = Number(this.$route.query.pg || 1);
-    },
+    '$route.query.pg': function() {
+      this.page = Number(this.$route.query.pg || 1)
+    }
     // $route() {
     //   this.keyword = this.$route.query.keyword
     //   this.page = Number(this.$route.query.pg || 1);
     // },
+  },
+  created() {
+    this.keyword = this.$route.query.keyword
+    this.page = Number(this.$route.query.pg || 1)
+    this.getData()
   },
   methods: {
     handleDetail(vod_id) {
@@ -72,7 +72,7 @@ export default {
         console.log(err)
       })
     }
-  },
+  }
 }
 </script>
 
@@ -139,7 +139,6 @@ export default {
   //    }
   //  }
   //}
-
 
   .page-wrap {
     margin-top: 16px;

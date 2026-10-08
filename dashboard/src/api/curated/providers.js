@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { cleanQuery } from '@/utils'
 
 const api_url = '/curated/providers'
 
@@ -15,7 +16,7 @@ export function listProviders(query) {
   return request({
     url: api_url,
     method: 'get',
-    params: query
+    params: cleanQuery(query)
   })
 }
 

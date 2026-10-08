@@ -28,15 +28,6 @@ export function addJob(data) {
   })
 }
 
-// 修改定时任务调度
-export function updateJob(data) {
-  return request({
-    url: api_url,
-    method: 'put',
-    data: data
-  })
-}
-
 // 修改
 export function setRecord(id, data) {
   return request({
@@ -71,15 +62,14 @@ export function changeActive(id, active) {
   return request({
     url: api_url + '/' + id + '/active',
     method: 'put',
-    data: {'active': active}
+    data: { 'active': active }
   })
 }
-
 
 // 定时任务立即执行一次
 export function runJob(id) {
   return request({
     url: api_url + `/${id}/run`,
-    method: 'put',
+    method: 'put'
   })
 }

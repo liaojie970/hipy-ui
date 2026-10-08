@@ -33,11 +33,10 @@ export function listselect() {
   })
 }
 
-
 // 新增菜单
 export function addMenu(data) {
   return request({
-    url: '/permission/menu/',
+    url: '/permission/menu',
     method: 'post',
     data: data
   })
@@ -63,7 +62,7 @@ export function delMenu(id) {
 // 获取最排序
 export function getMaxOrderNum(parent_id) {
   return request({
-    url: "/permission/menu/" + parent_id + "/max-order-num",
+    url: '/permission/menu/' + parent_id + '/max-order-num',
     method: 'get'
   })
 }

@@ -74,49 +74,48 @@
 
 <script>
 import UserLayout from '../layout'
-import {register} from "@/api/user";
-import {getCaptchaCode} from "@/api/user";
-import {deepClone} from "@/utils";
+import { register } from '@/api/user'
+import { getCaptchaCode } from '@/api/user'
+import { deepClone } from '@/utils'
 import md5 from 'js-md5'
 
-
 export default {
-  name: "index",
-  components: {UserLayout},
+  name: 'Index',
+  components: { UserLayout },
   data() {
     return {
-      cookiePassword: "",
+      cookiePassword: '',
       registerForm: {
-        username: "",
-        email: "",
-        phone: "",
-        password: "",
-        confirmPassword: "",
-        code: "",
-        key: ""
+        username: '',
+        email: '',
+        phone: '',
+        password: '',
+        confirmPassword: '',
+        code: '',
+        key: ''
       },
       registerRules: {
         username: [
-          { required: true, trigger: "blur", message: "用户名不能为空" },
-          { pattern: /^[a-zA-Z]{1}([a-zA-Z0-9]|[-_]){4,19}$/, trigger: "blur", message: "只能输入5-20个以字母开头、可带数字、“_”、“-”的字串"},
+          { required: true, trigger: 'blur', message: '用户名不能为空' },
+          { pattern: /^[a-zA-Z]{1}([a-zA-Z0-9]|[-_]){4,19}$/, trigger: 'blur', message: '只能输入5-20个以字母开头、可带数字、“_”、“-”的字串' }
         ],
         email: [
-          { required: true, trigger: "blur", message: "邮箱不能为空" },
-          { type: "email", trigger: "blur", message: "请输入正确的邮箱地址"},
+          { required: true, trigger: 'blur', message: '邮箱不能为空' },
+          { type: 'email', trigger: 'blur', message: '请输入正确的邮箱地址' }
         ],
         phone: [
-          { required: true, trigger: "blur", message: "手机号不能为空" },
-          { pattern: /^1[2-9][0-9]\d{8}$/, message: "请输入正确的手机号码", trigger: "blur"},
+          { required: true, trigger: 'blur', message: '手机号不能为空' },
+          { pattern: /^1[2-9][0-9]\d{8}$/, message: '请输入正确的手机号码', trigger: 'blur' }
         ],
         password: [
-          { required: true, trigger: "blur", message: "密码不能为空" },
+          { required: true, trigger: 'blur', message: '密码不能为空' }
         ],
         confirmPassword: [
-          { required: true, trigger: "blur", message: "确认密码不能为空" },
+          { required: true, trigger: 'blur', message: '确认密码不能为空' }
         ],
-        code: [{ required: true, trigger: "change", message: "验证码不能为空" }]
+        code: [{ required: true, trigger: 'change', message: '验证码不能为空' }]
       },
-      codeImg: "",
+      codeImg: '',
       allQuery: {},
       otherQuery: {},
       loading: false,
@@ -126,11 +125,11 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
-        const query = route.query;
-        this.allQuery = query;
+        const query = route.query
+        this.allQuery = query
         if (query) {
-          this.redirect = query.redirect;
-          this.otherQuery = this.getOtherQuery(query);
+          this.redirect = query.redirect
+          this.otherQuery = this.getOtherQuery(query)
         }
       },
       immediate: true
@@ -141,38 +140,38 @@ export default {
   },
   methods: {
     getCode() {
-      getCaptchaCode().then( res => {
+      getCaptchaCode().then(res => {
         if (res.code === 0) {
-          this.codeImg = res.data.img;
-          this.registerForm.key = res.data.key;
+          this.codeImg = res.data.img
+          this.registerForm.key = res.data.key
         }
       })
     },
     handleRegister() {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
-          this.loading = true;
-          const registerForm = deepClone(this.registerForm);
-          registerForm.password = md5(registerForm.password);
-          registerForm.confirmPassword = md5(registerForm.confirmPassword);
+          this.loading = true
+          const registerForm = deepClone(this.registerForm)
+          registerForm.password = md5(registerForm.password)
+          registerForm.confirmPassword = md5(registerForm.confirmPassword)
           register(registerForm).then(res => {
-            if(res.code === 0){
+            if (res.code === 0) {
               this.$notify.success({
-              title: '注册成功',
-              duration: 3000,
-              showClose: true,
-              message: '注册成功，请注意查收验证邮箱，验证后方可登录。',
-              onClose: () => {
-                this.$router.push({ path: this.redirect || "/login" }).catch(() => {});
-              }
-            })
+                title: '注册成功',
+                duration: 3000,
+                showClose: true,
+                message: '注册成功，请注意查收验证邮箱，验证后方可登录。',
+                onClose: () => {
+                  this.$router.push({ path: this.redirect || '/login' }).catch(() => {})
+                }
+              })
             }
           }).catch(() => {
-            this.loading = false;
-            this.getCode();
-          });
+            this.loading = false
+            this.getCode()
+          })
         }
-      });
+      })
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {

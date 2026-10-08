@@ -9,12 +9,11 @@ export function listRole(query) {
   })
 }
 
-
 // 获取最大排序
 export function getRoleMaxOrderNum() {
   return request({
-    url: "/permission/role/max-order-num",
-    method: "get"
+    url: '/permission/role/max-order-num',
+    method: 'get'
   })
 }
 
@@ -44,17 +43,15 @@ export function setRole(roleId, data) {
   })
 }
 
-
 // 修改角色菜单
 export function setRoleMenus(roleId, menus) {
   console.log(menus)
   return request({
-    url: "/permission/role/" + roleId + "/menu",
-    method: "put",
-    data: {menu_ids: menus}
+    url: '/permission/role/' + roleId + '/menu',
+    method: 'put',
+    data: { menu_ids: menus }
   })
 }
-
 
 // 删除角色
 export function delRole(roleId) {
@@ -64,11 +61,10 @@ export function delRole(roleId) {
   })
 }
 
-
 // 获取角色选择列表
 export function getRoleSelectList() {
   return request({
-    url: "/permission/role/select/list",
-    method: "get"
+    url: '/permission/role/select/list',
+    method: 'get'
   })
 }

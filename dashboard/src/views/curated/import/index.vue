@@ -3,28 +3,32 @@
     <el-alert
       v-if="currentProvider && !hasCookie"
       title="当前站点尚未配置登录 Cookie, 搜索结果可能不完整且播放清晰度受限, 请先到【站点管理】配置。"
-      type="warning" :closable="false" show-icon style="margin-bottom: 12px"/>
+      type="warning"
+      :closable="false"
+      show-icon
+      style="margin-bottom: 12px"
+    />
     <el-form :inline="true" label-width="80px" @submit.native.prevent>
       <el-form-item label="站点">
         <el-select v-model="providerCode" placeholder="请选择站点" style="width: 180px" @change="onProviderChange">
-          <el-option v-for="p in providers" :key="p.code" :label="p.name" :value="p.code"/>
+          <el-option v-for="p in providers" :key="p.code" :label="p.name" :value="p.code" />
         </el-select>
       </el-form-item>
       <el-form-item label="入库分类">
         <el-select v-model="categoryId" placeholder="未分类" clearable style="width: 180px">
-          <el-option v-for="c in categories" :key="c.id" :label="c.name" :value="c.id"/>
+          <el-option v-for="c in categories" :key="c.id" :label="c.name" :value="c.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="入库后">
         <el-select v-model="importStatus" style="width: 130px">
-          <el-option label="待审核" :value="0"/>
-          <el-option label="直接通过" :value="1"/>
+          <el-option label="待审核" :value="0" />
+          <el-option label="直接通过" :value="1" />
         </el-select>
       </el-form-item>
       <el-form-item label="前台">
         <el-select v-model="importVisible" style="width: 110px">
-          <el-option label="可见" :value="1"/>
-          <el-option label="隐藏" :value="0"/>
+          <el-option label="可见" :value="1" />
+          <el-option label="隐藏" :value="0" />
         </el-select>
       </el-form-item>
     </el-form>
@@ -34,16 +38,26 @@
       <el-tab-pane label="关键词搜索" name="search">
         <el-form :inline="true" @submit.native.prevent>
           <el-form-item>
-            <el-input v-model="keyword" placeholder="输入关键词, 如: 儿童科普 / 唐诗三百首"
-                      style="width: 320px" clearable @keyup.enter.native="handleSearch"/>
+            <el-input
+              v-model="keyword"
+              placeholder="输入关键词, 如: 儿童科普 / 唐诗三百首"
+              style="width: 320px"
+              clearable
+              @keyup.enter.native="handleSearch"
+            />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" :loading="searching" @click="handleSearch">搜索
             </el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="success" icon="el-icon-plus" :loading="importing"
-                       :disabled="!selected.length || importing" @click="handleBatchImport()">
+            <el-button
+              type="success"
+              icon="el-icon-plus"
+              :loading="importing"
+              :disabled="!selected.length || importing"
+              @click="handleBatchImport()"
+            >
               批量入库({{ selected.length }})
             </el-button>
           </el-form-item>
@@ -53,15 +67,20 @@
         </el-form>
 
         <el-table v-loading="searching || importing" :data="searchList" @selection-change="onSelect">
-          <el-table-column type="selection" width="55" align="center" :selectable="rowSelectable"/>
+          <el-table-column type="selection" width="55" align="center" :selectable="rowSelectable" />
           <el-table-column label="封面" align="center" width="120">
             <template slot-scope="scope">
-              <el-image v-if="scope.row.cover" :src="scope.row.cover" fit="cover"
-                        style="width: 96px; height: 54px" :preview-src-list="[scope.row.cover]"/>
+              <el-image
+                v-if="scope.row.cover"
+                :src="scope.row.cover"
+                fit="cover"
+                style="width: 96px; height: 54px"
+                :preview-src-list="[scope.row.cover]"
+              />
             </template>
           </el-table-column>
-          <el-table-column label="标题" align="left" prop="title" :show-overflow-tooltip="true" min-width="240"/>
-          <el-table-column label="UP主" align="center" prop="up_name" width="140" :show-overflow-tooltip="true"/>
+          <el-table-column label="标题" align="left" prop="title" :show-overflow-tooltip="true" min-width="240" />
+          <el-table-column label="UP主" align="center" prop="up_name" width="140" :show-overflow-tooltip="true" />
           <el-table-column label="时长" align="center" width="100">
             <template slot-scope="scope">{{ formatDuration(scope.row.duration) }}</template>
           </el-table-column>
@@ -73,9 +92,13 @@
           </el-table-column>
           <el-table-column label="操作" align="center" width="120" fixed="right">
             <template slot-scope="scope">
-              <el-button size="mini" type="text" icon="el-icon-plus"
-                         :disabled="importing || (skipExisting && scope.row.imported)"
-                         @click="handleBatchImport([scope.row])">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-plus"
+                :disabled="importing || (skipExisting && scope.row.imported)"
+                @click="handleBatchImport([scope.row])"
+              >
                 入库
               </el-button>
               <el-button size="mini" type="text" icon="el-icon-link" @click="openSource(scope.row)">原片</el-button>
@@ -97,16 +120,24 @@
       <el-tab-pane label="粘贴链接" name="resolve">
         <el-form @submit.native.prevent>
           <el-form-item>
-            <el-input v-model="linkText" type="textarea" :rows="4"
-                      placeholder="每行一个链接或 BV 号, 例如:&#10;https://www.bilibili.com/video/BV1GJ411x7h7&#10;BV1GMaG6MELJ"></el-input>
+            <el-input
+              v-model="linkText"
+              type="textarea"
+              :rows="4"
+              placeholder="每行一个链接或 BV 号, 例如:&#10;https://www.bilibili.com/video/BV1GJ411x7h7&#10;BV1GMaG6MELJ"
+            />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-magic-stick" :loading="resolving" @click="handleResolve">
               解析链接
             </el-button>
-            <el-button type="success" icon="el-icon-plus" :loading="importing"
-                       :disabled="!resolvedSelected.length || importing"
-                       @click="handleBatchImport(resolvedSelected)">批量入库({{ resolvedSelected.length }})
+            <el-button
+              type="success"
+              icon="el-icon-plus"
+              :loading="importing"
+              :disabled="!resolvedSelected.length || importing"
+              @click="handleBatchImport(resolvedSelected)"
+            >批量入库({{ resolvedSelected.length }})
             </el-button>
           </el-form-item>
           <el-form-item>
@@ -115,15 +146,20 @@
         </el-form>
 
         <el-table v-loading="resolving || importing" :data="resolvedList" @selection-change="onResolvedSelect">
-          <el-table-column type="selection" width="55" align="center" :selectable="rowSelectable"/>
+          <el-table-column type="selection" width="55" align="center" :selectable="rowSelectable" />
           <el-table-column label="封面" align="center" width="120">
             <template slot-scope="scope">
-              <el-image v-if="scope.row.cover" :src="scope.row.cover" fit="cover"
-                        style="width: 96px; height: 54px" :preview-src-list="[scope.row.cover]"/>
+              <el-image
+                v-if="scope.row.cover"
+                :src="scope.row.cover"
+                fit="cover"
+                style="width: 96px; height: 54px"
+                :preview-src-list="[scope.row.cover]"
+              />
             </template>
           </el-table-column>
-          <el-table-column label="标题" align="left" prop="title" :show-overflow-tooltip="true" min-width="220"/>
-          <el-table-column label="UP主" align="center" prop="up_name" width="130"/>
+          <el-table-column label="标题" align="left" prop="title" :show-overflow-tooltip="true" min-width="220" />
+          <el-table-column label="UP主" align="center" prop="up_name" width="130" />
           <el-table-column label="集数" align="center" width="80">
             <template slot-scope="scope">{{ (scope.row.episodes || []).length }}</template>
           </el-table-column>
@@ -141,8 +177,14 @@
           </el-table-column>
           <el-table-column label="操作" align="center" width="120" fixed="right">
             <template slot-scope="scope">
-              <el-button v-if="!scope.row._error" size="mini" type="text" icon="el-icon-plus"
-                         :disabled="importing" @click="handleBatchImport([scope.row])">入库
+              <el-button
+                v-if="!scope.row._error"
+                size="mini"
+                type="text"
+                icon="el-icon-plus"
+                :disabled="importing"
+                @click="handleBatchImport([scope.row])"
+              >入库
               </el-button>
             </template>
           </el-table-column>
@@ -158,22 +200,27 @@
         已跳过 <b style="color: #e6a23c">{{ (result.skipped || []).length }}</b> 条,
         失败 <b style="color: #f56c6c">{{ (result.errors || []).length }}</b> 条
       </p>
-      <el-alert v-if="(result.skipped || []).length" type="warning" :closable="false" show-icon
-                :title="'本次有 ' + result.skipped.length + ' 条已在库中, 已自动跳过; 若需刷新其信息请先取消勾选「跳过已入库」'"
-                style="margin-bottom: 12px"/>
+      <el-alert
+        v-if="(result.skipped || []).length"
+        type="warning"
+        :closable="false"
+        show-icon
+        :title="'本次有 ' + result.skipped.length + ' 条已在库中, 已自动跳过; 若需刷新其信息请先取消勾选「跳过已入库」'"
+        style="margin-bottom: 12px"
+      />
       <el-table v-if="(result.errors || []).length" :data="result.errors" max-height="300">
-        <el-table-column label="标识" prop="media_id" width="180"/>
-        <el-table-column label="原因" prop="error" show-overflow-tooltip/>
+        <el-table-column label="标识" prop="media_id" width="180" />
+        <el-table-column label="原因" prop="error" show-overflow-tooltip />
       </el-table>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {listProviders} from '@/api/curated/providers'
-import {listCategories} from '@/api/curated/categories'
-import {batchImport} from '@/api/curated/media'
-import {searchMedia, resolveUrl} from '@/api/curated/import'
+import { listProviders } from '@/api/curated/providers'
+import { listCategories } from '@/api/curated/categories'
+import { batchImport } from '@/api/curated/media'
+import { searchMedia, resolveUrl } from '@/api/curated/import'
 
 export default {
   name: 'CuratedImport',
@@ -200,7 +247,7 @@ export default {
       resultOpen: false,
       importing: false,
       skipExisting: true,
-      result: {success: [], skipped: [], errors: [], created: 0, updated: 0}
+      result: { success: [], skipped: [], errors: [], created: 0, updated: 0 }
     }
   },
   computed: {
@@ -213,12 +260,12 @@ export default {
     }
   },
   created() {
-    listProviders({page: 1, page_size: 100}).then(res => {
+    listProviders({ page: 1, page_size: 100 }).then(res => {
       this.providers = (res.data.list || []).filter(p => p.status === 1)
       const enabled = this.providers.filter(p => p.config && p.config.cookie)
       this.providerCode = (enabled[0] || this.providers[0] || {}).code
     })
-    listCategories({page: 1, page_size: 200}).then(res => {
+    listCategories({ page: 1, page_size: 200 }).then(res => {
       this.categories = res.data.list || []
     })
   },
@@ -253,7 +300,7 @@ export default {
         page: this.searchPage,
         page_size: this.searchPageSize
       }).then(res => {
-        this.searchList = (res.data.list || []).map(it => Object.assign({}, it, {provider_code: this.providerCode}))
+        this.searchList = (res.data.list || []).map(it => Object.assign({}, it, { provider_code: this.providerCode }))
         this.searchTotal = res.data.total || 0
         this.searching = false
       }).catch(() => {
@@ -272,9 +319,9 @@ export default {
       if (!lines.length) return this.msgError('请粘贴至少一个链接')
       this.resolving = true
       this.resolvedList = []
-      const tasks = lines.map(url => resolveUrl({provider_code: this.providerCode, url: url})
-        .then(res => Object.assign({}, res.data, {provider_code: this.providerCode}))
-        .catch(err => ({_error: (err && err.message) || '解析失败', source_url: url})))
+      const tasks = lines.map(url => resolveUrl({ provider_code: this.providerCode, url: url })
+        .then(res => Object.assign({}, res.data, { provider_code: this.providerCode }))
+        .catch(err => ({ _error: (err && err.message) || '解析失败', source_url: url })))
       Promise.all(tasks).then(list => {
         this.resolvedList = list
         this.resolving = false
@@ -318,7 +365,7 @@ export default {
         items: items
       }).then(res => {
         const d = res.data || {}
-        this.result = Object.assign({success: [], skipped: [], errors: [], created: 0, updated: 0}, d)
+        this.result = Object.assign({ success: [], skipped: [], errors: [], created: 0, updated: 0 }, d)
         const parts = []
         if (this.result.created) parts.push('新增 ' + this.result.created + ' 条')
         if (this.result.updated) parts.push('更新 ' + this.result.updated + ' 条')

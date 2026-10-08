@@ -28,13 +28,13 @@
     <div style="text-align: center; margin-bottom: 5px; font-weight: bolder; font-size: 30px">支持&反馈</div>
     <el-row :gutter="32">
       <el-col :span="8">
-        <el-image :src="publicPath + 'alipay.jpg'" style="width: 100%"></el-image>
+        <el-image :src="publicPath + 'alipay.jpg'" style="width: 100%" />
       </el-col>
       <el-col :span="8">
-        <el-image :src="publicPath + 'wechatpay.jpg'" style="width: 100%"></el-image>
+        <el-image :src="publicPath + 'wechatpay.jpg'" style="width: 100%" />
       </el-col>
       <el-col :span="8">
-        <el-image :src="publicPath + 'qqqun.jpg'" style="width: 100%"></el-image>
+        <el-image :src="publicPath + 'qqqun.jpg'" style="width: 100%" />
       </el-col>
     </el-row>
   </div>
@@ -83,7 +83,7 @@ export default {
   },
   data() {
     return {
-       publicPath: process.env.BASE_URL,
+      publicPath: process.env.BASE_URL,
       lineChartData: lineChartData.newVisitis
     }
   },

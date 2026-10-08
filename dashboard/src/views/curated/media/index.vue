@@ -2,33 +2,63 @@
   <div class="app-container">
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="80px" @submit.native.prevent>
       <el-form-item label="站点" prop="provider_code">
-        <el-select v-model="queryParams.provider_code" placeholder="全部" clearable size="small"
-                   @change="handleQuery" style="width: 150px">
-          <el-option v-for="p in providers" :key="p.code" :label="p.name" :value="p.code"/>
+        <el-select
+          v-model="queryParams.provider_code"
+          placeholder="全部"
+          clearable
+          size="small"
+          style="width: 150px"
+          @change="handleQuery"
+        >
+          <el-option v-for="p in providers" :key="p.code" :label="p.name" :value="p.code" />
         </el-select>
       </el-form-item>
       <el-form-item label="分类" prop="category_id">
-        <el-select v-model="queryParams.category_id" placeholder="全部" clearable size="small"
-                   @change="handleQuery" style="width: 160px">
-          <el-option v-for="c in categories" :key="c.id" :label="c.name" :value="c.id"/>
+        <el-select
+          v-model="queryParams.category_id"
+          placeholder="全部"
+          clearable
+          size="small"
+          style="width: 160px"
+          @change="handleQuery"
+        >
+          <el-option v-for="c in categories" :key="c.id" :label="c.name" :value="c.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="审核" prop="status">
-        <el-select v-model="queryParams.status" placeholder="全部" clearable size="small"
-                   @change="handleQuery" style="width: 120px">
-          <el-option v-for="dict in statusOptions" :key="dict.value" :label="dict.label" :value="dict.value"/>
+        <el-select
+          v-model="queryParams.status"
+          placeholder="全部"
+          clearable
+          size="small"
+          style="width: 120px"
+          @change="handleQuery"
+        >
+          <el-option v-for="dict in statusOptions" :key="dict.value" :label="dict.label" :value="dict.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="可见" prop="visible">
-        <el-select v-model="queryParams.visible" placeholder="全部" clearable size="small"
-                   @change="handleQuery" style="width: 110px">
-          <el-option label="可见" :value="1"/>
-          <el-option label="隐藏" :value="0"/>
+        <el-select
+          v-model="queryParams.visible"
+          placeholder="全部"
+          clearable
+          size="small"
+          style="width: 110px"
+          @change="handleQuery"
+        >
+          <el-option label="可见" :value="1" />
+          <el-option label="隐藏" :value="0" />
         </el-select>
       </el-form-item>
       <el-form-item label="标题" prop="keyword">
-        <el-input v-model="queryParams.keyword" placeholder="标题关键字" clearable size="small"
-                  style="width: 180px" @keyup.enter.native="handleQuery"/>
+        <el-input
+          v-model="queryParams.keyword"
+          placeholder="标题关键字"
+          clearable
+          size="small"
+          style="width: 180px"
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -38,38 +68,79 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="success" icon="el-icon-check" size="mini" :disabled="!ids.length"
-                   v-has-permi="['curated:media:put']" @click="handleStatus(1)">通过
+        <el-button
+          v-has-permi="['curated:media:put']"
+          type="success"
+          icon="el-icon-check"
+          size="mini"
+          :disabled="!ids.length"
+          @click="handleStatus(1)"
+        >通过
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" icon="el-icon-close" size="mini" :disabled="!ids.length"
-                   v-has-permi="['curated:media:put']" @click="handleStatus(2)">拒绝
+        <el-button
+          v-has-permi="['curated:media:put']"
+          type="warning"
+          icon="el-icon-close"
+          size="mini"
+          :disabled="!ids.length"
+          @click="handleStatus(2)"
+        >拒绝
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-view" size="mini" :disabled="!ids.length"
-                   v-has-permi="['curated:media:put']" @click="handleVisible(1)">设为可见
+        <el-button
+          v-has-permi="['curated:media:put']"
+          type="primary"
+          icon="el-icon-view"
+          size="mini"
+          :disabled="!ids.length"
+          @click="handleVisible(1)"
+        >设为可见
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button icon="el-icon-view" size="mini" :disabled="!ids.length"
-                   v-has-permi="['curated:media:put']" @click="handleVisible(0)">设为隐藏
+        <el-button
+          v-has-permi="['curated:media:put']"
+          icon="el-icon-view"
+          size="mini"
+          :disabled="!ids.length"
+          @click="handleVisible(0)"
+        >设为隐藏
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="info" icon="el-icon-connection" size="mini" :disabled="!ids.length" :loading="checking"
-                   v-has-permi="['curated:media:get']" @click="handleCheck">校验
+        <el-button
+          v-has-permi="['curated:media:get']"
+          type="info"
+          icon="el-icon-connection"
+          size="mini"
+          :disabled="!ids.length"
+          :loading="checking"
+          @click="handleCheck"
+        >校验
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-mobile-phone" size="mini"
-                   v-has-permi="['curated:media:get']" @click="handleKidConfig">儿童配置
+        <el-button
+          v-has-permi="['curated:media:get']"
+          type="primary"
+          icon="el-icon-mobile-phone"
+          size="mini"
+          @click="handleKidConfig"
+        >儿童配置
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="!ids.length"
-                   v-hasRole="['admin','opts']" @click="handleRemove">删除
+        <el-button
+          v-hasRole="['admin','opts']"
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="!ids.length"
+          @click="handleRemove"
+        >删除
         </el-button>
       </el-col>
       <el-col :span="6" style="float: right">
@@ -78,17 +149,22 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="ID" align="center" prop="id" width="60"/>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="ID" align="center" prop="id" width="60" />
       <el-table-column label="封面" align="center" width="120">
         <template slot-scope="scope">
-          <el-image v-if="scope.row.cover" :src="scope.row.cover" fit="cover"
-                    style="width: 96px; height: 54px" :preview-src-list="[scope.row.cover]"/>
+          <el-image
+            v-if="scope.row.cover"
+            :src="scope.row.cover"
+            fit="cover"
+            style="width: 96px; height: 54px"
+            :preview-src-list="[scope.row.cover]"
+          />
           <span v-else>-</span>
         </template>
       </el-table-column>
-      <el-table-column label="标题" align="left" prop="title" :show-overflow-tooltip="true" min-width="220"/>
-      <el-table-column label="UP主" align="center" prop="up_name" width="130" :show-overflow-tooltip="true"/>
+      <el-table-column label="标题" align="left" prop="title" :show-overflow-tooltip="true" min-width="220" />
+      <el-table-column label="UP主" align="center" prop="up_name" width="130" :show-overflow-tooltip="true" />
       <el-table-column label="分类" align="center" width="110">
         <template slot-scope="scope">
           <span>{{ categoryName(scope.row.category_id) }}</span>
@@ -115,17 +191,37 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-connection"
-                     v-has-permi="['curated:media:get']" @click="handleCheckRow(scope.row)">校验
+          <el-button
+            v-has-permi="['curated:media:get']"
+            size="mini"
+            type="text"
+            icon="el-icon-connection"
+            @click="handleCheckRow(scope.row)"
+          >校验
           </el-button>
-          <el-button size="mini" type="text" icon="el-icon-video-play"
-                     v-has-permi="['curated:media:get']" @click="handleDetail(scope.row)">选集
+          <el-button
+            v-has-permi="['curated:media:get']"
+            size="mini"
+            type="text"
+            icon="el-icon-video-play"
+            @click="handleDetail(scope.row)"
+          >选集
           </el-button>
-          <el-button size="mini" type="text" icon="el-icon-edit"
-                     v-has-permi="['curated:media:put']" @click="handleUpdate(scope.row)">修改
+          <el-button
+            v-has-permi="['curated:media:put']"
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+          >修改
           </el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete"
-                     v-hasRole="['admin','opts']" @click="handleDelete(scope.row)">删除
+          <el-button
+            v-hasRole="['admin','opts']"
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+          >删除
           </el-button>
         </template>
       </el-table-column>
@@ -144,19 +240,19 @@
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" label-width="80px" @submit.native.prevent>
         <el-form-item label="标题">
-          <el-input v-model="form.title" placeholder="前台展示标题"/>
+          <el-input v-model="form.title" placeholder="前台展示标题" />
         </el-form-item>
         <el-row>
           <el-col :span="12">
             <el-form-item label="分类">
               <el-select v-model="form.category_id" placeholder="未分类" clearable style="width: 100%">
-                <el-option v-for="c in categories" :key="c.id" :label="c.name" :value="c.id"/>
+                <el-option v-for="c in categories" :key="c.id" :label="c.name" :value="c.id" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="排序">
-              <el-input-number v-model="form.order_num" :min="0" controls-position="right"/>
+              <el-input-number v-model="form.order_num" :min="0" controls-position="right" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -164,18 +260,18 @@
           <el-col :span="12">
             <el-form-item label="审核">
               <el-select v-model="form.status" style="width: 100%">
-                <el-option v-for="dict in statusOptions" :key="dict.value" :label="dict.label" :value="dict.value"/>
+                <el-option v-for="dict in statusOptions" :key="dict.value" :label="dict.label" :value="dict.value" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="可见">
-              <el-switch v-model="form.visible" :active-value="1" :inactive-value="0"/>
+              <el-switch v-model="form.visible" :active-value="1" :inactive-value="0" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item label="备注">
-          <el-input v-model="form.remark" placeholder="备注信息"/>
+          <el-input v-model="form.remark" placeholder="备注信息" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -190,8 +286,8 @@
         <p><b>{{ detail.title }}</b></p>
         <p style="color: #909399; font-size: 13px">来源: {{ detail.source_url }}</p>
         <el-table :data="detail.episodes || []" max-height="380">
-          <el-table-column label="#" type="index" width="60" align="center"/>
-          <el-table-column label="标题" prop="title" show-overflow-tooltip/>
+          <el-table-column label="#" type="index" width="60" align="center" />
+          <el-table-column label="标题" prop="title" show-overflow-tooltip />
           <el-table-column label="时长" align="center" width="100">
             <template slot-scope="scope">{{ formatDuration(scope.row.duration) }}</template>
           </el-table-column>
@@ -214,7 +310,7 @@
             </el-input>
           </el-form-item>
           <el-form-item label="TVBox(clan)">
-            <el-input :value="kid.tvbox_url" readonly/>
+            <el-input :value="kid.tvbox_url" readonly />
           </el-form-item>
         </el-form>
         <p style="color:#909399;font-size:12px">{{ kid.tips }}</p>
@@ -224,9 +320,9 @@
 </template>
 
 <script>
-import {listMedia, getMedia, setMedia, delMedia, batchStatus, batchVisible, batchRemove, checkMedia, kidConfig} from '@/api/curated/media'
-import {listProviders} from '@/api/curated/providers'
-import {listCategories} from '@/api/curated/categories'
+import { listMedia, getMedia, setMedia, delMedia, batchStatus, batchVisible, batchRemove, checkMedia, kidConfig } from '@/api/curated/media'
+import { listProviders } from '@/api/curated/providers'
+import { listCategories } from '@/api/curated/categories'
 
 export default {
   name: 'CuratedMedia',
@@ -248,9 +344,9 @@ export default {
       kidLoading: false,
       kid: {},
       statusOptions: [
-        {label: '待审核', value: 0},
-        {label: '已通过', value: 1},
-        {label: '已拒绝', value: 2}
+        { label: '待审核', value: 0 },
+        { label: '已通过', value: 1 },
+        { label: '已拒绝', value: 2 }
       ],
       queryParams: {
         page: 1,
@@ -266,10 +362,10 @@ export default {
   },
   created() {
     this.getList()
-    listProviders({page: 1, page_size: 100}).then(res => {
+    listProviders({ page: 1, page_size: 100 }).then(res => {
       this.providers = res.data.list || []
     })
-    listCategories({page: 1, page_size: 200}).then(res => {
+    listCategories({ page: 1, page_size: 200 }).then(res => {
       this.categories = res.data.list || []
     })
   },
@@ -293,7 +389,7 @@ export default {
       return d ? d.label : s
     },
     statusTagType(s) {
-      return {0: 'info', 1: 'success', 2: 'danger'}[s] || 'info'
+      return { 0: 'info', 1: 'success', 2: 'danger' }[s] || 'info'
     },
     formatDuration(sec) {
       sec = parseInt(sec || 0)
@@ -392,7 +488,7 @@ export default {
       })
     },
     handleCheckRow(row) {
-      const loading = this.$loading({lock: true, text: '校验中...'})
+      const loading = this.$loading({ lock: true, text: '校验中...' })
       checkMedia([row.id]).then(res => {
         loading.close()
         const r = (res.data.results || [])[0] || {}
@@ -407,7 +503,7 @@ export default {
     handleKidConfig() {
       this.kidOpen = true
       this.kidLoading = true
-      kidConfig({mode: 0, ensure: true}).then(res => {
+      kidConfig({ mode: 0, ensure: true }).then(res => {
         this.kidLoading = false
         this.kid = res.data || {}
       }).catch(() => {

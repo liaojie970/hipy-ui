@@ -50,7 +50,7 @@ export function setOrderNum(id, order_num) {
   return request({
     url: api_url + '/' + id + '/order_num',
     method: 'put',
-    data: {order_num: order_num}
+    data: { order_num: order_num }
   })
 }
 
@@ -59,7 +59,7 @@ export function saveRecordContent(id, content) {
   return request({
     url: api_url + '/raw/' + id,
     method: 'put',
-    data: {content: content}
+    data: { content: content }
   })
 }
 
@@ -68,11 +68,11 @@ export function refreshRules() {
   return request({
     url: api_url + '/refresh',
     method: 'post',
-    timeout: 60*1000
+    timeout: 60 * 1000
   })
 }
 
-//上传源
+// 上传源
 export async function uploadRules(formData, query) {
   return request({
     url: api_url + '/file/uploadData',
@@ -84,11 +84,11 @@ export async function uploadRules(formData, query) {
 
 // 删除源
 export function delRecord(id, query) {
-  query = query || {};
+  query = query || {}
   return request({
     url: api_url + '/' + id,
     method: 'delete',
-    params: query,
+    params: query
   })
 }
 
@@ -97,10 +97,9 @@ export function changeActive(id, active) {
   return request({
     url: api_url + '/' + id + '/active',
     method: 'put',
-    data: {'active': active}
+    data: { 'active': active }
   })
 }
-
 
 // 清空源
 export function clearRecord() {

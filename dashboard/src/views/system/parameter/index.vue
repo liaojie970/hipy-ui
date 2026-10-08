@@ -45,20 +45,20 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:config-setting:post']"
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          v-hasPermi="['system:config-setting:post']"
           @click="handleAdd"
         >新增
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:config-setting:put']"
           type="success"
           icon="el-icon-edit"
           size="mini"
-          v-hasPermi="['system:config-setting:put']"
           :disabled="single"
           @click="handleUpdate"
         >修改
@@ -66,10 +66,10 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasRole="['admin','opts']"
           type="danger"
           icon="el-icon-delete"
           size="mini"
-          v-hasRole="['admin','opts']"
           :disabled="multiple"
           @click="handleDelete"
         >删除
@@ -78,14 +78,14 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="编号" align="center" prop="id" width="55"/>
-      <el-table-column label="参数名称" align="center" prop="name" :show-overflow-tooltip="true"/>
-      <el-table-column label="参数键" align="center" prop="key" :show-overflow-tooltip="true"/>
-      <el-table-column label="参数值" align="center" prop="value" :show-overflow-tooltip="true"/>
-      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
-      <el-table-column label="排序" align="center" prop="order_num" :show-overflow-tooltip="true" width="55"/>
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" :show-overflow-tooltip="true"/>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="编号" align="center" prop="id" width="55" />
+      <el-table-column label="参数名称" align="center" prop="name" :show-overflow-tooltip="true" />
+      <el-table-column label="参数键" align="center" prop="key" :show-overflow-tooltip="true" />
+      <el-table-column label="参数值" align="center" prop="value" :show-overflow-tooltip="true" />
+      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
+      <el-table-column label="排序" align="center" prop="order_num" :show-overflow-tooltip="true" width="55" />
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" align="center" prop="created_ts">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.created_ts) }}</span>
@@ -99,18 +99,18 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-hasPermi="['system:config-setting:put']"
             size="mini"
             type="text"
             icon="el-icon-edit"
-            v-hasPermi="['system:config-setting:put']"
             @click="handleUpdate(scope.row)"
           >修改
           </el-button>
           <el-button
+            v-hasRole="['admin','opts']"
             size="mini"
             type="text"
             icon="el-icon-delete"
-            v-hasRole="['admin','opts']"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>
@@ -130,18 +130,18 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="参数名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入参数名称"/>
+          <el-input v-model="form.name" placeholder="请输入参数名称" />
         </el-form-item>
         <el-form-item label="参数键" prop="key">
-          <el-input v-model="form.key" placeholder="请输入参数键"/>
+          <el-input v-model="form.key" placeholder="请输入参数键" />
         </el-form-item>
         <el-form-item label="参数值" prop="value">
-          <el-input v-model="form.value" placeholder="请输入常数值"/>
+          <el-input v-model="form.value" placeholder="请输入常数值" />
         </el-form-item>
         <el-row>
           <el-col :span="12">
             <el-form-item label="显示排序" prop="order_num">
-              <el-input-number v-model="form.order_num" controls-position="right" :min="0" style="width: 100%"/>
+              <el-input-number v-model="form.order_num" controls-position="right" :min="0" style="width: 100%" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -158,7 +158,7 @@
           </el-col>
         </el-row>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -170,7 +170,7 @@
 </template>
 
 <script>
-import {getDicts} from '@/api/system/dict/data'
+import { getDicts } from '@/api/system/dict/data'
 import {
   listConfigSettings,
   getConfigSettingMaxOrderNum,
@@ -178,7 +178,7 @@ import {
   setConfigSetting,
   addConfigSetting,
   delConfigSetting
-} from "@/api/system/parameter";
+} from '@/api/system/parameter'
 
 export default {
   name: 'Parameter',
@@ -214,21 +214,21 @@ export default {
       // 表单校验
       rules: {
         name: [
-          {required: true, message: '参数名称不能为空', trigger: 'blur'}
+          { required: true, message: '参数名称不能为空', trigger: 'blur' }
         ],
         key: [
-          {required: true, message: '参数键不能为空', trigger: 'blur'}
+          { required: true, message: '参数键不能为空', trigger: 'blur' }
         ],
         value: [
-          {required: true, message: '参数值不能为空', trigger: 'blur'}
-        ],
+          { required: true, message: '参数值不能为空', trigger: 'blur' }
+        ]
       }
     }
   },
   created() {
     this.getList()
-    getDicts("com_default_status").then(response => {
-      this.statusOptions = response.data.details;
+    getDicts('com_default_status').then(response => {
+      this.statusOptions = response.data.details
     })
   },
   methods: {
@@ -236,15 +236,15 @@ export default {
     getList() {
       this.loading = true
       listConfigSettings(this.queryParams).then(response => {
-          this.list = response.data.data
-          this.total = response.data.total
-          this.loading = false
-        }
+        this.list = response.data.data
+        this.total = response.data.total
+        this.loading = false
+      }
       )
     },
     // 字典状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {
@@ -305,7 +305,7 @@ export default {
       })
     },
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       if (this.submitLoading) return
       this.$refs['form'].validate(valid => {
         if (valid) {
@@ -313,21 +313,21 @@ export default {
           if (this.form.id !== undefined) {
             setConfigSetting(this.form.id, this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("修改成功")
+                this.msgSuccess('修改成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("修改失败," + response.msg)
+                this.msgError('修改失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           } else {
             addConfigSetting(this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("添加成功")
+                this.msgSuccess('添加成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("添加失败," + response.msg)
+                this.msgError('添加失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           }
@@ -341,12 +341,12 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function () {
+      }).then(function() {
         return delConfigSetting(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function () {
+      }).catch(function() {
       })
     }
   }

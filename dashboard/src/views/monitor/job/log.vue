@@ -105,24 +105,28 @@
     </el-row>
 
     <el-table v-loading="loading" :data="jobLogList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="日志编号" width="80" align="center" prop="id"/>
-      <el-table-column label="任务代号" align="center" prop="job_id" :show-overflow-tooltip="true"/>
-      <el-table-column label="任务名称" align="center" prop="job_name" :show-overflow-tooltip="true"/>
-      <el-table-column label="任务组名" align="center" prop="job_group" :show-overflow-tooltip="true"
-                       :formatter="groupFormat"/>
-      <el-table-column label="调用目标字符串" align="center" prop="func_name" :show-overflow-tooltip="true"/>
-      <el-table-column label="传入位置参数" align="center" prop="func_args" :show-overflow-tooltip="true"/>
-      <el-table-column label="传入字典参数" align="center" prop="func_kwargs" :show-overflow-tooltip="true"/>
-      <el-table-column label="日志信息" align="center" prop="run_info" :show-overflow-tooltip="true"/>
-      <el-table-column label="执行状态" align="center" prop="run_status" :formatter="statusFormat"/>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="日志编号" width="80" align="center" prop="id" />
+      <el-table-column label="任务代号" align="center" prop="job_id" :show-overflow-tooltip="true" />
+      <el-table-column label="任务名称" align="center" prop="job_name" :show-overflow-tooltip="true" />
+      <el-table-column
+        label="任务组名"
+        align="center"
+        prop="job_group"
+        :show-overflow-tooltip="true"
+        :formatter="groupFormat"
+      />
+      <el-table-column label="调用目标字符串" align="center" prop="func_name" :show-overflow-tooltip="true" />
+      <el-table-column label="传入位置参数" align="center" prop="func_args" :show-overflow-tooltip="true" />
+      <el-table-column label="传入字典参数" align="center" prop="func_kwargs" :show-overflow-tooltip="true" />
+      <el-table-column label="日志信息" align="center" prop="run_info" :show-overflow-tooltip="true" />
+      <el-table-column label="执行状态" align="center" prop="run_status" :formatter="statusFormat" />
       <el-table-column label="创建时间" align="center" prop="created_ts" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.created_ts) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="执行时间" align="center" prop="run_time" width="180">
-      </el-table-column>
+      <el-table-column label="执行时间" align="center" prop="run_time" width="180" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -182,10 +186,10 @@
 </template>
 
 <script>
-import {getJob} from '@/api/monitor/job'
-import {listJobLog, delJobLog, cleanJobLog} from '@/api/monitor/jobLog'
-import {getDicts} from '@/api/system/dict/data'
-import {parseTime} from "@/utils";
+import { getJob } from '@/api/monitor/job'
+import { listJobLog, delJobLog, cleanJobLog } from '@/api/monitor/jobLog'
+import { getDicts } from '@/api/system/dict/data'
+import { parseTime } from '@/utils'
 
 export default {
   name: 'JobLog',
@@ -243,10 +247,10 @@ export default {
     getList() {
       this.loading = true
       listJobLog(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.jobLogList = response.data.results
-          this.total = response.data.total
-          this.loading = false
-        }
+        this.jobLogList = response.data.results
+        this.total = response.data.total
+        this.loading = false
+      }
       )
 
       getDicts('sys_job_run_status').then(response => {
@@ -259,16 +263,16 @@ export default {
     },
     // 返回按钮
     handleClose() {
-      const obj = {path: '/monitor/job'}
+      const obj = { path: '/monitor/job' }
       this.$tab.closeOpenPage(obj)
     },
     // 字典状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.run_status);
+      return this.selectDictLabel(this.statusOptions, row.run_status)
     },
     // 分组状态字典翻译
     groupFormat(row, column) {
-      return this.selectDictLabel(this.groupOptions, row.job_group);
+      return this.selectDictLabel(this.groupOptions, row.job_group)
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -294,7 +298,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const jobLogIds = this.ids
-      this.$modal.confirm('是否确认删除调度日志编号为"' + jobLogIds + '"的数据项？').then(function () {
+      this.$modal.confirm('是否确认删除调度日志编号为"' + jobLogIds + '"的数据项？').then(function() {
         return delJobLog(jobLogIds)
       }).then(() => {
         this.getList()
@@ -304,7 +308,7 @@ export default {
     },
     /** 清空按钮操作 */
     handleClean() {
-      this.$modal.confirm('是否确认清空所有调度日志数据项？').then(function () {
+      this.$modal.confirm('是否确认清空所有调度日志数据项？').then(function() {
         return cleanJobLog()
       }).then(() => {
         this.getList()
@@ -315,7 +319,7 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       this.download('monitor_job_log', {
-        ...this.queryParams, ...{template: '0'}
+        ...this.queryParams, ...{ template: '0' }
       }, `定时任务调度日志_${parseTime(new Date().getTime())}.xlsx`)
     }
 

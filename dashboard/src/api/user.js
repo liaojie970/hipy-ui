@@ -22,7 +22,6 @@ export function logout() {
   })
 }
 
-
 export function register(data) {
   return request({
     url: '/user/register',
@@ -30,7 +29,6 @@ export function register(data) {
     data: data
   })
 }
-
 
 export function verifyRegister(code) {
   return request({
@@ -46,7 +44,6 @@ export function confirmRegister(code) {
   })
 }
 
-
 export function forgetPassword(data) {
   return request({
     url: '/user/forget-password',
@@ -54,7 +51,6 @@ export function forgetPassword(data) {
     data: data
   })
 }
-
 
 export function verifyForgetPwd(code) {
   return request({
@@ -71,45 +67,40 @@ export function confirmForgetPwd(code, data) {
   })
 }
 
-
-export function getRouters(){
+export function getRouters() {
   return request({
-    url: "/user/routers",
-    method: "get"
+    url: '/user/routers',
+    method: 'get'
   })
 }
 
-
-export function changeAvatar(data){
+export function changeAvatar(data) {
   return request({
-    url: "/user/avatar",
+    url: '/user/avatar',
     method: 'post',
     data: data
   })
 }
 
-
-export function changeInfo(data){
+export function changeInfo(data) {
   return request({
-    url: "/user/info",
+    url: '/user/info',
     method: 'put',
     data: data
   })
 }
-
 
 export function changePwd(data) {
   return request({
-    url: "/user/password",
+    url: '/user/password',
     method: 'put',
     data: data
   })
 }
 
-
 export function getCaptchaCode() {
   return request({
-    url: "/user/captcha-code",
-    method: "get"
+    url: '/user/captcha-code',
+    method: 'get'
   })
 }

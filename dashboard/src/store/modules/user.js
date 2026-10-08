@@ -14,7 +14,7 @@ const state = {
   email: '',
   roles: [],
   roles_name: [],
-  permissions: [],
+  permissions: []
 }
 
 const mutations = {
@@ -50,15 +50,15 @@ const mutations = {
   },
   SET_PERMISSIONS: (state, permissions) => {
     state.permissions = permissions
-  },
+  }
 }
 
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { user, password, key, code} = userInfo
+    const { user, password, key, code } = userInfo
     return new Promise((resolve, reject) => {
-      let params = {
+      const params = {
         user: user,
         password: md5(password),
         key: key,
@@ -98,7 +98,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles,roles_name, permissions, nickname, avatar, username, email, phone, sex } = data
+        const { roles, roles_name, permissions, nickname, avatar, username, email, phone, sex } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {

@@ -16,22 +16,22 @@ import Menu from '@/views/vod/web/components/menu.vue'
 
 import {
   HomeApi, ConfigApi, now_site
-} from "@/api/vod/web";
+} from '@/api/vod/web'
 
-import cache from "@/plugins/cache"
+import cache from '@/plugins/cache'
 
 export default {
   name: 'VodWeb',
-  components: {Header, Footer, Menu},
+  components: { Header, Footer, Menu },
   data() {
     return {
       category: []
     }
   },
   created() {
-    this.getConfig();
+    this.getConfig()
     // this.getData();
-    console.log('filters:', this.getItem('filters'));
+    console.log('filters:', this.getItem('filters'))
   },
   methods: {
     goHome() {
@@ -40,31 +40,31 @@ export default {
         this.$router.push({
           path: '/vod/web/category',
           query: {}
-        });
+        })
       }
     },
     getData() {
       HomeApi().then((resp) => {
-        this.category = resp.class;
-        //this.setItem('class', resp.class);
-        this.setItem('filters', resp.filters||{});
-        this.setItem('recommend', resp.list);
-        this.goHome();
+        this.category = resp.class
+        // this.setItem('class', resp.class);
+        this.setItem('filters', resp.filters || {})
+        this.setItem('recommend', resp.list)
+        this.goHome()
       })
     },
     getConfig() {
       ConfigApi().then((resp) => {
-        let config = resp;
+        const config = resp
         console.log('config:', config)
         if (config.sites) {
           console.log('get config cost:', config.cost_time)
-          let hipy_sites = config.sites.filter(it => it.key.startsWith('hipy_py')||it.key.startsWith('hipy_js'))
+          const hipy_sites = config.sites.filter(it => it.key.startsWith('hipy_py') || it.key.startsWith('hipy_js'))
           console.log('hipy_sites from config:', hipy_sites)
-          this.setItem('hipy_sites', hipy_sites);
-          let cacheSite = cache.local.getJSON('hipy_site');
-          if (!cacheSite && hipy_sites.length > 0) {//设置首页源
+          this.setItem('hipy_sites', hipy_sites)
+          let cacheSite = cache.local.getJSON('hipy_site')
+          if (!cacheSite && hipy_sites.length > 0) { // 设置首页源
             cacheSite = hipy_sites[0]
-            cache.local.setJSON('hipy_site', cacheSite);
+            cache.local.setJSON('hipy_site', cacheSite)
             now_site.api_url = cacheSite.api
             now_site.extend = cacheSite.ext
             console.log('now_site:', now_site)
@@ -75,14 +75,14 @@ export default {
       })
     },
     setItem(key, value) {
-      let new_value = {};
-      new_value[key] = value;
-      Object.assign(this.$store.state.vod, new_value);
+      const new_value = {}
+      new_value[key] = value
+      Object.assign(this.$store.state.vod, new_value)
     },
     getItem(key, value) {
-      return this.$store.state.vod[key] || value;
+      return this.$store.state.vod[key] || value
     }
-  },
+  }
 }
 
 </script>

@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" @submit.native.prevent>
       <el-form-item prop="user">
         <el-input v-model="loginForm.user" type="text" auto-complete="off" placeholder="用户名/邮箱">
-          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
@@ -15,17 +15,17 @@
           show-password
           @keyup.enter.native="handleLogin"
         >
-          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
+          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
-      <el-form-item prop="code" v-if="login_with_captcha">
+      <el-form-item v-if="login_with_captcha" prop="code">
         <el-input
           v-model="loginForm.code"
           auto-complete="off"
           placeholder="验证码"
           style="width: 63%"
         >
-          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
+          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
         </el-input>
         <div class="login-code">
           <img :src="codeImg" class="login-code-img" @click="getCode">
@@ -55,10 +55,10 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
-import { decrypt, encrypt } from "@/utils/jsencrypt";
+import Cookies from 'js-cookie'
+import { decrypt, encrypt } from '@/utils/jsencrypt'
 import UserLayout from '../layout'
-import {getParameter} from '@/api/system/parameter'
+import { getParameter } from '@/api/system/parameter'
 import { getCaptchaCode } from '@/api/user'
 
 export default {
@@ -66,7 +66,7 @@ export default {
   components: { UserLayout },
   data() {
     const validatePassword = (rule, value, callback) => {
-      if (value == ''){
+      if (value == '') {
         callback(new Error('请输入密码'))
       } else if (value.length < 5) {
         callback(new Error('密码长度不小于5位'))
@@ -79,95 +79,93 @@ export default {
         user: '',
         password: '',
         code: '',
-        key: '',
+        key: ''
       },
       rememberMe: false,
       loginRules: {
-        user: [{ required: true, trigger: 'blur', message: "请输入用户名/邮箱" }],
+        user: [{ required: true, trigger: 'blur', message: '请输入用户名/邮箱' }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-        code: [{required: true, message: '请输入验证码', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
       },
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
-      codeImg: "",
+      codeImg: '',
       allQuery: {},
       otherQuery: {},
-      login_with_captcha:false,
+      login_with_captcha: false
     }
   },
   watch: {
     $route: {
       handler: function(route) {
-        const query = route.query;
-        this.allQuery = query;
+        const query = route.query
+        this.allQuery = query
         if (query) {
-          this.redirect = query.redirect;
-          this.otherQuery = this.getOtherQuery(query);
+          this.redirect = query.redirect
+          this.otherQuery = this.getOtherQuery(query)
         }
       },
       immediate: true
     }
   },
   created() {
-    this.getCode();
+    this.getCode()
     this.getCookie()
   },
   methods: {
     getCode() {
       getParameter('login_with_captcha').then(response => {
-        let data = response.data;
-        console.log(data);
-        if (data.value==='yes') {
-          this.login_with_captcha = true;
-          getCaptchaCode().then( res => {
+        const data = response.data
+        console.log(data)
+        if (data.value === 'yes') {
+          this.login_with_captcha = true
+          getCaptchaCode().then(res => {
             if (res.code === 0) {
-              this.codeImg = res.data.img;
-              this.loginForm.key = res.data.key;
+              this.codeImg = res.data.img
+              this.loginForm.key = res.data.key
             }
           })
-
         }
-      });
-
+      })
     },
     getCookie() {
-      const username = Cookies.get("username");
-      const password = Cookies.get("password");
-      const rememberMe = Cookies.get("rememberMe");
+      const username = Cookies.get('username')
+      const password = Cookies.get('password')
+      const rememberMe = Cookies.get('rememberMe')
       this.loginForm = {
         username: username === undefined ? this.loginForm.user : username,
         password: password === undefined ? this.loginForm.password : decrypt(password),
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
-      };
+      }
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-           if (this.rememberMe) {
-            Cookies.set("username", this.loginForm.user, { expires: 30 });
-            Cookies.set("password", encrypt(this.loginForm.password), { expires: 30 });
-            Cookies.set("rememberMe", this.rememberMe, { expires: 30 });
+          if (this.rememberMe) {
+            Cookies.set('username', this.loginForm.user, { expires: 30 })
+            Cookies.set('password', encrypt(this.loginForm.password), { expires: 30 })
+            Cookies.set('rememberMe', this.rememberMe, { expires: 30 })
           } else {
-            Cookies.remove("username");
-            Cookies.remove("password");
-            Cookies.remove("rememberMe");
+            Cookies.remove('username')
+            Cookies.remove('password')
+            Cookies.remove('rememberMe')
           }
           console.log(this.loginForm)
           this.$store.dispatch('user/login', this.loginForm).then(res => {
-              console.log(res);
-              if (res.code === 0) {
-                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              } else {
-                this.getCode();
-              }
-              this.loading = false
-            })
+            console.log(res)
+            if (res.code === 0) {
+              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+            } else {
+              this.getCode()
+            }
+            this.loading = false
+          })
             .catch(() => {
-              this.getCode();
+              this.getCode()
               this.loading = false
             })
         } else {
@@ -189,7 +187,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 
 .login-form {
   border-radius: 6px;

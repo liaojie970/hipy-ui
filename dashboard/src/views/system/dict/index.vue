@@ -45,20 +45,20 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:dict:post']"
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          v-hasPermi="['system:dict:post']"
           @click="handleAdd"
         >新增
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:dict:put']"
           type="success"
           icon="el-icon-edit"
           size="mini"
-          v-hasPermi="['system:dict:put']"
           :disabled="single"
           @click="handleUpdate"
         >修改
@@ -66,10 +66,10 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasRole="['admin','opts']"
           type="danger"
           icon="el-icon-delete"
           size="mini"
-          v-hasRole="['admin','opts']"
           :disabled="multiple"
           @click="handleDelete"
         >删除
@@ -79,7 +79,7 @@
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" width="55"/>
+      <el-table-column label="编号" align="center" prop="id" width="55" />
       <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <router-link :to="'/system/dict/detail/' + scope.row.id" class="link-type">
@@ -87,35 +87,35 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="字典名称" align="center" prop="dict_name" :show-overflow-tooltip="true"/>
-      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
-      <el-table-column label="排序" align="center" prop="order_num" :show-overflow-tooltip="true" width="55"/>
+      <el-table-column label="字典名称" align="center" prop="dict_name" :show-overflow-tooltip="true" />
+      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
+      <el-table-column label="排序" align="center" prop="order_num" :show-overflow-tooltip="true" width="55" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="创建时间" align="center" prop="created_ts" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.created_ts) }}</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-hasPermi="['system:dict:put']"
             size="mini"
             type="text"
             icon="el-icon-edit"
-            v-hasPermi="['system:dict:put']"
             @click="handleUpdate(scope.row)"
           >修改
           </el-button>
           <el-button
+            v-hasRole="['admin','opts']"
             size="mini"
             type="text"
             icon="el-icon-delete"
-            v-hasRole="['admin','opts']"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>
@@ -143,7 +143,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="显示排序" prop="order_num">
-              <el-input-number v-model="form.order_num" controls-position="right" :min="0" style="width: 100%"/>
+              <el-input-number v-model="form.order_num" controls-position="right" :min="0" style="width: 100%" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -172,7 +172,7 @@
 </template>
 
 <script>
-import {getDictData, setDictData, listDictData, addDictData, delDictData, getDictDataMaxOrderNum, getDicts} from '@/api/system/dict/data'
+import { getDictData, setDictData, listDictData, addDictData, delDictData, getDictDataMaxOrderNum, getDicts } from '@/api/system/dict/data'
 
 export default {
   name: 'DictType',
@@ -217,9 +217,9 @@ export default {
     }
   },
   created() {
-    this.getList();
-    getDicts("com_default_status").then(response => {
-      this.statusOptions = response.data.details;
+    this.getList()
+    getDicts('com_default_status').then(response => {
+      this.statusOptions = response.data.details
     })
   },
   methods: {
@@ -234,7 +234,7 @@ export default {
     },
     // 字典状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {
@@ -301,21 +301,21 @@ export default {
           if (this.form.id !== undefined) {
             setDictData(this.form.id, this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("修改成功")
+                this.msgSuccess('修改成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("修改失败," + response.msg)
+                this.msgError('修改失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           } else {
             addDictData(this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("添加成功")
+                this.msgSuccess('添加成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("添加失败," + response.msg)
+                this.msgError('添加失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           }

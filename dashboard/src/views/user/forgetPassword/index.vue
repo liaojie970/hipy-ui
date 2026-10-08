@@ -40,28 +40,28 @@
 
 <script>
 import UserLayout from '../layout'
-import {forgetPassword, getCaptchaCode, register} from "@/api/user";
+import { forgetPassword, getCaptchaCode, register } from '@/api/user'
 
 export default {
-  name: "ForgetPassword",
-  components: {UserLayout},
+  name: 'ForgetPassword',
+  components: { UserLayout },
   data() {
     return {
-      cookiePassword: "",
+      cookiePassword: '',
       forgetForm: {
-        email: "",
-        password: "",
-        code: "",
-        key: ""
+        email: '',
+        password: '',
+        code: '',
+        key: ''
       },
       forgetRules: {
         email: [
-          { required: true, trigger: "blur", message: "邮箱不能为空" },
-          { type: "email", trigger: "blur", message: "请输入正确的邮箱地址"},
+          { required: true, trigger: 'blur', message: '邮箱不能为空' },
+          { type: 'email', trigger: 'blur', message: '请输入正确的邮箱地址' }
         ],
-        code: [{ required: true, trigger: "change", message: "验证码不能为空" }]
+        code: [{ required: true, trigger: 'change', message: '验证码不能为空' }]
       },
-      codeImg: "",
+      codeImg: '',
       allQuery: {},
       otherQuery: {},
       loading: false,
@@ -71,11 +71,11 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
-        const query = route.query;
-        this.allQuery = query;
+        const query = route.query
+        this.allQuery = query
         if (query) {
-          this.redirect = query.redirect;
-          this.otherQuery = this.getOtherQuery(query);
+          this.redirect = query.redirect
+          this.otherQuery = this.getOtherQuery(query)
         }
       },
       immediate: true
@@ -86,35 +86,35 @@ export default {
   },
   methods: {
     getCode() {
-      getCaptchaCode().then( res => {
+      getCaptchaCode().then(res => {
         if (res.code === 0) {
-          this.codeImg = res.data.img;
-          this.forgetForm.key = res.data.key;
+          this.codeImg = res.data.img
+          this.forgetForm.key = res.data.key
         }
       })
     },
     handleForget() {
       this.$refs.forgetForm.validate(valid => {
         if (valid) {
-          this.loading = true;
+          this.loading = true
           forgetPassword(this.forgetForm).then(res => {
-            if(res.code === 0){
+            if (res.code === 0) {
               this.$notify.success({
-              title: '提交成功',
-              duration: 3000,
-              showClose: true,
-              message: '提交成功，请注意查收验证邮箱，打开邮件中的链接重置密码。',
-              onClose: () => {
-                this.$router.push({ path: this.redirect || "/login" });
-              }
-            })
+                title: '提交成功',
+                duration: 3000,
+                showClose: true,
+                message: '提交成功，请注意查收验证邮箱，打开邮件中的链接重置密码。',
+                onClose: () => {
+                  this.$router.push({ path: this.redirect || '/login' })
+                }
+              })
             }
           }).catch(() => {
-            this.loading = false;
-            this.getCode();
-          });
+            this.loading = false
+            this.getCode()
+          })
         }
-      });
+      })
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {

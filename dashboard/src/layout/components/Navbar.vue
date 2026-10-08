@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       fileBase: process.env.VUE_APP_MEDIA_BASE,
-      defaultAvatar: "images/avatar/default/avatar.jpg",
+      defaultAvatar: 'images/avatar/default/avatar.jpg'
     }
   },
   computed: {

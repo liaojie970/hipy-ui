@@ -160,6 +160,23 @@ export function param(json) {
 }
 
 /**
+ * 清理查询参数: 剔除空串/undefined/null, 保留 0/false 等有效值。
+ * 用于 el-select 清空时会 emit '' 导致后端 int 参数校验失败(400)的场景。
+ * @param {Object} query
+ * @returns {Object}
+ */
+export function cleanQuery(query) {
+  const result = {}
+  Object.keys(query || {}).forEach(key => {
+    const val = query[key]
+    if (val !== undefined && val !== null && val !== '') {
+      result[key] = val
+    }
+  })
+  return result
+}
+
+/**
  * @param {string} url
  * @returns {Object}
  */
@@ -256,7 +273,7 @@ export function getTime(type) {
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
-  const later = function () {
+  const later = function() {
     // 据上一次触发时间间隔
     const last = +new Date() - timestamp
 
@@ -273,7 +290,7 @@ export function debounce(func, wait, immediate) {
     }
   }
 
-  return function (...args) {
+  return function(...args) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
@@ -428,29 +445,29 @@ export function isNumberStr(str) {
 
 export function getFormatTime(dateTime, flag) {
   if (dateTime != null) {
-    //若传入的dateTime为字符串类型，需要进行转换成数值，若不是无需下面注释代码
+    // 若传入的dateTime为字符串类型，需要进行转换成数值，若不是无需下面注释代码
     var time = parseInt(String(dateTime * 1000))
-    var date = new Date(time);
-    //获取年份
-    var YY = date.getFullYear();
-    //获取月份
-    var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
-    //获取日期
-    var DD = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate());
-    if (flag) { //flag为true，显示时分秒格式
-      //获取小时
-      var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours());
-      //获取分
-      var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
-      ///获取秒
-      var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
-      //返回时间格式： 2020-11-09 13:14:52
-      return YY + '-' + MM + '-' + DD + ' ' + hh + ':' + mm + ':' + ss;
+    var date = new Date(time)
+    // 获取年份
+    var YY = date.getFullYear()
+    // 获取月份
+    var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1)
+    // 获取日期
+    var DD = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
+    if (flag) { // flag为true，显示时分秒格式
+      // 获取小时
+      var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours())
+      // 获取分
+      var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
+      // /获取秒
+      var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
+      // 返回时间格式： 2020-11-09 13:14:52
+      return YY + '-' + MM + '-' + DD + ' ' + hh + ':' + mm + ':' + ss
     } else {
-      //返回时间格式： 2020-11-09
-      return YY + '-' + MM + '-' + DD;
+      // 返回时间格式： 2020-11-09
+      return YY + '-' + MM + '-' + DD
     }
   } else {
-    return "";
+    return ''
   }
 }

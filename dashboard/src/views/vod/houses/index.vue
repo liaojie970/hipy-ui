@@ -35,20 +35,20 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-hasRole="['admin','opts']"
           type="success"
           icon="el-icon-refresh"
           size="mini"
-          v-hasRole="['admin','opts']"
           @click="handleRefresh"
         >获取仓库数据
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasRole="['admin','opts']"
           type="warning"
           icon="el-icon-download"
           size="mini"
-          v-hasRole="['admin','opts']"
           :disabled="multiple"
           @click="handleImport"
         >导入源
@@ -57,33 +57,33 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="编号" align="center" prop="id" width="55"/>
-      <el-table-column label="源名" align="center" prop="rule" width="120" :show-overflow-tooltip="true"/>
-      <el-table-column label="文件名" align="center" prop="name" width="150" :show-overflow-tooltip="true"/>
-      <el-table-column label="体积" align="center" prop="size" width="100" :show-overflow-tooltip="true"/>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="编号" align="center" prop="id" width="55" />
+      <el-table-column label="源名" align="center" prop="rule" width="120" :show-overflow-tooltip="true" />
+      <el-table-column label="文件名" align="center" prop="name" width="150" :show-overflow-tooltip="true" />
+      <el-table-column label="体积" align="center" prop="size" width="100" :show-overflow-tooltip="true" />
       <el-table-column label="链接" align="center" prop="url" width="400" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>
-              <el-link type="primary" :href="scope.row.url" target="_blank">
-                <span>{{ scope.row.url }}</span>
-              </el-link>
+            <el-link type="primary" :href="scope.row.url" target="_blank">
+              <span>{{ scope.row.url }}</span>
+            </el-link>
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="来源" align="center" prop="from" width="150" :show-overflow-tooltip="true"/>
+      <el-table-column label="来源" align="center" prop="from" width="150" :show-overflow-tooltip="true" />
       <el-table-column label="安装状态" align="center" prop="status" width="80">
         <template slot-scope="scope">
-          <el-switch :active-value="1" :inactive-value="0" v-model="scope.row.status" disabled></el-switch>
+          <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" disabled />
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-hasPermi="['vod:configs:put']"
             size="mini"
             type="text"
             icon="el-icon-download"
-            v-hasPermi="['vod:configs:put']"
             @click="handleImport(scope.row)"
           >导入源
           </el-button>
@@ -104,8 +104,8 @@
 </template>
 
 <script>
-import {getDicts} from '@/api/system/dict/data'
-import {addHouses, listHouses, refreshHouses} from "@/api/vod/houses";
+import { getDicts } from '@/api/system/dict/data'
+import { addHouses, listHouses, refreshHouses } from '@/api/vod/houses'
 
 export default {
   name: 'VodHouses',
@@ -145,28 +145,28 @@ export default {
   },
   created() {
     this.getList()
-    getDicts("vod_rule_status").then(response => {
-      this.statusOptions = response.data.details;
-    });
-    this.host = new URL(process.env.VUE_APP_BASE_API).origin;
+    getDicts('vod_rule_status').then(response => {
+      this.statusOptions = response.data.details
+    })
+    this.host = new URL(process.env.VUE_APP_BASE_API).origin
   },
   methods: {
     /** 查询字典类型列表 */
     getList() {
       this.loading = true
       if (!this.queryParams.status && typeof (this.queryParams.status) === 'string') {
-        this.queryParams.status = undefined;
+        this.queryParams.status = undefined
       }
       listHouses(this.queryParams).then(response => {
-          this.list = response.data.data
-          this.total = response.data.total
-          this.loading = false
-        }
+        this.list = response.data.data
+        this.total = response.data.total
+        this.loading = false
+      }
       )
     },
     // 字典状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {
@@ -206,35 +206,35 @@ export default {
     },
     /** 刷新源列表按钮操作 */
     handleRefresh(row) {
-      let self = this;
-      this.$modal.confirm('从源仓库获取一些drpy源的更新信息？').then(function () {
-        self.$modal.loading("数据获取中，请稍候...");
-        return refreshHouses();
+      const self = this
+      this.$modal.confirm('从源仓库获取一些drpy源的更新信息？').then(function() {
+        self.$modal.loading('数据获取中，请稍候...')
+        return refreshHouses()
       }).then(() => {
-        self.$modal.closeLoading();
-        this.getList();
-        this.$modal.msgSuccess("初始化成功");
+        self.$modal.closeLoading()
+        this.getList()
+        this.$modal.msgSuccess('初始化成功')
       }).catch(() => {
-        self.$modal.closeLoading();
-      });
+        self.$modal.closeLoading()
+      })
     },
     /** 导入按钮操作 */
     handleImport(row) {
       const ids = row.id || this.ids
-      let self = this;
+      const self = this
       this.$confirm('是否确认安装编号为"' + ids + '"等' + (ids.length || 1) + '个源?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function () {
-        self.$modal.loading("数据获取中，请稍候...");
+      }).then(function() {
+        self.$modal.loading('数据获取中，请稍候...')
         return addHouses(ids)
       }).then((resp) => {
-        self.$modal.closeLoading();
+        self.$modal.closeLoading()
         this.getList()
         this.msgSuccess(resp.data)
-      }).catch(function () {
-        self.$modal.closeLoading();
+      }).catch(function() {
+        self.$modal.closeLoading()
       })
     }
   }

@@ -75,12 +75,12 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="编号" align="center" prop="id" width="55"/>
-      <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true"/>
-      <el-table-column label="描述" align="center" prop="key" :show-overflow-tooltip="true"/>
-      <el-table-column label="排序" align="center" prop="order_num" :show-overflow-tooltip="true" width="55"/>
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" :show-overflow-tooltip="true"/>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="编号" align="center" prop="id" width="55" />
+      <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true" />
+      <el-table-column label="描述" align="center" prop="key" :show-overflow-tooltip="true" />
+      <el-table-column label="排序" align="center" prop="order_num" :show-overflow-tooltip="true" width="55" />
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" align="center" prop="created_ts">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.created_ts) }}</span>
@@ -123,15 +123,15 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="角色名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入参数名称"/>
+          <el-input v-model="form.name" placeholder="请输入参数名称" />
         </el-form-item>
         <el-form-item label="角色描述" prop="key">
-          <el-input v-model="form.key" placeholder="请输入参数键"/>
+          <el-input v-model="form.key" placeholder="请输入参数键" />
         </el-form-item>
         <el-row>
           <el-col :span="12">
             <el-form-item label="显示排序" prop="order_num">
-              <el-input-number v-model="form.order_num" controls-position="right" :min="0" style="width: 100%"/>
+              <el-input-number v-model="form.order_num" controls-position="right" :min="0" style="width: 100%" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -173,9 +173,9 @@
 </template>
 
 <script>
-import {getDicts} from '@/api/system/dict/data'
-import {addRole, delRole, getRole, getRoleMaxOrderNum, listRole, setRole, setRoleMenus} from "@/api/permission/role";
-import {listselect} from "@/api/permission/menu";
+import { getDicts } from '@/api/system/dict/data'
+import { addRole, delRole, getRole, getRoleMaxOrderNum, listRole, setRole, setRoleMenus } from '@/api/permission/role'
+import { listselect } from '@/api/permission/menu'
 
 export default {
   name: 'Role',
@@ -209,8 +209,8 @@ export default {
       // 菜单列表
       menuOptions: [],
       defaultProps: {
-        children: "children",
-        label: "title"
+        children: 'children',
+        label: 'title'
       },
       menuExpand: false,
       menuNodeAll: false,
@@ -219,15 +219,15 @@ export default {
       // 表单校验
       rules: {
         name: [
-          {required: true, message: '角色名称不能为空', trigger: 'blur'}
-        ],
+          { required: true, message: '角色名称不能为空', trigger: 'blur' }
+        ]
       }
     }
   },
   created() {
     this.getList()
-    getDicts("com_default_status").then(response => {
-      this.statusOptions = response.data.details;
+    getDicts('com_default_status').then(response => {
+      this.statusOptions = response.data.details
     })
   },
   methods: {
@@ -235,10 +235,10 @@ export default {
     getList() {
       this.loading = true
       listRole(this.queryParams).then(response => {
-          this.list = response.data.results
-          this.total = response.data.total
-          this.loading = false
-        }
+        this.list = response.data.results
+        this.total = response.data.total
+        this.loading = false
+      }
       )
     },
     /** 查询菜单树结构 */
@@ -247,12 +247,12 @@ export default {
       //   this.menuOptions = response.data.menus
       // })
       listselect().then(response => {
-        this.menuOptions = this.handleTree(response.data.menus, "id");
-      });
+        this.menuOptions = this.handleTree(response.data.menus, 'id')
+      })
     },
     // 字典状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {
@@ -268,7 +268,7 @@ export default {
         status: undefined,
         order_num: undefined,
         menus: [],
-        menuCheckStrictly: true,
+        menuCheckStrictly: true
       }
       this.resetForm('form')
     },
@@ -293,7 +293,7 @@ export default {
       this.reset()
       this.open = true
       this.title = '添加角色'
-      this.getMenuTreeselect();
+      this.getMenuTreeselect()
       getRoleMaxOrderNum().then(response => {
         this.form.order_num = response.data.max_order_num + 1
       })
@@ -309,29 +309,29 @@ export default {
     },
     // 树权限（展开/折叠）
     handleCheckedTreeExpand(value, type) {
-      if (type === "menu") {
-        const treeList = this.menuOptions;
+      if (type === 'menu') {
+        const treeList = this.menuOptions
         for (let i = 0; i < treeList.length; i++) {
-          this.$refs.menu.store.nodesMap[treeList[i].id].expanded = value;
+          this.$refs.menu.store.nodesMap[treeList[i].id].expanded = value
         }
       }
     },
     // 树权限（全选/全不选）
     handleCheckedTreeNodeAll(value, type) {
-      if (type === "menu") {
-        this.$refs.menu.setCheckedNodes(value ? this.menuOptions : []);
+      if (type === 'menu') {
+        this.$refs.menu.setCheckedNodes(value ? this.menuOptions : [])
       }
     },
     // 树权限（父子联动）
     handleCheckedTreeConnect(value, type) {
-      if (type === "menu") {
-        this.form.menuCheckStrictly = !!value;
+      if (type === 'menu') {
+        this.form.menuCheckStrictly = !!value
       }
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      this.getMenuTreeselect();
+      this.getMenuTreeselect()
       const id = row.id || this.ids
       getRole(id).then(response => {
         this.form = response.data
@@ -343,38 +343,37 @@ export default {
       })
     },
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       if (this.submitLoading) return
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.submitLoading = true
-          this.form.menus = this.$refs.menu.getCheckedKeys();
+          this.form.menus = this.$refs.menu.getCheckedKeys()
           if (this.form.id !== undefined) {
             setRole(this.form.id, this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("角色修改成功")
+                this.msgSuccess('角色修改成功')
                 this.open = false
                 this.getList()
                 setRoleMenus(this.form.id, this.form.menus).then(response => {
                   if (response.code === 0) {
                     this.getList()
                   } else {
-                    this.msgError("菜单权限修改失败," + response.msg)
+                    this.msgError('菜单权限修改失败,' + response.msg)
                   }
-                }).finally(() => { this.submitLoading = false });
+                }).finally(() => { this.submitLoading = false })
               } else {
-                this.msgError("角色修改失败," + response.msg)
+                this.msgError('角色修改失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
-
           } else {
             addRole(this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("添加成功")
+                this.msgSuccess('添加成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("添加失败," + response.msg)
+                this.msgError('添加失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           }
@@ -388,12 +387,12 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function () {
+      }).then(function() {
         return delRole(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function () {
+      }).catch(function() {
       })
     }
   }

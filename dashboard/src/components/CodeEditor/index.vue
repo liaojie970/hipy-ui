@@ -1,6 +1,6 @@
 <template>
   <div class="code-editor">
-    <textarea ref="textarea"/>
+    <textarea ref="textarea" />
   </div>
 </template>
 
@@ -26,7 +26,7 @@ import 'codemirror/addon/lint/json-lint'
 export default {
   name: 'CodeEditor',
   /* eslint-disable vue/require-prop-types */
-  props: ['value', 'mode', 'theme', 'height', 'auto_line'],
+  props: ['value', 'mode', 'theme', 'height', 'autoLine'],
   data() {
     return {
       codeEditor: false
@@ -34,32 +34,32 @@ export default {
   },
   watch: {
     value(value) {
-      value = value || '';
+      value = value || ''
       const editorValue = this.codeEditor.getValue()
       if (value !== editorValue) {
         this.codeEditor.setValue(this.value)
       }
     },
     theme(theme) {
-      this.codeEditor.setOption("theme", theme);
+      this.codeEditor.setOption('theme', theme)
     },
     auto_line(auto_line) {
-      console.log('auto_line', auto_line);
-      this.codeEditor.setOption("lineWrapping", auto_line);
+      console.log('auto_line', auto_line)
+      this.codeEditor.setOption('lineWrapping', auto_line)
     }
   },
   mounted() {
-    console.log('this.mode:', this.mode, 'this.theme:', this.theme);
+    console.log('this.mode:', this.mode, 'this.theme:', this.theme)
     this.codeEditor = CodeMirror.fromTextArea(this.$refs.textarea, {
       lineNumbers: true,
       lineWrapping: this.auto_line,
       mode: this.mode || 'javascript',
       gutters: ['CodeMirror-lint-markers'],
       theme: this.theme || 'monokai',
-      lint: true,
+      lint: true
     })
 
-    this.codeEditor.setSize('auto', (this.height || 500) + 'px'); //设置宽度,高度
+    this.codeEditor.setSize('auto', (this.height || 500) + 'px') // 设置宽度,高度
     this.codeEditor.setValue(this.value)
     this.codeEditor.on('change', cm => {
       this.$emit('changed', cm.getValue())

@@ -31,20 +31,20 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-has-permi="['hiker:rule_type:post']"
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          v-has-permi="['hiker:rule_type:post']"
           @click="handleAdd"
         >新增
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-has-permi="['hiker:rule_type:put']"
           type="success"
           icon="el-icon-edit"
           size="mini"
-          v-has-permi="['hiker:rule_type:put']"
           :disabled="single"
           @click="handleUpdate"
         >修改
@@ -52,10 +52,10 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasRole="['admin','opts']"
           type="danger"
           icon="el-icon-delete"
           size="mini"
-          v-hasRole="['admin','opts']"
           :disabled="multiple"
           @click="handleDelete"
         >删除
@@ -63,10 +63,10 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-has-permi="['report:excel_generate:export']"
           type="warning"
           icon="el-icon-download"
           size="mini"
-          v-has-permi="['report:excel_generate:export']"
           :disabled="multiple"
           @click="handleExport"
         >导出
@@ -75,13 +75,13 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
-      <el-table-column fixed="left" type="selection" width="55" align="center"/>
-      <el-table-column label="ID" align="center" prop="id" width="55"/>
-      <el-table-column label="类型名称" align="center" prop="name" :show-overflow-tooltip="true"/>
-      <el-table-column label="规则数量" align="center" prop="count_num" :show-overflow-tooltip="true"/>
+      <el-table-column fixed="left" type="selection" width="55" align="center" />
+      <el-table-column label="ID" align="center" prop="id" width="55" />
+      <el-table-column label="类型名称" align="center" prop="name" :show-overflow-tooltip="true" />
+      <el-table-column label="规则数量" align="center" prop="count_num" :show-overflow-tooltip="true" />
       <el-table-column label="是否启用" align="center" prop="active" width="100">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.active" @change="handleChangActive(scope.row)"/>
+          <el-switch v-model="scope.row.active" @change="handleChangActive(scope.row)" />
         </template>
       </el-table-column>
 
@@ -98,18 +98,18 @@
       <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-has-permi="['hiker:rule_type:put']"
             size="mini"
             type="text"
             icon="el-icon-edit"
-            v-has-permi="['hiker:rule_type:put']"
             @click="handleUpdate(scope.row)"
           >修改
           </el-button>
           <el-button
+            v-hasRole="['admin','opts']"
             size="mini"
             type="text"
             icon="el-icon-delete"
-            v-hasRole="['admin','opts']"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>
@@ -131,13 +131,13 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入规则类型名称"/>
+              <el-input v-model="form.name" placeholder="请输入规则类型名称" />
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="规则数量" prop="count_num">
-              <el-input-number v-model="form.count_num" controls-position="right" :min="0" style="width: 100%"/>
+              <el-input-number v-model="form.count_num" controls-position="right" :min="0" style="width: 100%" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -145,7 +145,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="是否启用" prop="active">
-              <el-switch v-model="form.active"/>
+              <el-switch v-model="form.active" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -160,7 +160,7 @@
 </template>
 
 <script>
-import {searchRecords, getRecord, addRecord, setRecord, delRecord, changeActive} from '@/api/hiker/rule_type'
+import { searchRecords, getRecord, addRecord, setRecord, delRecord, changeActive } from '@/api/hiker/rule_type'
 
 export default {
   name: 'HikerRuleType',
@@ -196,17 +196,17 @@ export default {
       // 表单校验
       rules: {
         name: [
-          {required: true, message: '规则类型不能为空', trigger: 'blur'}
-        ],
+          { required: true, message: '规则类型不能为空', trigger: 'blur' }
+        ]
       }
     }
   },
   created() {
     const ruleTypeId = this.$route.params && this.$route.params.id
     if (ruleTypeId) {
-      console.log('ruleTypeId:', ruleTypeId);
+      console.log('ruleTypeId:', ruleTypeId)
     }
-    this.getList();
+    this.getList()
   },
   methods: {
     /** 查询字典类型列表 */
@@ -227,7 +227,7 @@ export default {
     reset() {
       this.form = {
         id: undefined,
-        name: undefined,
+        name: undefined
       }
       this.resetForm('form')
     },
@@ -241,14 +241,14 @@ export default {
       this.queryParams = {
         page: 1,
         page_size: 20,
-        name: undefined,
+        name: undefined
       }
       this.handleQuery()
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
-      this.form.active = true;
+      this.form.active = true
       this.open = true
       this.title = '添加规则类型'
     },
@@ -272,21 +272,21 @@ export default {
     handleChangIsManager(row) {
       changeIsManager(row.id, row.is_manager).then(response => {
         if (response.code === 0) {
-          this.msgSuccess("修改成功")
+          this.msgSuccess('修改成功')
         }
-        this.getList();
+        this.getList()
       })
     },
     handleChangActive(row) {
       changeActive(row.id, row.active).then(response => {
         if (response.code === 0) {
-          this.msgSuccess("修改成功")
+          this.msgSuccess('修改成功')
         }
-        this.getList();
+        this.getList()
       })
     },
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       if (this.submitLoading) return
       this.$refs['form'].validate(valid => {
         if (valid) {
@@ -294,21 +294,21 @@ export default {
           if (this.form.id !== undefined) {
             setRecord(this.form.id, this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("修改成功")
+                this.msgSuccess('修改成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("修改失败," + response.msg)
+                this.msgError('修改失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           } else {
             addRecord(this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("添加成功")
+                this.msgSuccess('添加成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("添加失败," + response.msg)
+                this.msgError('添加失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           }
@@ -322,28 +322,28 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function () {
+      }).then(function() {
         return delRecord(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function () {
+      }).catch(function() {
       })
     },
 
     /** 导出按钮操作 */
     handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所选中的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
-        return exportConfig(queryParams);
+      const queryParams = this.queryParams
+      this.$confirm('是否确认导出所选中的数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function() {
+        return exportConfig(queryParams)
       }).then(response => {
-        this.download(response.msg);
-      }).catch(function () {
-      });
+        this.download(response.msg)
+      }).catch(function() {
+      })
     }
   }
 }

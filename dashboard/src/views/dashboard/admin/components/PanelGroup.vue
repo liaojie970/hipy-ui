@@ -1,61 +1,47 @@
 <template>
   <el-row :gutter="40" class="panel-group">
-    <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="24" :sm="12" :lg="8" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
         <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon"/>
+          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
             用户数量
           </div>
-          <count-to :start-val="0" :end-val="count.active_users" :duration="1" class="card-panel-num"/>
+          <count-to :start-val="0" :end-val="count.active_users" :duration="1" class="card-panel-num" />
           <span class="card-panel-text">/</span>
-          <count-to :start-val="0" :end-val="count.total_users" :duration="1" class="card-panel-num"/>
+          <count-to :start-val="0" :end-val="count.total_users" :duration="1" class="card-panel-num" />
         </div>
       </div>
     </el-col>
-    <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="24" :sm="12" :lg="8" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('messages')">
         <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="list" class-name="card-panel-icon"/>
+          <svg-icon icon-class="list" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
             源数量
           </div>
-          <count-to :start-val="0" :end-val="count.active_rules" :duration="1" class="card-panel-num"/>
+          <count-to :start-val="0" :end-val="count.active_rules" :duration="1" class="card-panel-num" />
           <span class="card-panel-text">/</span>
-          <count-to :start-val="0" :end-val="count.total_rules" :duration="1" class="card-panel-num"/>
+          <count-to :start-val="0" :end-val="count.total_rules" :duration="1" class="card-panel-num" />
         </div>
       </div>
     </el-col>
-    <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="24" :sm="12" :lg="8" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="star" class-name="card-panel-icon"/>
+          <svg-icon icon-class="star" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
             订阅数量
           </div>
-          <count-to :start-val="0" :end-val="count.active_subs" :duration="1" class="card-panel-num"/>
+          <count-to :start-val="0" :end-val="count.active_subs" :duration="1" class="card-panel-num" />
           <span class="card-panel-text">/</span>
-          <count-to :start-val="0" :end-val="count.total_subs" :duration="1" class="card-panel-num"/>
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('shoppings')">
-        <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon icon-class="question" class-name="card-panel-icon"/>
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            版本号
-          </div>
-          <el-tag>{{ version }}</el-tag>
-          <!--          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num"/>-->
+          <count-to :start-val="0" :end-val="count.total_subs" :duration="1" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -64,7 +50,7 @@
 
 <script>
 import CountTo from 'vue-count-to'
-import {getVersion} from '@/api/control_panel/database'
+import { getVersion } from '@/api/control_panel/database'
 
 export default {
   components: {
@@ -79,24 +65,20 @@ export default {
         total_rules: NaN,
         active_subs: NaN,
         total_subs: NaN
-      },
-      version: "hipy-server 20240722 beta1",
-      cost_time: 10.97
+      }
     }
   },
   created() {
-    this.getList();
+    this.getList()
   },
   methods: {
     getList() {
       getVersion().then(response => {
-          let res = response.data;
-          console.log(res);
-          this.count = res.count;
-          this.version = res.version;
-          this.cost_time = res.cost_time;
-        }
-      );
+        const res = response.data
+        console.log(res)
+        this.count = res.count
+      }
+      )
     },
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)

@@ -19,7 +19,7 @@
 
     <!-- 换源对话框 -->
     <el-dialog :title="form_title" :visible.sync="open" :width="dialogWidth" class="change_rule_dialog" append-to-body>
-      <el-input v-model="siteFilter" placeholder="请输入站源名称" class="site_filter_input"></el-input>
+      <el-input v-model="siteFilter" placeholder="请输入站源名称" class="site_filter_input" />
       <el-form ref="form" :model="form" label-width="120px" class="change_rule_form" @submit.native.prevent>
         <div class="button-container">
           <div v-for="(site,index) in filteredSites" :key="index" :ref="site.key === form.new_site.key ? 'currentSite' : ''" class="btn-item">
@@ -60,28 +60,28 @@ export default {
       LogoImg,
       keywordRef: '',
       title: 'hipy影视',
-      siteFilter:''
+      siteFilter: ''
     }
-  },
-  created() {
-    this.getCache()
   },
   computed: {
     filteredSites() {
       // 将 input 和 site.name 都转换为小写，进行包含匹配
-      const inputLower = this.siteFilter.toLowerCase();
+      const inputLower = this.siteFilter.toLowerCase()
       return this.siteFilter
         ? this.form.sites.filter((site) => site.name.toLowerCase().includes(inputLower))
-        : this.form.sites;
+        : this.form.sites
     },
     dialogWidth() {
-      return window.innerWidth < 768 ? '100%' : '600px';
-    },
+      return window.innerWidth < 768 ? '100%' : '600px'
+    }
   },
   watch: {
     open(newVal) {
-      if (newVal) this.scrollToCurrentSite();
-    },
+      if (newVal) this.scrollToCurrentSite()
+    }
+  },
+  created() {
+    this.getCache()
   },
   methods: {
     handleSearch() {
@@ -114,7 +114,7 @@ export default {
     },
     handleChangeRule(rule) { // 临时换源
       this.form.new_site = rule
-      this.scrollToCurrentSite();
+      this.scrollToCurrentSite()
     },
     handleConfirmChange() { // 确认换源
       this.form.now_site = this.form.new_site
@@ -125,10 +125,10 @@ export default {
     scrollToCurrentSite() {
       this.$nextTick(() => {
         if (this.$refs.currentSite && this.$refs.currentSite.length > 0) {
-          const currentSite = this.$refs.currentSite[0];
-          currentSite.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          const currentSite = this.$refs.currentSite[0]
+          currentSite.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }
-      });
+      })
     },
     handleConfirmClear() {
       // 清除缓存
@@ -140,18 +140,18 @@ export default {
         modalStyle: {
           maxWidth: '90%', // 最大宽度为 90%
           width: 'auto', // 宽度自适应内容
-          margin: '0 auto', // 居中对话框
-        },
+          margin: '0 auto' // 居中对话框
+        }
       })
         .then(() => {
-          cache.local.remove('hipy_site');
-          this.open = false;
+          cache.local.remove('hipy_site')
+          this.open = false
           // 清除缓存后自动处理换源的缓存接口问题
-          location.href = '/vod/web/';
+          location.href = '/vod/web/'
         })
         .catch(() => {
           // 取消操作的处理
-        });
+        })
     }
 
   }

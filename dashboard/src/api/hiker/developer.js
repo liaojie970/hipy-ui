@@ -43,20 +43,20 @@ export function delRecord(id) {
   })
 }
 
-//修改开发者是否超管
+// 修改开发者是否超管
 export function changeIsManager(id, is_manager) {
   return request({
-    url: "/hiker/hiker_developer/" + id + "/is_manager",
+    url: '/hiker/hiker_developer/' + id + '/is_manager',
     method: 'put',
-    data: {'is_manager': is_manager}
+    data: { 'is_manager': is_manager }
   })
 }
 
 // 修改开发者是否启用
 export function changeActive(id, active) {
   return request({
-    url: "/hiker/hiker_developer/" + id + "/active",
+    url: '/hiker/hiker_developer/' + id + '/active',
     method: 'put',
-    data: {'active': active}
+    data: { 'active': active }
   })
 }

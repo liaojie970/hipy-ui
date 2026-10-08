@@ -25,7 +25,7 @@ export function addRecord(data) {
     url: api_url,
     method: 'post',
     data: data,
-    timeout: 60*1000
+    timeout: 60 * 1000
   })
 }
 

@@ -1,6 +1,6 @@
 import request from '@/utils/request'
-import {base64Encode, base64Decode} from "@/utils/jsencrypt";
-import cache from "@/plugins/cache"
+import { base64Encode, base64Decode } from '@/utils/jsencrypt'
+import cache from '@/plugins/cache'
 
 const config_url = new URL(process.env.VUE_APP_BASE_API).origin + '/config/0'
 
@@ -9,9 +9,9 @@ export const now_site = {
   extend: new URL(process.env.VUE_APP_BASE_API).origin + '/files/hipy/cntv央视.json'
 }
 
-function get_now_site(){
-  let cacheSite = cache.local.getJSON('hipy_site');
-  if (cacheSite) {//读取缓存
+function get_now_site() {
+  const cacheSite = cache.local.getJSON('hipy_site')
+  if (cacheSite) { // 读取缓存
     console.log('当前存在缓存首页源:', cacheSite.name)
     now_site.api_url = cacheSite.api
     now_site.extend = cacheSite.ext
@@ -43,10 +43,10 @@ export function HomeApi() {
     url: now_site.api_url,
     responseType: 'json',
     method: 'get',
-    timeout: 10*1000,
+    timeout: 10 * 1000,
     params: {
       extend: now_site.extend,
-      filter: true,
+      filter: true
     }
   })
 }
@@ -59,12 +59,12 @@ export function HomeApi() {
  * @constructor
  */
 export function SearchApi(wd, pg) {
-  pg = pg || 1;
+  pg = pg || 1
   return request({
     url: now_site.api_url,
     responseType: 'json',
     method: 'get',
-    timeout: 10*1000,
+    timeout: 10 * 1000,
     params: {
       extend: now_site.extend,
       wd: wd,
@@ -72,7 +72,6 @@ export function SearchApi(wd, pg) {
     }
   })
 }
-
 
 /**
  * 一级/分类 接口
@@ -83,14 +82,14 @@ export function SearchApi(wd, pg) {
  * @constructor
  */
 export function CateGoryApi(t, pg, filters) {
-  pg = pg || 1;
+  pg = pg || 1
   filters = filters || {}
-  let ext_filters = base64Encode(JSON.stringify(filters))
+  const ext_filters = base64Encode(JSON.stringify(filters))
   return request({
     url: now_site.api_url + '&ac=list',
     responseType: 'json',
     method: 'get',
-    timeout: 10*1000,
+    timeout: 10 * 1000,
     params: {
       extend: now_site.extend,
       filter: true,
@@ -101,8 +100,7 @@ export function CateGoryApi(t, pg, filters) {
   })
 }
 
-
-/***
+/** *
  * 二级/详情 接口
  * @param ids 视频id,多个用逗号隔开，一般只有一个。网页就传的 视频的详情页url链接
  * @returns {*}
@@ -113,16 +111,15 @@ export function DetailApi(ids) {
     url: now_site.api_url + '&ac=detail',
     responseType: 'json',
     method: 'get',
-    timeout: 10*1000,
+    timeout: 10 * 1000,
     params: {
       extend: now_site.extend,
-      ids: ids,
+      ids: ids
     }
   })
 }
 
-
-/***
+/** *
  * 播放接口
  * @param play 视频播放页地址
  * @param flag 线路名称
@@ -130,16 +127,16 @@ export function DetailApi(ids) {
  * @constructor
  */
 export function PlayApi(play, flag) {
-  flag = flag || '';
+  flag = flag || ''
   return request({
     url: now_site.api_url,
     responseType: 'json',
     method: 'get',
-    timeout: 10*1000,
+    timeout: 10 * 1000,
     params: {
       extend: now_site.extend,
       play: play,
-      flag: flag,
+      flag: flag
     }
   })
 }

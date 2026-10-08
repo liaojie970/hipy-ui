@@ -1,11 +1,11 @@
 <template>
   <div class="detail">
-    <Header/>
+    <Header />
     <div class="about">
-      <img :src="LogoImg" style="width: 400px;height: 400px;"/>
+      <img :src="LogoImg" style="width: 400px;height: 400px;">
       <div style="font-size: 18px;">扫个微信，聊一聊</div>
     </div>
-    <Footer/>
+    <Footer />
   </div>
 </template>
 
@@ -17,12 +17,12 @@ export default {
   components: {},
   data() {
     return {
-      LogoImg,
+      LogoImg
     }
   },
   created() {
   },
-  methods: {},
+  methods: {}
 }
 </script>
 

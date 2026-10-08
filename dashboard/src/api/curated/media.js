@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { cleanQuery } from '@/utils'
 
 const api_url = '/curated/media'
 
@@ -7,7 +8,7 @@ export function listMedia(query) {
   return request({
     url: api_url,
     method: 'get',
-    params: query
+    params: cleanQuery(query)
   })
 }
 
@@ -51,7 +52,7 @@ export function batchStatus(ids, status) {
   return request({
     url: api_url + '/status/batch',
     method: 'put',
-    data: {ids: ids, status: status}
+    data: { ids: ids, status: status }
   })
 }
 
@@ -60,7 +61,7 @@ export function batchVisible(ids, status) {
   return request({
     url: api_url + '/visible/batch',
     method: 'post',
-    data: {ids: ids, status: status}
+    data: { ids: ids, status: status }
   })
 }
 
@@ -69,7 +70,7 @@ export function batchRemove(ids) {
   return request({
     url: api_url + '/remove/batch',
     method: 'post',
-    data: {ids: ids, status: 0}
+    data: { ids: ids, status: 0 }
   })
 }
 
@@ -78,7 +79,7 @@ export function checkMedia(ids) {
   return request({
     url: api_url + '/check/batch',
     method: 'post',
-    data: {ids: ids},
+    data: { ids: ids },
     timeout: 300 * 1000
   })
 }

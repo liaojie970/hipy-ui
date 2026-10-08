@@ -30,20 +30,20 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['monitor:pip:post']"
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          v-hasPermi="['monitor:pip:post']"
           @click="handleAdd"
         >新增
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['monitor:pip:put']"
           type="success"
           icon="el-icon-edit"
           size="mini"
-          v-hasPermi="['monitor:pip:put']"
           :disabled="single"
           @click="handleUpdate"
         >修改
@@ -51,10 +51,10 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-hasRole="['admin','opts']"
           type="danger"
           icon="el-icon-delete"
           size="mini"
-          v-hasRole="['admin','opts']"
           :disabled="multiple"
           @click="handleDelete"
         >卸载
@@ -63,31 +63,31 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="序号" align="center" prop="id" width="55"/>
-      <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true"/>
-      <el-table-column label="版本" align="center" prop="version" :show-overflow-tooltip="true"/>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="序号" align="center" prop="id" width="55" />
+      <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true" />
+      <el-table-column label="版本" align="center" prop="version" :show-overflow-tooltip="true" />
       <el-table-column label="是否内置" align="center" prop="is_local" width="100">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.is_local" disabled/>
+          <el-switch v-model="scope.row.is_local" disabled />
         </template>
       </el-table-column>
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-hasPermi="['monitor:pip:put']"
             size="mini"
             type="text"
             icon="el-icon-edit"
-            v-hasPermi="['monitor:pip:put']"
             @click="handleUpdate(scope.row)"
           >修改
           </el-button>
           <el-button
+            v-hasRole="['admin','opts']"
             size="mini"
             type="text"
             icon="el-icon-delete"
-            v-hasRole="['admin','opts']"
             @click="handleDelete(scope.row)"
           >卸载
           </el-button>
@@ -107,13 +107,13 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="依赖名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入依赖名称" :readOnly="form_readonly"/>
+          <el-input v-model="form.name" placeholder="请输入依赖名称" :read-only="form_readonly" />
         </el-form-item>
         <el-form-item label="依赖版本" prop="version">
-          <el-input v-model="form.version" placeholder="请输入依赖版本"/>
+          <el-input v-model="form.version" placeholder="请输入依赖版本" />
         </el-form-item>
         <el-form-item label="是否内置" prop="is_local">
-          <el-switch v-model="form.is_local" disabled></el-switch>
+          <el-switch v-model="form.is_local" disabled />
         </el-form-item>
 
       </el-form>
@@ -126,8 +126,7 @@
 </template>
 
 <script>
-import {searchRecords, getRecord, addRecord, setRecord, delRecord} from '@/api/monitor/pip'
-
+import { searchRecords, getRecord, addRecord, setRecord, delRecord } from '@/api/monitor/pip'
 
 export default {
   name: 'Pip',
@@ -164,8 +163,8 @@ export default {
       // 表单校验
       rules: {
         name: [
-          {required: true, message: '依赖名称不能为空', trigger: 'blur'}
-        ],
+          { required: true, message: '依赖名称不能为空', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -177,10 +176,10 @@ export default {
     getList() {
       this.loading = true
       searchRecords(this.queryParams).then(response => {
-          this.list = response.data.results
-          this.total = response.data.total
-          this.loading = false
-        }
+        this.list = response.data.results
+        this.total = response.data.total
+        this.loading = false
+      }
       )
     },
     // 取消按钮
@@ -194,7 +193,7 @@ export default {
         id: undefined,
         version: undefined,
         name: undefined,
-        is_local: undefined,
+        is_local: undefined
       }
       this.resetForm('form')
     },
@@ -209,7 +208,7 @@ export default {
         page: 1,
         page_size: 20,
         name: undefined,
-        version: undefined,
+        version: undefined
       }
       this.handleQuery()
     },
@@ -239,7 +238,7 @@ export default {
       })
     },
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       if (this.submitLoading) return
       this.$refs['form'].validate(valid => {
         if (valid) {
@@ -247,19 +246,19 @@ export default {
           if (this.form.id != undefined) {
             setRecord(this.form.id, this.form).then(response => {
               if (response.code === 0) {
-                this.msgSuccess("修改成功")
+                this.msgSuccess('修改成功')
                 this.open = false
                 this.getList()
               } else {
-                this.msgError("修改失败," + response.msg)
+                this.msgError('修改失败,' + response.msg)
               }
             }).finally(() => { this.submitLoading = false })
           } else {
             addRecord(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            }).finally(() => { this.submitLoading = false });
+              this.$modal.msgSuccess('新增成功')
+              this.open = false
+              this.getList()
+            }).finally(() => { this.submitLoading = false })
           }
         }
       })
@@ -268,7 +267,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids
       const id_list = Array.isArray(ids) ? ids : [ids]
-      let data = this.list.filter(it => id_list.includes(it.id) && it.is_local);
+      const data = this.list.filter(it => id_list.includes(it.id) && it.is_local)
       if (data.length > 0) {
         this.$message.error('不允许卸载内置模块:' + data[0].name)
         return
@@ -277,12 +276,12 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function () {
+      }).then(function() {
         return delRecord(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('卸载成功')
-      }).catch(function () {
+      }).catch(function() {
       })
     }
   }

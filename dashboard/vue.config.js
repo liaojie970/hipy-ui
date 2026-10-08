@@ -12,8 +12,11 @@ const name = defaultSettings.title || 'vue Element Admin' // page title
 // use administrator privileges to execute the command line.
 // For example, Mac: sudo npm run
 // You can change the port by the following method:
-// port = 9527 npm run dev OR npm run dev --port = 9527
-const port = process.env.port || process.env.npm_config_port || 9527 // dev port
+// port = 8080 npm run dev OR npm run dev --port = 8080
+// 注意: Windows 上 Hyper-V/WSL/Docker 会保留一部分动态端口(如 9524-9823),
+// 原 9527/9526 落在保留区间内无法绑定, 会导致 dev server 被自动顺延到 9824。
+// 这里改用 8080, 如需恢复请先释放对应端口保留区间。
+const port = process.env.port || process.env.npm_config_port || 8080 // dev port
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {

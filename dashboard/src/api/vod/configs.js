@@ -10,7 +10,6 @@ export function getConfigsByKey(key) {
   })
 }
 
-
 // 查询参数列表
 export function listConfigs(query) {
   return request({
@@ -20,34 +19,30 @@ export function listConfigs(query) {
   })
 }
 
-
 // 获取参数
 export function getConfigsById(id) {
   return request({
     url: api_url + '/' + id,
-    method: "get"
+    method: 'get'
   })
 }
-
 
 // 获取最大排序
 export function getConfigsMaxOrderNum() {
   return request({
-    url: api_url + "/max-order-num",
-    method: "get"
+    url: api_url + '/max-order-num',
+    method: 'get'
   })
 }
-
 
 // 添加参数
 export function addConfigs(data) {
   return request({
     url: api_url,
-    method: "post",
+    method: 'post',
     data: data
   })
 }
-
 
 // 刷新配置
 export function refreshConfigs() {
@@ -57,24 +52,21 @@ export function refreshConfigs() {
   })
 }
 
-
 // 更新参数
 export function setConfigs(id, data) {
   return request({
-    url: api_url + "/" + id,
-    method: "put",
+    url: api_url + '/' + id,
+    method: 'put',
     data: data
   })
 }
 
-
 // 删除参数
 export function delConfigs(id) {
   return request({
-    url: api_url + "/" + id,
+    url: api_url + '/' + id,
     method: 'delete'
   })
-
 }
 
 // 清空配置

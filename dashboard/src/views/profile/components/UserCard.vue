@@ -6,11 +6,11 @@
 
     <div class="user-profile">
       <div class="box-center">
-<!--        <pan-thumb :image="fileBase + user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">-->
-<!--          <div>Hello</div>-->
-<!--          {{ user.nickname }}-->
-<!--        </pan-thumb>-->
-      <user-avatar :user="user"></user-avatar>
+        <!--        <pan-thumb :image="fileBase + user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">-->
+        <!--          <div>Hello</div>-->
+        <!--          {{ user.nickname }}-->
+        <!--        </pan-thumb>-->
+        <user-avatar :user="user" />
       </div>
       <div class="box-center">
         <div class="user-name text-center">{{ user.nickname }}</div>
@@ -19,17 +19,17 @@
       <div>
         <ul class="list-group list-group-striped">
           <li class="list-group-item">
-            <svg-icon icon-class="user"/>
+            <svg-icon icon-class="user" />
             用户名称
             <div class="pull-right">{{ user.username }}</div>
           </li>
           <li class="list-group-item">
-            <svg-icon icon-class="phone"/>
+            <svg-icon icon-class="phone" />
             手机号码
             <div class="pull-right">{{ user.phone }}</div>
           </li>
           <li class="list-group-item">
-            <svg-icon icon-class="email"/>
+            <svg-icon icon-class="email" />
             用户邮箱
             <div class="pull-right">{{ user.email }}</div>
           </li>
@@ -42,17 +42,11 @@
 
 <script>
 import PanThumb from '@/components/PanThumb'
-import userAvatar from "./userAvatar";
-import UserAvatar from "@/views/profile/components/userAvatar";
+import userAvatar from './userAvatar'
+import UserAvatar from '@/views/profile/components/userAvatar'
 
 export default {
-  components: {UserAvatar, PanThumb },
-  data () {
-    return {
-      fileBase: process.env.VUE_APP_MEDIA_BASE,
-      defaultAvatar: "images/avatar/default/avatar.jpg",
-    }
-  },
+  components: { UserAvatar, PanThumb },
   props: {
     user: {
       type: Object,
@@ -64,6 +58,12 @@ export default {
           role: ''
         }
       }
+    }
+  },
+  data() {
+    return {
+      fileBase: process.env.VUE_APP_MEDIA_BASE,
+      defaultAvatar: 'images/avatar/default/avatar.jpg'
     }
   }
 }

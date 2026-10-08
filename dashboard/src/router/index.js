@@ -72,7 +72,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: '汇总', icon: 'dashboard', affix: true }
+        meta: { title: '数据看板', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -120,5 +120,4 @@ export function resetRouter() {
 }
 
 export default router
-
 

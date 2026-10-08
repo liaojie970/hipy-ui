@@ -9,7 +9,6 @@ export function listPermLabel(query) {
   })
 }
 
-
 // 查询权限标签详细
 export function getPermLabel(labelId) {
   return request({
@@ -44,5 +43,4 @@ export function delPermLabel(labelId) {
     method: 'delete'
   })
 }
-
 

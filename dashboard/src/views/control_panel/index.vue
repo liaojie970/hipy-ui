@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form ref="mainForm" :model="form" :inline="true" label-width="68px" @submit.native.prevent>
       <el-form-item>
-        <el-button :loading="loading" type="primary" icon="el-icon-upload" size="mini" @click="dialogVisible = true" v-hasRole="['admin','opts']">
+        <el-button v-hasRole="['admin','opts']" :loading="loading" type="primary" icon="el-icon-upload" size="mini" @click="dialogVisible = true">
           升级数据库
         </el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="handleRefresh">刷新</el-button>
@@ -10,10 +10,10 @@
 
       <el-col :span="24">
         <el-button
+          v-hasPermi="['monitor:job:post']"
           type="primary"
           icon="el-icon-upload2"
           size="mini"
-          v-hasPermi="['monitor:job:post']"
           @click="handleImport"
         >上传定时任务脚本
         </el-button>
@@ -24,12 +24,13 @@
       title="提示"
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="handleClose">
+      :before-close="handleClose"
+    >
       <span>确定要升级数据库吗?可以热更新表结构，同步模型中增删过的字段</span>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="handleUpdateDatabase">确 定</el-button>
-  </span>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleUpdateDatabase">确 定</el-button>
+      </span>
     </el-dialog>
 
     <!-- 定时任务上传对话框 -->
@@ -46,16 +47,20 @@
         :auto-upload="false"
         drag
       >
-        <i class="el-icon-upload"></i>
+        <i class="el-icon-upload" />
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip text-center" slot="tip">
-          <div class="el-upload__tip" slot="tip">
-            <el-checkbox v-model="upload.updateSupport"/>
+        <div slot="tip" class="el-upload__tip text-center">
+          <div slot="tip" class="el-upload__tip">
+            <el-checkbox v-model="upload.updateSupport" />
             是否覆盖已经存在的定时任务脚本文件
           </div>
           <span>仅允许上传py格式文件。</span>
-          <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;"
-                   @click="importTemplate">下载模板
+          <el-link
+            type="primary"
+            :underline="false"
+            style="font-size:12px;vertical-align: baseline;"
+            @click="importTemplate"
+          >下载模板
           </el-link>
         </div>
       </el-upload>
@@ -69,10 +74,10 @@
 </template>
 
 <script>
-import {getParameter} from '@/api/system/parameter'
-import {setRecord} from '@/api/control_panel/database'
-import {getToken} from "@/utils/auth";
-import {parseTime} from "@/utils";
+import { getParameter } from '@/api/system/parameter'
+import { setRecord } from '@/api/control_panel/database'
+import { getToken } from '@/utils/auth'
+import { parseTime } from '@/utils'
 
 export default {
   name: 'ControlPanel',
@@ -91,16 +96,16 @@ export default {
         // 是否显示弹出层（定时任务上传）
         open: false,
         // 弹出层标题（定时任务上传）
-        title: "",
+        title: '',
         // 是否禁用上传
         isUploading: false,
         // 是否更新已经存在的定时任务数据
         updateSupport: 0,
         // 设置上传的请求头部
-        headers: {Token: getToken()},
+        headers: { Token: getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "monitor/job/file/importData"
-      },
+        url: process.env.VUE_APP_BASE_API + 'monitor/job/file/importData'
+      }
     }
   },
   created() {
@@ -116,34 +121,33 @@ export default {
     updateDatabase() {
       this.loading = true
       getParameter('database_update_auth').then(response => {
-        let data = response.data;
-        console.log(data);
+        const data = response.data
+        console.log(data)
         if (data.value) {
           const loading2 = this.$loading({
             lock: true,
             text: '数据库升级中，请稍等...',
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
-          });
+          })
           try {
-            setRecord({auth_code: data.value}).then(response => {
-              let code = response.code
-              loading2.close();
-              this.loading = false;
+            setRecord({ auth_code: data.value }).then(response => {
+              const code = response.code
+              loading2.close()
+              this.loading = false
               if (code === 0 && !response.data.error) {
                 this.$message({
                   message: '数据库升级成功',
                   type: 'success'
-                });
+                })
               } else {
-                this.$message.error('数据库升级失败:' + response.data.error);
+                this.$message.error('数据库升级失败:' + response.data.error)
               }
-            });
-          }catch (e) {
-            loading2.close();
-            this.loading = false;
+            })
+          } catch (e) {
+            loading2.close()
+            this.loading = false
           }
-
         } else {
           this.loading = false
         }
@@ -168,12 +172,12 @@ export default {
     /** 刷新按钮操作 */
     handleRefresh() {
       this.init()
-      location.reload();
+      location.reload()
     },
     /** 上传按钮操作 */
     handleImport() {
-      this.upload.title = "定时任务脚本上传";
-      this.upload.open = true;
+      this.upload.title = '定时任务脚本上传'
+      this.upload.open = true
     },
     /** 下载模板操作 */
     importTemplate() {
@@ -184,19 +188,19 @@ export default {
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
-      this.upload.isUploading = true;
+      this.upload.isUploading = true
     },
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
-      this.upload.open = false;
-      this.upload.isUploading = false;
-      this.$refs.upload.clearFiles();
-      this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "上传结果", {dangerouslyUseHTMLString: true});
+      this.upload.open = false
+      this.upload.isUploading = false
+      this.$refs.upload.clearFiles()
+      this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + '</div>', '上传结果', { dangerouslyUseHTMLString: true })
     },
     // 提交上传文件
     submitFileForm() {
-      this.$refs.upload.submit();
-    },
+      this.$refs.upload.submit()
+    }
 
   }
 }
