@@ -42,7 +42,14 @@ router.beforeEach(async(to, from, next) => {
           router.addRoutes(accessRoutes)
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
-          next({ ...to, replace: true })
+          // 目标地址可能在当前账号的可访问路由之外(例如切换账号后遗留的 redirect,
+          // 上一个账号能访问但当前账号无权限), 此时 addRoutes 后该地址会命中通配路由
+          // 并被重定向到 /404, 这里回退到首页
+          // 注意: vue-router 3.0.x 的 resolve() 返回 { location, route, href, ... },
+          // 真正的路由对象在 .route 上
+          const resolvedRoute = router.resolve(to.fullPath).route
+          const isCatchAll = to.path !== '/404' && resolvedRoute && resolvedRoute.path === '/404'
+          next(isCatchAll ? { path: '/', replace: true } : { ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
