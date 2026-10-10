@@ -66,7 +66,8 @@ export default {
   components: { UserLayout },
   data() {
     const validatePassword = (rule, value, callback) => {
-      if (value == '') {
+      // 用 !value 同时拦住 undefined/null/''，避免后面 value.length 报错
+      if (!value) {
         callback(new Error('请输入密码'))
       } else if (value.length < 5) {
         callback(new Error('密码长度不小于5位'))
@@ -79,9 +80,9 @@ export default {
         user: '',
         password: '',
         code: '',
-        key: ''
+        key: '',
+        rememberMe: false
       },
-      rememberMe: false,
       loginRules: {
         user: [{ required: true, trigger: 'blur', message: '请输入用户名/邮箱' }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }],
@@ -135,20 +136,27 @@ export default {
       const username = Cookies.get('username')
       const password = Cookies.get('password')
       const rememberMe = Cookies.get('rememberMe')
-      this.loginForm = {
-        username: username === undefined ? this.loginForm.user : username,
-        password: password === undefined ? this.loginForm.password : decrypt(password),
-        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
+      // 只回填字段, 不要整体替换 loginForm(否则会丢掉 user/code/key)
+      if (username !== undefined) {
+        this.loginForm.user = username
       }
+      if (password !== undefined) {
+        const decrypted = decrypt(password)
+        if (decrypted) {
+          this.loginForm.password = decrypted
+        }
+      }
+      // cookie 里存的是字符串 'true'/'false', 不能用 Boolean('false')(结果为 true)
+      this.loginForm.rememberMe = rememberMe === 'true'
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          if (this.rememberMe) {
+          if (this.loginForm.rememberMe) {
             Cookies.set('username', this.loginForm.user, { expires: 30 })
             Cookies.set('password', encrypt(this.loginForm.password), { expires: 30 })
-            Cookies.set('rememberMe', this.rememberMe, { expires: 30 })
+            Cookies.set('rememberMe', this.loginForm.rememberMe, { expires: 30 })
           } else {
             Cookies.remove('username')
             Cookies.remove('password')
