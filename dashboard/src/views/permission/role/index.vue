@@ -348,7 +348,9 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.submitLoading = true
-          this.form.menus = this.$refs.menu.getCheckedKeys()
+          // 必须带上"半选"的父级菜单, 否则保存后父菜单会从角色菜单中丢失,
+          // 导致用户登录后整块菜单/路由消失
+          this.form.menus = this.$refs.menu.getCheckedKeys().concat(this.$refs.menu.getHalfCheckedKeys())
           if (this.form.id !== undefined) {
             setRole(this.form.id, this.form).then(response => {
               if (response.code === 0) {
