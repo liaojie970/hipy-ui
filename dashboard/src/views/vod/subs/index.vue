@@ -105,7 +105,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-hasRole="['admin','opts']"
+          v-hasRole="['admin','Operation']"
           type="danger"
           icon="el-icon-delete"
           size="mini"
@@ -116,7 +116,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-hasRole="['admin','opts']"
+          v-hasRole="['admin','Operation']"
           type="success"
           icon="el-icon-edit"
           size="mini"
@@ -127,7 +127,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-hasRole="['admin','opts']"
+          v-hasRole="['admin','Operation']"
           type="danger"
           icon="el-icon-edit"
           size="mini"
@@ -186,7 +186,7 @@
           >修改
           </el-button>
           <el-button
-            v-hasRole="['admin','opts']"
+            v-hasRole="['admin','Operation']"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -197,13 +197,13 @@
             <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item
-                v-hasRole="['admin','opts']"
+                v-hasRole="['admin','Operation']"
                 command="handleT3"
                 icon="el-icon-link"
               >T3配置
               </el-dropdown-item>
               <el-dropdown-item
-                v-hasRole="['admin','opts']"
+                v-hasRole="['admin','Operation']"
                 command="handleT4"
                 icon="el-icon-link"
               >T4配置

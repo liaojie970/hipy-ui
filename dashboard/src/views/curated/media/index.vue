@@ -134,7 +134,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-hasRole="['admin','opts']"
+          v-hasRole="['admin','Operation']"
           type="danger"
           icon="el-icon-delete"
           size="mini"
@@ -216,7 +216,7 @@
           >修改
           </el-button>
           <el-button
-            v-hasRole="['admin','opts']"
+            v-hasRole="['admin','Operation']"
             size="mini"
             type="text"
             icon="el-icon-delete"

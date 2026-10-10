@@ -48,7 +48,7 @@
             >
               <template slot-scope="scope">
                 <el-button
-                  v-hasRole="['admin','opts']"
+                  v-hasRole="['admin','Operation']"
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
@@ -98,7 +98,7 @@
             >
               <template slot-scope="scope">
                 <el-button
-                  v-hasRole="['admin','opts']"
+                  v-hasRole="['admin','Operation']"
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
@@ -115,7 +115,7 @@
           <div slot="header">
             <span><i class="el-icon-document" /> 缓存内容</span>
             <el-button
-              v-hasRole="['admin','opts']"
+              v-hasRole="['admin','Operation']"
               style="float: right; padding: 3px 0"
               type="text"
               icon="el-icon-refresh-right"

@@ -35,7 +35,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          v-hasRole="['admin','opts']"
+          v-hasRole="['admin','Operation']"
           type="success"
           icon="el-icon-refresh"
           size="mini"
@@ -45,7 +45,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-hasRole="['admin','opts']"
+          v-hasRole="['admin','Operation']"
           type="warning"
           icon="el-icon-download"
           size="mini"

@@ -76,7 +76,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          v-hasRole="['admin','opts']"
+          v-hasRole="['admin','Operation']"
           type="success"
           icon="el-icon-refresh"
           size="mini"
@@ -98,7 +98,7 @@
 
       <el-col :span="1.5">
         <el-button
-          v-hasRole="['admin','opts']"
+          v-hasRole="['admin','Operation']"
           type="warning"
           icon="el-icon-delete"
           size="mini"
@@ -110,7 +110,7 @@
 
       <el-col :span="1.5">
         <el-button
-          v-hasRole="['admin','opts']"
+          v-hasRole="['admin','Operation']"
           type="danger"
           icon="el-icon-delete"
           size="mini"
@@ -122,7 +122,7 @@
 
       <el-col :span="1.5">
         <el-button
-          v-hasRole="['admin','opts']"
+          v-hasRole="['admin','Operation']"
           type="danger"
           plain
           icon="el-icon-delete"
@@ -305,7 +305,7 @@
           >修改
           </el-button>
           <el-button
-            v-hasRole="['admin','opts']"
+            v-hasRole="['admin','Operation']"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -316,31 +316,31 @@
             <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item
-                v-hasRole="['admin','opts']"
+                v-hasRole="['admin','Operation']"
                 command="handleRaw"
                 icon="el-icon-link"
               >直链
               </el-dropdown-item>
               <el-dropdown-item
-                v-hasRole="['admin','opts']"
+                v-hasRole="['admin','Operation']"
                 command="handleHome"
                 icon="el-icon-menu"
               >首页
               </el-dropdown-item>
               <el-dropdown-item
-                v-hasRole="['admin','opts']"
+                v-hasRole="['admin','Operation']"
                 command="handleSearch"
                 icon="el-icon-search"
               >搜索
               </el-dropdown-item>
               <el-dropdown-item
-                v-hasRole="['admin','opts']"
+                v-hasRole="['admin','Operation']"
                 command="handleSetTop"
                 icon="el-icon-top"
               >置顶
               </el-dropdown-item>
               <el-dropdown-item
-                v-hasRole="['admin','opts']"
+                v-hasRole="['admin','Operation']"
                 command="handleSetBottom"
                 icon="el-icon-bottom"
               >置底

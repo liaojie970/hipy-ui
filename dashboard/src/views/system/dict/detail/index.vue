@@ -65,7 +65,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-hasRole="['admin','opts']"
+          v-hasRole="['admin','Operation']"
           type="danger"
           icon="el-icon-delete"
           size="mini"
@@ -113,7 +113,7 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button v-hasPermi="['system:dict:detail:put']" size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button v-hasRole="['admin','opts']" size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-hasRole="['admin','Operation']" size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

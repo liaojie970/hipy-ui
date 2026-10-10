@@ -61,7 +61,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-hasRole="['admin','opts']"
+          v-hasRole="['admin','Operation']"
           type="danger"
           plain
           icon="el-icon-delete"
@@ -137,7 +137,7 @@
           >修改
           </el-button>
           <el-button
-            v-hasRole="['admin','opts']"
+            v-hasRole="['admin','Operation']"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -148,7 +148,7 @@
             <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item
-                v-hasRole="['admin','opts']"
+                v-hasRole="['admin','Operation']"
                 command="handleRun"
                 icon="el-icon-caret-right"
               >执行一次

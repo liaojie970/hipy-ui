@@ -73,7 +73,7 @@
           >修改
           </el-button>
           <el-button
-            v-hasRole="['admin','opts']"
+            v-hasRole="['admin','Operation']"
             size="mini"
             type="text"
             icon="el-icon-delete"
