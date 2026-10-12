@@ -73,7 +73,7 @@
           type="success"
           icon="el-icon-check"
           size="mini"
-          :disabled="!ids.length"
+          :disabled="!ids.length || !batchWritable"
           @click="handleStatus(1)"
         >通过
         </el-button>
@@ -84,7 +84,7 @@
           type="warning"
           icon="el-icon-close"
           size="mini"
-          :disabled="!ids.length"
+          :disabled="!ids.length || !batchWritable"
           @click="handleStatus(2)"
         >拒绝
         </el-button>
@@ -95,7 +95,7 @@
           type="primary"
           icon="el-icon-view"
           size="mini"
-          :disabled="!ids.length"
+          :disabled="!ids.length || !batchWritable"
           @click="handleVisible(1)"
         >设为可见
         </el-button>
@@ -105,7 +105,7 @@
           v-has-permi="['curated:media:put']"
           icon="el-icon-view"
           size="mini"
-          :disabled="!ids.length"
+          :disabled="!ids.length || !batchWritable"
           @click="handleVisible(0)"
         >设为隐藏
         </el-button>
@@ -138,7 +138,7 @@
           type="danger"
           icon="el-icon-delete"
           size="mini"
-          :disabled="!ids.length"
+          :disabled="!ids.length || !batchWritable"
           @click="handleRemove"
         >删除
         </el-button>
@@ -149,7 +149,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" :selectable="canWrite" />
       <el-table-column label="ID" align="center" prop="id" width="60" />
       <el-table-column label="封面" align="center" width="120">
         <template slot-scope="scope">
@@ -212,6 +212,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            :disabled="!canWrite(scope.row)"
             @click="handleUpdate(scope.row)"
           >修改
           </el-button>
@@ -220,6 +221,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
+            :disabled="!canWrite(scope.row)"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>
@@ -320,6 +322,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { listMedia, getMedia, setMedia, delMedia, batchStatus, batchVisible, batchRemove, checkMedia, kidConfig } from '@/api/curated/media'
 import { listProviders } from '@/api/curated/providers'
 import { listCategories } from '@/api/curated/categories'
@@ -331,6 +334,7 @@ export default {
       submitLoading: false,
       loading: true,
       ids: [],
+      selectedRows: [],
       total: 0,
       list: [],
       providers: [],
@@ -360,6 +364,15 @@ export default {
       form: {}
     }
   },
+  computed: {
+    ...mapGetters(['userId', 'isSuperAdmin']),
+    // 批量操作是否可用: 选中项必须全部可写
+    batchWritable() {
+      if (this.isSuperAdmin) return true
+      if (this.userId === undefined || this.userId === null || this.userId === '') return true
+      return this.selectedRows.every(row => this.canWrite(row))
+    }
+  },
   created() {
     this.getList()
     listProviders({ page: 1, page_size: 100 }).then(res => {
@@ -376,8 +389,9 @@ export default {
         this.list = res.data.list
         this.total = res.data.total
         this.loading = false
-      }).catch(() => {
+      }).catch(error => {
         this.loading = false
+        this.handleApiError(error)
       })
     },
     categoryName(id) {
@@ -399,6 +413,27 @@ export default {
       const pad = n => (n < 10 ? '0' + n : '' + n)
       return (h > 0 ? h + ':' : '') + pad(m) + ':' + pad(s)
     },
+    // 是否可写: 超管可写全部; 普通用户仅可写本人创建的数据(creator_id 等于当前用户 id)。
+    // 若拿不到当前用户 id, 返回 true(放行), 由后端做最终校验(前端仅做体验优化)。
+    canWrite(row) {
+      if (!row) return false
+      if (this.isSuperAdmin) return true
+      if (this.userId === undefined || this.userId === null || this.userId === '') return true
+      if (row.creator_id === undefined || row.creator_id === null) return true
+      return String(row.creator_id) === String(this.userId)
+    },
+    // 接口异常统一处理: "无权限"类给出友好提示, 其它错误由 request 拦截器统一提示
+    handleApiError(error) {
+      const status = error && error.response && error.response.status
+      const msg = (error && (error.message || error.msg)) || ''
+      if (status === 403 || /403|无权限|权限不足|forbidden|permission/i.test(msg)) {
+        this.$message({
+          showClose: true,
+          message: '无权限操作该数据，该数据可能由超级管理员创建或不属于你',
+          type: 'warning'
+        })
+      }
+    },
     handleQuery() {
       this.queryParams.page = 1
       this.getList()
@@ -411,6 +446,7 @@ export default {
       this.handleQuery()
     },
     handleSelectionChange(selection) {
+      this.selectedRows = selection
       this.ids = selection.map(item => item.id)
     },
     cancel() {
@@ -423,7 +459,7 @@ export default {
         this.form = res.data
         this.open = true
         this.title = '修改内容'
-      })
+      }).catch(error => this.handleApiError(error))
     },
     submitForm() {
       if (this.submitLoading) return
@@ -432,13 +468,13 @@ export default {
         this.msgSuccess('修改成功')
         this.open = false
         this.getList()
-      }).finally(() => { this.submitLoading = false })
+      }).catch(error => this.handleApiError(error)).finally(() => { this.submitLoading = false })
     },
     handleDetail(row) {
       getMedia(row.id).then(res => {
         this.detail = res.data
         this.detailOpen = true
-      })
+      }).catch(error => this.handleApiError(error))
     },
     handleStatus(status) {
       const desc = status === 1 ? '通过' : '拒绝'
@@ -447,8 +483,7 @@ export default {
       }).then(() => batchStatus(this.ids, status)).then(() => {
         this.getList()
         this.msgSuccess('操作成功')
-      }).catch(() => {
-      })
+      }).catch(error => this.handleApiError(error))
     },
     handleVisible(visible) {
       const desc = visible === 1 ? '可见' : '隐藏'
@@ -457,8 +492,7 @@ export default {
       }).then(() => batchVisible(this.ids, visible)).then(() => {
         this.getList()
         this.msgSuccess('操作成功')
-      }).catch(() => {
-      })
+      }).catch(error => this.handleApiError(error))
     },
     handleRemove() {
       this.$confirm('是否确认删除选中的 ' + this.ids.length + ' 项? 该操作不可恢复。', '警告', {
@@ -466,8 +500,7 @@ export default {
       }).then(() => batchRemove(this.ids)).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(() => {
-      })
+      }).catch(error => this.handleApiError(error))
     },
     handleCheck() {
       if (!this.ids.length) return
@@ -483,8 +516,9 @@ export default {
           type: d.fail_count ? 'warning' : 'success'
         })
         this.getList()
-      }).catch(() => {
+      }).catch(error => {
         this.checking = false
+        this.handleApiError(error)
       })
     },
     handleCheckRow(row) {
@@ -498,7 +532,10 @@ export default {
           this.msgError('校验未通过: ' + (r.message || '未知原因'))
         }
         this.getList()
-      }).catch(() => loading.close())
+      }).catch(error => {
+        loading.close()
+        this.handleApiError(error)
+      })
     },
     handleKidConfig() {
       this.kidOpen = true
@@ -506,8 +543,9 @@ export default {
       kidConfig({ mode: 0, ensure: true }).then(res => {
         this.kidLoading = false
         this.kid = res.data || {}
-      }).catch(() => {
+      }).catch(error => {
         this.kidLoading = false
+        this.handleApiError(error)
       })
     },
     copyKidUrl() {
@@ -526,8 +564,7 @@ export default {
       }).then(() => delMedia(id)).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(() => {
-      })
+      }).catch(error => this.handleApiError(error))
     }
   }
 }

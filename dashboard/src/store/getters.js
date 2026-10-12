@@ -5,6 +5,9 @@ const getters = {
   visitedViews: state => state.tagsView.visitedViews,
   cachedViews: state => state.tagsView.cachedViews,
   token: state => state.user.token,
+  userId: state => state.user.id,
+  // 超级管理员判定与按钮级权限一致: 角色含 'admin'
+  isSuperAdmin: state => (state.user.roles || []).some(role => role === 'admin'),
   avatar: state => state.user.avatar,
   username: state => state.user.username,
   nickname: state => state.user.nickname,

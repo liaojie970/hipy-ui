@@ -6,6 +6,7 @@ import md5 from 'js-md5'
 
 const state = {
   token: getToken(),
+  id: undefined,
   username: '',
   nickname: '',
   avatar: '',
@@ -20,6 +21,9 @@ const state = {
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
+  },
+  SET_ID: (state, id) => {
+    state.id = id
   },
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -98,12 +102,14 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, roles_name, permissions, nickname, avatar, username, email, phone, sex } = data
+        const { id, roles, roles_name, permissions, nickname, avatar, username, email, phone, sex } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
+        // 当前登录用户 id: 后端 /user/info 若返回则记录, 用于"数据范围"前端判权
+        commit('SET_ID', id)
         commit('SET_ROLES', roles)
         commit('SET_ROLES_NAME', roles_name)
         commit('SET_PERMISSIONS', permissions)

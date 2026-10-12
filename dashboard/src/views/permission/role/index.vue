@@ -81,6 +81,7 @@
       <el-table-column label="描述" align="center" prop="key" :show-overflow-tooltip="true" />
       <el-table-column label="排序" align="center" prop="order_num" :show-overflow-tooltip="true" width="55" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" :show-overflow-tooltip="true" />
+      <el-table-column label="数据范围" align="center" prop="data_scope" :formatter="dataScopeFormat" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" align="center" prop="created_ts">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.created_ts) }}</span>
@@ -127,6 +128,16 @@
         </el-form-item>
         <el-form-item label="角色描述" prop="key">
           <el-input v-model="form.key" placeholder="请输入参数键" />
+        </el-form-item>
+        <el-form-item label="数据范围" prop="data_scope">
+          <el-select v-model="form.data_scope" placeholder="请选择数据范围" style="width: 100%">
+            <el-option
+              v-for="dict in dataScopeOptions"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
+          </el-select>
         </el-form-item>
         <el-row>
           <el-col :span="12">
@@ -199,6 +210,12 @@ export default {
       // 是否显示弹出层
       open: false,
       statusOptions: [],
+      // 数据范围选项: 1=仅本人 / 2=本人+公共只读 / 3=全部
+      dataScopeOptions: [
+        { label: '仅本人', value: 1 },
+        { label: '本人+公共只读', value: 2 },
+        { label: '全部', value: 3 }
+      ],
       // 查询参数
       queryParams: {
         page: 1,
@@ -254,6 +271,23 @@ export default {
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status)
     },
+    // 数据范围字典翻译
+    dataScopeFormat(row, column) {
+      const dict = this.dataScopeOptions.find(item => item.value === row.data_scope)
+      return dict ? dict.label : row.data_scope
+    },
+    // 接口异常统一处理: "无权限"类给出友好提示, 其它错误由 request 拦截器统一提示
+    handleApiError(error) {
+      const status = error && error.response && error.response.status
+      const msg = (error && (error.message || error.msg)) || ''
+      if (status === 403 || /403|无权限|权限不足|forbidden|permission/i.test(msg)) {
+        this.$message({
+          showClose: true,
+          message: '无权限操作该数据，该数据可能由超级管理员创建或不属于你',
+          type: 'warning'
+        })
+      }
+    },
     // 取消按钮
     cancel() {
       this.open = false
@@ -266,6 +300,7 @@ export default {
         key: undefined,
         name: undefined,
         status: undefined,
+        data_scope: 2,
         order_num: undefined,
         menus: [],
         menuCheckStrictly: true
@@ -335,6 +370,10 @@ export default {
       const id = row.id || this.ids
       getRole(id).then(response => {
         this.form = response.data
+        // 历史数据可能未返回 data_scope, 回退到默认值 2
+        if (this.form.data_scope === undefined || this.form.data_scope === null) {
+          this.form.data_scope = 2
+        }
         this.open = true
         this.title = '修改参数'
         setTimeout(() => {
@@ -363,11 +402,11 @@ export default {
                   } else {
                     this.msgError('菜单权限修改失败,' + response.msg)
                   }
-                }).finally(() => { this.submitLoading = false })
+                }).catch(error => this.handleApiError(error)).finally(() => { this.submitLoading = false })
               } else {
                 this.msgError('角色修改失败,' + response.msg)
               }
-            }).finally(() => { this.submitLoading = false })
+            }).catch(error => this.handleApiError(error)).finally(() => { this.submitLoading = false })
           } else {
             addRole(this.form).then(response => {
               if (response.code === 0) {
@@ -377,7 +416,7 @@ export default {
               } else {
                 this.msgError('添加失败,' + response.msg)
               }
-            }).finally(() => { this.submitLoading = false })
+            }).catch(error => this.handleApiError(error)).finally(() => { this.submitLoading = false })
           }
         }
       })
@@ -394,8 +433,7 @@ export default {
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {
-      })
+      }).catch(error => this.handleApiError(error))
     }
   }
 }
