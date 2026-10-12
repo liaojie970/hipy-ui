@@ -331,7 +331,7 @@ export default {
     getDicts('vod_configs_value_type').then(response => {
       this.valueTypeOptions = response.data.details
     })
-    this.host = new URL(process.env.VUE_APP_BASE_API).origin
+    this.host = window.location.origin
   },
   methods: {
     /** 查询字典类型列表 */
@@ -385,7 +385,7 @@ export default {
       this.handleQuery()
     },
     handleLink(row) {
-      const file_url = new URL(process.env.VUE_APP_BASE_API).origin + '/files/' + row.value + '?t=' + new Date().getTime()
+      const file_url = window.location.origin + '/files/' + row.value + '?t=' + new Date().getTime()
       open(file_url)
     },
     handleEdit(row) {

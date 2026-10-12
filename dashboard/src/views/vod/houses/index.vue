@@ -148,7 +148,7 @@ export default {
     getDicts('vod_rule_status').then(response => {
       this.statusOptions = response.data.details
     })
-    this.host = new URL(process.env.VUE_APP_BASE_API).origin
+    this.host = window.location.origin
   },
   methods: {
     /** 查询字典类型列表 */

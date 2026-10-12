@@ -526,7 +526,7 @@ export default {
     },
     handleConfig(row, mode) {
       const code = row.code
-      const file_url = new URL(process.env.VUE_APP_BASE_API).origin + `/config/${mode}?sub=${code}`
+      const file_url = window.location.origin + `/config/${mode}?sub=${code}`
       open(file_url)
     },
     /** 修改按钮操作 */

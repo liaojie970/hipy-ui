@@ -2,11 +2,11 @@ import request from '@/utils/request'
 import { base64Encode, base64Decode } from '@/utils/jsencrypt'
 import cache from '@/plugins/cache'
 
-const config_url = new URL(process.env.VUE_APP_BASE_API).origin + '/config/0'
+const config_url = window.location.origin + '/config/0'
 
 export const now_site = {
   api_url: process.env.VUE_APP_BASE_API + 'vod/cntv%E5%A4%AE%E8%A7%86?pwd=dzyyds&sub=dzyyds',
-  extend: new URL(process.env.VUE_APP_BASE_API).origin + '/files/hipy/cntv央视.json'
+  extend: window.location.origin + '/files/hipy/cntv央视.json'
 }
 
 function get_now_site() {

@@ -5,7 +5,7 @@ const api_url = '/database_update'
 // 修改
 export function setRecord(data) {
   return request({
-    baseURL: new URL(process.env.VUE_APP_BASE_API).origin,
+    baseURL: window.location.origin,
     url: api_url,
     method: 'put',
     data: data,
@@ -15,7 +15,7 @@ export function setRecord(data) {
 
 export function getVersion() {
   return request({
-    baseURL: new URL(process.env.VUE_APP_BASE_API).origin,
+    baseURL: window.location.origin,
     url: '/version',
     method: 'get',
     timeout: 5 * 1000

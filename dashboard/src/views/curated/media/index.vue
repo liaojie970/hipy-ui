@@ -551,11 +551,13 @@ export default {
     copyKidUrl() {
       const url = this.kid && this.kid.config_url
       if (!url) return
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(() => this.msgSuccess('已复制')).catch(() => this.msgSuccess(url))
-      } else {
+      // 局域网 http 访问属于非安全上下文, navigator.clipboard 不可用,
+      // 统一改用项目内置的 vue-clipboard2($copyText), 它在 http 下也能复制。
+      this.$copyText(url).then(() => {
+        this.msgSuccess('已复制')
+      }).catch(() => {
         this.msgSuccess(url)
-      }
+      })
     },
     handleDelete(row) {
       const id = row.id

@@ -754,13 +754,13 @@ export default {
     handleLink(row) {
       const group = this.groupOptions.find(x => x.value === row.group).label
       const name = row.name + row.file_type
-      const file_url = new URL(process.env.VUE_APP_BASE_API).origin + '/files/' + group + '/' + name + '?t=' + new Date().getTime() + '&raw=1'
+      const file_url = window.location.origin + '/files/' + group + '/' + name + '?t=' + new Date().getTime() + '&raw=1'
       open(file_url)
     },
     handleHome(row) {
       const group = this.groupOptions.find(x => x.value === row.group).label
       if (group === 'hipy' && row.file_type === '.py') {
-        const home_url = new URL(process.env.VUE_APP_BASE_API).origin + '/api/v1/vod/' + row.name
+        const home_url = window.location.origin + '/api/v1/vod/' + row.name
         open(home_url)
       } else {
         this.$modal.msgError('只有hipy源允许访问首页')
@@ -769,7 +769,7 @@ export default {
     handleSearch(row) {
       const group = this.groupOptions.find(x => x.value === row.group).label
       if (group === 'hipy' && row.file_type === '.py') {
-        const home_url = new URL(process.env.VUE_APP_BASE_API).origin + '/api/v1/vod/' + row.name
+        const home_url = window.location.origin + '/api/v1/vod/' + row.name
         const search_url = home_url + '?ac=list&pg=1&wd=斗罗大陆'
         open(search_url)
       } else {

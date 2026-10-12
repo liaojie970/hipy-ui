@@ -8,7 +8,7 @@ export default {
   components: { iFrame },
   data() {
     return {
-      url: new URL(process.env.VUE_APP_BASE_API).origin + '/docs'
+      url: window.location.origin + '/docs'
     }
   }
 }
