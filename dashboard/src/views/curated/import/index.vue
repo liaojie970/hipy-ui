@@ -213,12 +213,42 @@
         <el-table-column label="原因" prop="error" show-overflow-tooltip />
       </el-table>
     </el-dialog>
+
+    <!-- 未选择分类时, 入库前引导选择或新建分类 -->
+    <el-dialog
+      title="请选择入库分类"
+      :visible.sync="categoryDialogOpen"
+      width="460px"
+      append-to-body
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <p style="margin: 0 0 12px; color: #909399">
+        未选择分类会入库为「未分类」, 请从下方选择已有分类, 或直接输入新分类名。
+      </p>
+      <el-select
+        v-model="categoryPickId"
+        filterable
+        allow-create
+        default-first-option
+        clearable
+        placeholder="选择或输入新分类名"
+        style="width: 100%"
+      >
+        <el-option v-for="c in categories" :key="c.id" :label="c.name" :value="c.id" />
+      </el-select>
+      <div slot="footer">
+        <el-button :disabled="categorySaving" @click="cancelCategory">取消</el-button>
+        <el-button type="primary" :loading="categorySaving" @click="confirmCategory">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { listProviders } from '@/api/curated/providers'
-import { listCategories } from '@/api/curated/categories'
+import { listCategories, addCategory } from '@/api/curated/categories'
 import { batchImport } from '@/api/curated/media'
 import { searchMedia, resolveUrl } from '@/api/curated/import'
 
@@ -230,6 +260,10 @@ export default {
       categories: [],
       providerCode: undefined,
       categoryId: undefined,
+      categoryDialogOpen: false,
+      categoryPickId: undefined,
+      categorySaving: false,
+      pendingRows: [],
       importStatus: 1,
       importVisible: 1,
       activeTab: 'search',
@@ -343,6 +377,21 @@ export default {
           return this.$message.warning(before + ' 条均已入库, 已全部跳过')
         }
       }
+      // 入库前检查分类: 为空则暂存待入库行, 弹窗引导选择/新建分类, 不发起任何写请求
+      if (this.isCategoryEmpty()) {
+        this.pendingRows = rows.slice()
+        this.categoryPickId = undefined
+        this.categoryDialogOpen = true
+        return
+      }
+      this.doImport(rows)
+    },
+    // 分类是否为空(undefined / null / '')
+    isCategoryEmpty() {
+      return this.categoryId === undefined || this.categoryId === null || this.categoryId === ''
+    },
+    // 已拿到分类后复用原有入库逻辑
+    doImport(rows) {
       const items = rows.map(r => ({
         provider_code: this.providerCode,
         media_id: r.media_id,
@@ -379,6 +428,47 @@ export default {
       }).catch(() => {
         this.importing = false
       })
+    },
+    // 确认分类选择: 已有分类直接用; 新分类名则先创建, 成功后才继续入库
+    confirmCategory() {
+      const picked = this.categoryPickId
+      const existing = this.categories.find(c => c.id === picked)
+      if (existing) {
+        this.categoryId = existing.id
+        return this.finishCategoryChoice()
+      }
+      const name = typeof picked === 'string' ? picked.trim() : ''
+      if (!name) return this.msgError('请选择或输入一个分类')
+      if (this.categorySaving) return
+      this.categorySaving = true
+      addCategory({ name: name }).then(res => {
+        const id = res.data && res.data.id
+        if (id === undefined || id === null || id === '') {
+          this.categorySaving = false
+          return this.msgError('创建分类失败, 请重试')
+        }
+        this.categoryId = id
+        this.categories.push({ id: id, name: name })
+        this.categorySaving = false
+        this.finishCategoryChoice()
+      }).catch(() => {
+        // 失败时对话框不关闭、不继续入库
+        this.categorySaving = false
+      })
+    },
+    // 拿到分类后关闭对话框并复用原入库逻辑
+    finishCategoryChoice() {
+      const rows = this.pendingRows
+      this.categoryDialogOpen = false
+      this.categoryPickId = undefined
+      this.pendingRows = []
+      if (rows && rows.length) this.doImport(rows)
+    },
+    // 取消本次入库
+    cancelCategory() {
+      this.categoryDialogOpen = false
+      this.categoryPickId = undefined
+      this.pendingRows = []
     }
   }
 }
