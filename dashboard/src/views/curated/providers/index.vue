@@ -166,7 +166,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="排序">
-              <el-input-number v-model="form.order_num" :min="0" controls-position="right" />
+              <el-input-number v-model="form.order_num" :min="0" controls-position="right" style="width: 100%" />
             </el-form-item>
           </el-col>
         </el-row>
