@@ -56,8 +56,9 @@
       </el-table-column>
       <el-table-column label="代理" align="center" width="140" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span v-if="scope.row.config && scope.row.config.proxy">{{ scope.row.config.proxy }}</span>
-          <span v-else style="color:#909399">跟随系统</span>
+          <span v-if="!scope.row.config || !scope.row.config.proxy" style="color:#909399">跟随系统</span>
+          <span v-else-if="isDirectProxy(scope.row.config.proxy)" style="color:#909399">直连</span>
+          <span v-else>{{ scope.row.config.proxy }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" prop="status" width="90">
@@ -140,11 +141,12 @@
             </el-select>
           </el-form-item>
           <el-form-item label="网络代理">
-            <el-input
-              v-model="form.config.proxy"
-              placeholder="留空=跟随系统代理; none=强制直连; 或 127.0.0.1:7897"
-            />
-            <div class="tip">若本机直接访问 B 站不通(需要代理才能打开网页), 请在这里填代理地址, 例如 127.0.0.1:7897。</div>
+            <el-switch v-model="form.config.useProxy" active-text="使用代理" inactive-text="直连" />
+            <div class="tip">关闭(默认)=强制直连, 不使用任何代理; 手机等能直连 B 站的环境请保持关闭。</div>
+          </el-form-item>
+          <el-form-item v-if="form.config.useProxy" label="代理地址">
+            <el-input v-model="form.config.proxy" placeholder="例如 127.0.0.1:7897" />
+            <div class="tip">请确保该代理在<b>本机</b>可访问; 不要把电脑上的本机代理(127.0.0.1:7897)带到手机。</div>
           </el-form-item>
         </template>
 
@@ -233,12 +235,16 @@ export default {
       this.open = false
       this.reset()
     },
+    emptyConfig() {
+      // 预置所有会被 v-model 绑定的键: Vue2 无法侦测“后加的属性”, 必须先存在才响应式
+      return { useProxy: false, cookie: '', qn: undefined, proxy: '' }
+    },
     reset() {
       this.form = {
         id: undefined,
         code: undefined,
         name: undefined,
-        config: {},
+        config: this.emptyConfig(),
         status: 1,
         order_num: 1,
         remark: undefined
@@ -273,30 +279,50 @@ export default {
       const id = row.id || this.ids
       getProvider(id).then(res => {
         const data = res.data || {}
-        this.form = data
-        if (!this.form.config) this.form.config = {}
-        this.configText = JSON.stringify(this.form.config || {}, null, 2)
+        // 先把 config 合并成完整对象(含 useProxy)再赋值给 form, 保证响应式
+        const cfg = Object.assign(this.emptyConfig(), data.config || {})
+        const p = (cfg.proxy || '').trim()
+        cfg.useProxy = !!p && !this.isDirectProxy(p)
+        this.form = Object.assign({
+          id: undefined, code: undefined, name: undefined,
+          status: 1, order_num: 1, remark: undefined
+        }, data, { config: cfg })
+        this.configText = JSON.stringify(data.config || {}, null, 2)
         this.open = true
         this.title = '修改站点'
       })
+    },
+    isDirectProxy(p) {
+      return ['none', 'direct', 'no', 'off', '0', 'false'].indexOf(String(p || '').trim().toLowerCase()) >= 0
     },
     collectConfig() {
       if (this.form.code === 'bilibili') {
         const cfg = {}
         if (this.form.config && this.form.config.cookie) cfg.cookie = this.form.config.cookie
         if (this.form.config && this.form.config.qn) cfg.qn = this.form.config.qn
-        if (this.form.config && this.form.config.proxy) cfg.proxy = this.form.config.proxy
+        if (this.form.config && this.form.config.useProxy) {
+          const addr = (this.form.config.proxy || '').trim()
+          if (!addr) throw new Error('已开启网络代理, 请填写代理地址')
+          cfg.proxy = addr
+        } else {
+          // 开关关闭 => 强制直连(不写成空, 避免误用环境/系统代理)
+          cfg.proxy = 'none'
+        }
         return cfg
       }
       if (!this.configText || !this.configText.trim()) return {}
-      return JSON.parse(this.configText)
+      try {
+        return JSON.parse(this.configText)
+      } catch (e) {
+        throw new Error('配置不是合法的 JSON')
+      }
     },
     handleTestForm() {
       let config
       try {
         config = this.collectConfig()
       } catch (e) {
-        this.msgError('配置不是合法的 JSON')
+        this.msgError(e.message || '配置不是合法的 JSON')
         return
       }
       this.testing = true
@@ -333,7 +359,7 @@ export default {
         try {
           config = this.collectConfig()
         } catch (e) {
-          this.msgError('配置不是合法的 JSON')
+          this.msgError(e.message || '配置不是合法的 JSON')
           this.submitLoading = false
           return
         }
