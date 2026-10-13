@@ -18,6 +18,12 @@ const name = defaultSettings.title || 'vue Element Admin' // page title
 // 这里改用 8080, 如需恢复请先释放对应端口保留区间。
 const port = process.env.port || process.env.npm_config_port || 8080 // dev port
 
+// 开发模式后端地址: 优先显式配置, 否则取 VUE_APP_BASE_API 的 origin, 兜底 5707。
+const backendOrigin = process.env.VUE_APP_BACKEND_ORIGIN ||
+  (/^https?:\/\//i.test(process.env.VUE_APP_BASE_API || '')
+    ? new URL(process.env.VUE_APP_BASE_API).origin
+    : 'http://localhost:5707')
+
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
   /**
@@ -39,6 +45,23 @@ module.exports = {
     overlay: {
       warnings: false,
       errors: true
+    },
+    // 开发模式下前端(:8082)与后端(:5707)不同源, 而部分接口/链接使用同源根路径
+    // (如 /version /database_update /config /files /docs)。若不代理, 这些请求会打到
+    // 前端 devServer 并 404(见 commit 8edd259)。此处反向代理到后端, 使开发环境
+    // 与生产(前后端同源)行为一致。生产构建不使用 devServer, 故不受影响。
+    proxy: {
+      '/version': { target: backendOrigin, changeOrigin: true },
+      '/database_update': { target: backendOrigin, changeOrigin: true },
+      '/config': { target: backendOrigin, changeOrigin: true },
+      '/files': { target: backendOrigin, changeOrigin: true },
+      '/docs': { target: backendOrigin, changeOrigin: true },
+      '/openapi.json': { target: backendOrigin, changeOrigin: true },
+      '/redoc': { target: backendOrigin, changeOrigin: true },
+      '/api': { target: backendOrigin, changeOrigin: true },
+      '/media': { target: backendOrigin, changeOrigin: true },
+      '/images': { target: backendOrigin, changeOrigin: true },
+      '/sniffer': { target: backendOrigin, changeOrigin: true, ws: true }
     }
     // before: require('./mock/mock-server.js')
   },
