@@ -124,6 +124,28 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-has-permi="['curated:media:put']"
+          type="primary"
+          icon="el-icon-collection-tag"
+          size="mini"
+          :disabled="!ids.length || !batchWritable"
+          @click="handleCategory"
+        >设置分类
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          v-has-permi="['curated:media:put']"
+          type="warning"
+          icon="el-icon-magic-stick"
+          size="mini"
+          :loading="autoLoading"
+          @click="handleAutoCategory"
+        >智能归类
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           v-has-permi="['curated:media:get']"
           type="primary"
           icon="el-icon-mobile-phone"
@@ -318,12 +340,30 @@
         <p style="color:#909399;font-size:12px">{{ kid.tips }}</p>
       </div>
     </el-dialog>
+
+    <!-- 批量设置分类 -->
+    <el-dialog title="批量设置分类" :visible.sync="categoryOpen" width="420px" append-to-body>
+      <el-form label-width="80px" @submit.native.prevent>
+        <el-form-item label="分类">
+          <el-select v-model="categoryForm.category_id" placeholder="未分类(取消分类)" clearable style="width: 100%">
+            <el-option v-for="c in categories" :key="c.id" :label="c.name" :value="c.id" />
+          </el-select>
+        </el-form-item>
+        <p style="color:#909399;font-size:12px;margin:0">
+          将选中的 {{ ids.length }} 条内容设为该分类, 留空表示取消分类。
+        </p>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button :loading="categoryLoading" type="primary" @click="submitCategory">确 定</el-button>
+        <el-button @click="categoryOpen = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { listMedia, getMedia, setMedia, delMedia, batchStatus, batchVisible, batchRemove, checkMedia, kidConfig } from '@/api/curated/media'
+import { listMedia, getMedia, setMedia, delMedia, batchStatus, batchVisible, batchRemove, checkMedia, kidConfig, batchCategory, autoCategory } from '@/api/curated/media'
 import { listProviders } from '@/api/curated/providers'
 import { listCategories } from '@/api/curated/categories'
 
@@ -344,6 +384,10 @@ export default {
       detailOpen: false,
       detail: null,
       checking: false,
+      autoLoading: false,
+      categoryOpen: false,
+      categoryLoading: false,
+      categoryForm: { category_id: undefined },
       kidOpen: false,
       kidLoading: false,
       kid: {},
@@ -557,6 +601,45 @@ export default {
         this.msgSuccess('已复制')
       }).catch(() => {
         this.msgSuccess(url)
+      })
+    },
+    handleCategory() {
+      if (!this.ids.length) return
+      this.categoryForm = { category_id: undefined }
+      this.categoryOpen = true
+    },
+    submitCategory() {
+      if (this.categoryLoading) return
+      this.categoryLoading = true
+      const cid = this.categoryForm.category_id
+      batchCategory(this.ids, cid === undefined ? null : cid).then(() => {
+        this.msgSuccess('设置成功')
+        this.categoryOpen = false
+        this.getList()
+      }).catch(error => this.handleApiError(error)).finally(() => { this.categoryLoading = false })
+    },
+    handleAutoCategory() {
+      const scope = this.ids.length ? ('选中的 ' + this.ids.length + ' 条') : '所有未分类内容'
+      this.$confirm('将按标题关键词对' + scope + '自动归类(仅处理未分类内容, 不会覆盖已有分类), 是否继续?', '智能归类', {
+        confirmButtonText: '开始归类', cancelButtonText: '取消', type: 'warning'
+      }).then(() => {
+        this.autoLoading = true
+        return autoCategory({ ids: this.ids.length ? this.ids : undefined, apply: true })
+      }).then(res => {
+        this.autoLoading = false
+        const d = res.data || {}
+        if (!d.updated) {
+          this.msgSuccess('没有需要归类的内容')
+          return
+        }
+        const lines = (d.plan || []).filter(p => p.count).map(p => p.category + ' ' + p.count + ' 条')
+        this.$alert('共归类 ' + d.updated + ' 条<br>' + lines.join('<br>'), '归类结果', {
+          type: 'success', dangerouslyUseHTMLString: true
+        })
+        this.getList()
+      }).catch(error => {
+        this.autoLoading = false
+        if (error !== 'cancel') this.handleApiError(error)
       })
     },
     handleDelete(row) {

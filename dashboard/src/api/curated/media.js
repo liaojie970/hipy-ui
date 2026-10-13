@@ -65,6 +65,24 @@ export function batchVisible(ids, status) {
   })
 }
 
+// 批量设置分类 (categoryId 传 null 表示取消分类)
+export function batchCategory(ids, categoryId) {
+  return request({
+    url: api_url + '/category/batch',
+    method: 'put',
+    data: { ids: ids, category_id: categoryId }
+  })
+}
+
+// 智能归类: 按标题关键词给未分类内容归类(apply=false 只预览)
+export function autoCategory(data) {
+  return request({
+    url: api_url + '/category/auto',
+    method: 'post',
+    data: data
+  })
+}
+
 // 批量删除
 export function batchRemove(ids) {
   return request({

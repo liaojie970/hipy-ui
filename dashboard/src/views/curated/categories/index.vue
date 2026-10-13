@@ -49,6 +49,18 @@
       <el-table-column label="分类名称" align="center" prop="name" :show-overflow-tooltip="true" />
       <el-table-column label="图标" align="center" prop="icon" :show-overflow-tooltip="true" />
       <el-table-column label="排序" align="center" prop="order_num" width="70" />
+      <el-table-column label="智能归类关键词" align="center" prop="keywords" header-align="center" min-width="200" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <span v-if="scope.row.keywords">{{ (scope.row.keywords || '').replace(/\n/g, ' ') }}</span>
+          <span v-else style="color: #c0c4cc">—</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="兜底" align="center" width="70">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.is_default === 1" type="warning" size="mini">兜底</el-tag>
+          <span v-else style="color: #c0c4cc">—</span>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" align="center" prop="status" width="90">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'" size="mini">
@@ -106,7 +118,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="排序">
-              <el-input-number v-model="form.order_num" :min="0" controls-position="right" />
+              <el-input-number v-model="form.order_num" :min="0" controls-position="right" style="width: 100%" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -115,6 +127,19 @@
             <el-radio :label="1">启用</el-radio>
             <el-radio :label="0">禁用</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item label="智能归类">
+          <el-input
+            v-model="form.keywords"
+            type="textarea"
+            :rows="4"
+            placeholder="匹配关键词, 每行一个(支持正则); 命中任一行即归入本分类。留空则不参与自动匹配。"
+          />
+          <div class="form-tip">自动归类按「排序」从小到大依次匹配; 全部未命中时归入「兜底分类」。正则示例：<code>(?&lt;!双)语文</code></div>
+        </el-form-item>
+        <el-form-item label="兜底分类">
+          <el-switch v-model="form.is_default" :active-value="1" :inactive-value="0" />
+          <span class="form-tip">开启后, 标题未命中任何关键词时归入本分类(建议全局只设一个, 如「英语」)。</span>
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="form.remark" placeholder="备注信息" />
@@ -182,6 +207,8 @@ export default {
         icon: undefined,
         status: 1,
         order_num: 1,
+        keywords: undefined,
+        is_default: 0,
         remark: undefined
       }
       this.resetForm('form')
@@ -246,3 +273,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.form-tip {
+  color: #909399;
+  font-size: 12px;
+  line-height: 1.6;
+}
+</style>
