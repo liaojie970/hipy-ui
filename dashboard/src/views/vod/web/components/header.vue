@@ -33,8 +33,8 @@
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer dialog-footer-right">
-        <el-button type="danger" :disabled="switching" @click="handleConfirmClear">清除缓存</el-button>
-        <el-button type="primary" :loading="switching" :disabled="switching" @click="handleConfirmChange">确认换源</el-button>
+        <el-button type="danger" @click="handleConfirmClear">清除缓存</el-button>
+        <el-button type="primary" @click="handleConfirmChange">确认换源</el-button>
       </div>
 
     </el-dialog>
@@ -49,13 +49,6 @@ import cache from '@/plugins/cache'
 export default {
   name: 'VodWebHeader',
   components: {},
-  props: {
-    // 父组件正在换源: 弹窗保持打开并显示 loading, 换源结束后自动关闭
-    switching: {
-      type: Boolean,
-      default: false
-    }
-  },
   data() {
     return {
       // 弹出层标题
@@ -66,9 +59,7 @@ export default {
       form: { sites: [], now_site: {}, new_site: {}},
       LogoImg,
       keywordRef: '',
-      siteFilter: '',
-      // 已确认、等待父组件换源完成的源
-      pendingSite: null
+      siteFilter: ''
     }
   },
   computed: {
@@ -91,15 +82,6 @@ export default {
   watch: {
     open(newVal) {
       if (newVal) this.scrollToCurrentSite()
-    },
-    // 换源结束(成功或失败)后关闭弹窗, 失败时的错误提示由父组件的遮罩给出
-    switching(newVal) {
-      if (newVal) return
-      if (this.pendingSite) {
-        this.form.now_site = this.pendingSite
-        this.pendingSite = null
-      }
-      this.open = false
     }
   },
   created() {
@@ -145,11 +127,10 @@ export default {
         this.$message.error('请先选择数据源')
         return
       }
-      if (this.switching) return
       this.form.now_site = this.form.new_site
       cache.local.setJSON('hipy_site', this.form.now_site)
-      // 弹窗先不关, 等父组件换源结束(switching 变回 false)再关, 期间按钮显示 loading
-      this.pendingSite = this.form.now_site
+      // 立即关闭弹窗: 加载反馈统一由内容区遮罩给出(缓存命中的源瞬间完成, 不出现遮罩)
+      this.open = false
       // 通知父组件软刷新(只重挂载右侧内容区),不再整页跳转
       this.$emit('site-changed', this.form.now_site)
     },

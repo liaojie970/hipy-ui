@@ -1,7 +1,6 @@
 <template>
   <div class="preview-container">
     <Header
-      :switching="switching"
       @site-changed="handleSiteChanged"
       @site-cleared="handleSiteCleared"
     />
@@ -65,8 +64,6 @@ export default {
       switchError: '',
       switchSiteName: '',
       waited: 0,
-      // 从确认换源到结束(含命中缓存的瞬完成), 用于控制 Header 弹窗的 loading 与关闭
-      committing: false,
       // 请求序号, 用于丢弃过期的换源结果(用户连续切换时)
       seq: 0,
       prevSite: null,
@@ -80,10 +77,6 @@ export default {
     },
     nowSite() {
       return this.$store.state.vod.now_site || {}
-    },
-    switching() {
-      // 换源进行中(命中缓存时几乎立刻变为 false, 弹窗随即关闭)
-      return this.committing
     },
     switchVisible() {
       return this.switchState !== ''
@@ -210,7 +203,6 @@ export default {
       }
     },
     beginLoading(name) {
-      this.committing = true
       this.switchState = 'loading'
       this.switchError = ''
       this.switchSiteName = name || ''
@@ -219,14 +211,12 @@ export default {
     },
     finishLoading() {
       this.stopTimer()
-      this.committing = false
       this.switchState = ''
       this.switchError = ''
       this.waited = 0
     },
     failSwitch(err) {
       this.stopTimer()
-      this.committing = false
       const msg = (err && (err.message || err.msg)) || ''
       this.switchState = 'error'
       this.switchError = msg
@@ -252,7 +242,6 @@ export default {
     switchSite(site) {
       if (site && !site.api) return Promise.resolve()
       const seq = ++this.seq
-      this.committing = true
       const fromIdle = this.switchState === ''
       const targetKnown = !!(site && site.api)
 
