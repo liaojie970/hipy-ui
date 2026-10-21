@@ -56,7 +56,8 @@ export default {
       this.getData()
     },
     getData() {
-      this.filterData = this.categoryId ? this.$store.state.vod.filters[this.categoryId] : null
+      const filters = this.$store.state.vod.filters || {}
+      this.filterData = this.categoryId ? filters[this.categoryId] : null
       console.log('hipy_sites from store:', this.$store.state.vod.hipy_sites)
       // console.log('this.filterData:',this.filterData)
       console.log('this.currentClass:', this.currentClass)

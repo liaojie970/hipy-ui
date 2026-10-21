@@ -35,14 +35,21 @@ export default {
   },
   watch: {
     '$route.query.t': function() {
-      this.currentMenu = this.$route.query.t
+      this.currentMenu = this.$route.query.t || 'index'
     },
-    category(newVal) {
-      this.menuData = this.menuData.concat(newVal)
+    category: {
+      immediate: true,
+      handler(newVal) {
+        // 换源后分类列表整体替换,避免重复拼接
+        this.menuData = [{
+          type_name: '首页',
+          type_id: 'index'
+        }].concat(newVal || [])
+      }
     }
   },
   created() {
-    this.currentMenu = this.$route.query.t
+    this.currentMenu = this.$route.query.t || 'index'
   },
   methods: {
     handleNav(vid) {

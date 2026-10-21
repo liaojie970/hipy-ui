@@ -260,6 +260,10 @@ export default {
           this.startPlay(playData[0][0].link, tabList[0])
           // 获取推荐
           // getRecommendData()
+        } else {
+          // 换源后原视频 id 通常在新源里不存在,回到分类页避免空白
+          this.$message.warning('当前数据源未找到该视频,已返回分类页')
+          this.$router.replace('/vod/web/category')
         }
       }).catch(err => {
         console.log(err)

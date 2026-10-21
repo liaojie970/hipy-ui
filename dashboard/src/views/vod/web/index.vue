@@ -1,9 +1,9 @@
 <template>
   <div class="preview-container">
-    <Header />
+    <Header @site-changed="handleSiteChanged" @site-cleared="handleSiteCleared" />
     <div class="preview-content">
       <Menu :category="category" />
-      <router-view class="content" />
+      <router-view :key="siteVersion" class="content" />
     </div>
     <Footer />
   </div>
@@ -28,10 +28,14 @@ export default {
       category: []
     }
   },
+  computed: {
+    // 换源后 key 变化,只重新挂载右侧 router-view,不做整页刷新
+    siteVersion() {
+      return this.$store.state.vod.siteVersion || 0
+    }
+  },
   created() {
     this.getConfig()
-    // this.getData();
-    console.log('filters:', this.getItem('filters'))
   },
   methods: {
     goHome() {
@@ -43,44 +47,62 @@ export default {
         })
       }
     },
-    getData() {
-      HomeApi().then((resp) => {
-        this.category = resp.class
-        // this.setItem('class', resp.class);
-        this.setItem('filters', resp.filters || {})
-        this.setItem('recommend', resp.list)
-        this.goHome()
-      })
+    // 把选中的源同步到请求单例 now_site 和 store
+    applySite(site) {
+      if (!site || !site.api) return
+      now_site.api_url = site.api
+      now_site.extend = site.ext
+      this.$store.commit('vod/SET_NowSite', site)
     },
-    getConfig() {
-      ConfigApi().then((resp) => {
+    // 确认换源: 重新拉配置和首页数据,然后只重挂载右侧内容区
+    handleSiteChanged() {
+      this.getConfig(true)
+    },
+    // 清除缓存: 缓存已被移除,getConfig 会自动选回配置里的第一个源
+    handleSiteCleared() {
+      this.getConfig(true)
+    },
+    getConfig(isRefresh = false) {
+      const done = () => {
+        if (isRefresh) this.$store.commit('vod/BUMP_SiteVersion')
+      }
+      return ConfigApi().then((resp) => {
         const config = resp
         console.log('config:', config)
         if (config.sites) {
           console.log('get config cost:', config.cost_time)
           const hipy_sites = config.sites.filter(it => it.key.startsWith('hipy_py') || it.key.startsWith('hipy_js'))
           console.log('hipy_sites from config:', hipy_sites)
-          this.setItem('hipy_sites', hipy_sites)
+          this.$store.commit('vod/SET_HipySites', hipy_sites)
+
+          // 缓存的源不存在于最新配置里(或缓存被清除)时,回退到第一个源
           let cacheSite = cache.local.getJSON('hipy_site')
-          if (!cacheSite && hipy_sites.length > 0) { // 设置首页源
-            cacheSite = hipy_sites[0]
-            cache.local.setJSON('hipy_site', cacheSite)
-            now_site.api_url = cacheSite.api
-            now_site.extend = cacheSite.ext
-            console.log('now_site:', now_site)
-            console.log('cacheSite:', cacheSite)
+          if (!cacheSite || !hipy_sites.some(it => it.key === cacheSite.key)) {
+            cacheSite = hipy_sites[0] || null
+            if (cacheSite) {
+              cache.local.setJSON('hipy_site', cacheSite)
+            }
+          }
+          if (cacheSite) {
+            console.log('now_site:', cacheSite)
+            this.applySite(cacheSite)
           }
         }
-        this.getData()
+        return this.getData()
+      }).then(done, (err) => {
+        console.error('加载配置或首页数据失败:', err)
+        // 首页数据失败时也保证能进入分类页,避免停留在空白的 /vod/web/
+        this.goHome()
+        done()
       })
     },
-    setItem(key, value) {
-      const new_value = {}
-      new_value[key] = value
-      Object.assign(this.$store.state.vod, new_value)
-    },
-    getItem(key, value) {
-      return this.$store.state.vod[key] || value
+    getData() {
+      return HomeApi().then((resp) => {
+        this.category = resp.class || []
+        this.$store.commit('vod/SET_Filters', resp.filters || {})
+        this.$store.commit('vod/SET_Recommend', resp.list || [])
+        this.goHome()
+      })
     }
   }
 }

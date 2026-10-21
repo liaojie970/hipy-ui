@@ -59,11 +59,15 @@ export default {
       form: { sites: [], now_site: {}, new_site: {}},
       LogoImg,
       keywordRef: '',
-      title: 'hipy影视',
       siteFilter: ''
     }
   },
   computed: {
+    // 标题跟随当前源,换源后由父组件更新 store 自动刷新
+    title() {
+      const nowSite = this.$store.state.vod.now_site || {}
+      return nowSite.name || 'hipy影视'
+    },
     filteredSites() {
       // 将 input 和 site.name 都转换为小写，进行包含匹配
       const inputLower = this.siteFilter.toLowerCase()
@@ -96,20 +100,22 @@ export default {
       this.getData()
     },
     getCache() {
-      const cacheSite = cache.local.getJSON('hipy_site')
+      const storeSite = this.$store.state.vod.now_site || {}
+      const cacheSite = storeSite.key ? storeSite : cache.local.getJSON('hipy_site')
       if (cacheSite) {
         this.form.now_site = cacheSite
-        this.title = cacheSite.name
       }
     },
     getData() {
       console.log('header组件-hipy_sites from store:', this.$store.state.vod.hipy_sites)
-      this.form.sites = this.$store.state.vod.hipy_sites
+      this.form.sites = this.$store.state.vod.hipy_sites || []
+      const nowSite = this.$store.state.vod.now_site || {}
+      this.form.now_site = nowSite.key ? nowSite : this.form.now_site
       this.form.new_site = this.form.now_site
       if (!this.form.new_site.key && this.form.sites.length > 0) {
         this.form.new_site = this.form.sites[0]
-      } else if (this.form.new_site.key && !this.form.sites.map(i => i.key).includes(this.form.new_site.key)) {
-        this.form.new_site = this.form.sites[0]
+      } else if (this.form.new_site.key && !this.form.sites.some(i => i.key === this.form.new_site.key)) {
+        this.form.new_site = this.form.sites[0] || {}
       }
     },
     handleChangeRule(rule) { // 临时换源
@@ -117,10 +123,15 @@ export default {
       this.scrollToCurrentSite()
     },
     handleConfirmChange() { // 确认换源
+      if (!this.form.new_site || !this.form.new_site.key) {
+        this.$message.error('请先选择数据源')
+        return
+      }
       this.form.now_site = this.form.new_site
       this.open = false
       cache.local.setJSON('hipy_site', this.form.now_site)
-      location.href = '/vod/web/'
+      // 通知父组件软刷新(只重挂载右侧内容区),不再整页跳转
+      this.$emit('site-changed', this.form.now_site)
     },
     scrollToCurrentSite() {
       this.$nextTick(() => {
@@ -146,8 +157,8 @@ export default {
         .then(() => {
           cache.local.remove('hipy_site')
           this.open = false
-          // 清除缓存后自动处理换源的缓存接口问题
-          location.href = '/vod/web/'
+          // 清除缓存后由父组件重新拉取配置并回退到第一个源,同样只刷新右侧
+          this.$emit('site-cleared')
         })
         .catch(() => {
           // 取消操作的处理
