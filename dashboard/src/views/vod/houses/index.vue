@@ -56,13 +56,21 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
+    <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
+      <template slot="empty">
+        <div class="op-empty-tip">
+          <p>暂无仓库数据</p>
+          <p class="tip-sub">可点击上方「获取仓库数据」从上游仓库拉取（需先在「参数配置」中填写 GitHub 令牌）</p>
+        </div>
+      </template>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" width="55" />
       <el-table-column label="源名" align="center" prop="rule" width="120" :show-overflow-tooltip="true" />
       <el-table-column label="文件名" align="center" prop="name" width="150" :show-overflow-tooltip="true" />
       <el-table-column label="体积" align="center" prop="size" width="100" :show-overflow-tooltip="true" />
-      <el-table-column label="链接" align="center" prop="url" width="400" :show-overflow-tooltip="true">
+      <!-- 不写 width、改用 min-width：让本列自适应吸收表格剩余宽度，
+           否则所有列宽度固定后会在「安装状态」与右侧固定的「操作」列之间留下空白 -->
+      <el-table-column label="链接" align="center" prop="url" min-width="400" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>
             <el-link type="primary" :href="scope.row.url" target="_blank">
@@ -77,10 +85,17 @@
           <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" disabled />
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        v-if="canImport"
+        fixed="right"
+        width="80"
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width op-column"
+      >
         <template slot-scope="scope">
           <el-button
-            v-hasPermi="['vod:configs:put']"
+            v-hasPermi="['vod:houses:delete']"
             size="mini"
             type="text"
             icon="el-icon-download"
@@ -143,6 +158,13 @@ export default {
       rules: {}
     }
   },
+  computed: {
+    // 无导入权限时隐藏“操作”列,避免出现空白列
+    canImport() {
+      const permissions = this.$store.getters.permissions || []
+      return permissions.some(item => item === '*:*:*' || item === 'vod:houses:delete')
+    }
+  },
   created() {
     this.getList()
     getDicts('vod_rule_status').then(response => {
@@ -158,8 +180,13 @@ export default {
         this.queryParams.status = undefined
       }
       listHouses(this.queryParams).then(response => {
-        this.list = response.data.data
-        this.total = response.data.total
+        const data = response.data || {}
+        this.list = data.data || []
+        this.total = data.total || 0
+        this.loading = false
+      }).catch(() => {
+        this.list = []
+        this.total = 0
         this.loading = false
       }
       )
@@ -240,3 +267,20 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.op-empty-tip {
+  padding: 16px 0;
+  line-height: 1.8;
+  color: #909399;
+
+  p {
+    margin: 0;
+  }
+
+  .tip-sub {
+    font-size: 12px;
+    color: #c0c4cc;
+  }
+}
+</style>

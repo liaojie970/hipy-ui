@@ -131,13 +131,14 @@
         <!--          <span>{{ parseTime(scope.row.login_time_ts) }}</span>-->
         <!--        </template>-->
       </el-table-column>
-      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column width="80" fixed="right" label="操作" align="center" class-name="small-padding fixed-width op-column">
         <template slot-scope="scope">
           <el-button
             v-hasRole="['admin','Operation']"
             size="mini"
             type="text"
             icon="el-icon-delete"
+            class="text-danger"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>

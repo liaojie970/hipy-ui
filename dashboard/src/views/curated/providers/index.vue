@@ -70,7 +70,7 @@
       </el-table-column>
       <el-table-column label="排序" align="center" prop="order_num" width="70" />
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
-      <el-table-column fixed="right" label="操作" align="center" width="200" class-name="small-padding fixed-width">
+      <el-table-column width="190" fixed="right" label="操作" align="center" class-name="small-padding fixed-width op-column">
         <template slot-scope="scope">
           <el-button
             v-has-permi="['curated:provider:get']"
@@ -93,6 +93,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
+            class="text-danger"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>

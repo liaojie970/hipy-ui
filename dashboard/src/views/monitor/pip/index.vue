@@ -62,7 +62,7 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
+    <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" align="center" prop="id" width="55" />
       <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true" />
@@ -73,7 +73,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" width="130" label="操作" align="center" class-name="small-padding fixed-width op-column">
         <template slot-scope="scope">
           <el-button
             v-hasPermi="['monitor:pip:put']"
@@ -88,6 +88,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
+            class="text-danger"
             @click="handleDelete(scope.row)"
           >卸载
           </el-button>

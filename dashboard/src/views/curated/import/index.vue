@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-alert
       v-if="currentProvider && !hasCookie"
-      title="当前站点尚未配置登录 Cookie, 搜索结果可能不完整且播放清晰度受限, 请先到【站点管理】配置。"
+      title="当前站点尚未配置登录 Cookie, 搜索结果可能不完整且播放清晰度受限, 请先到【采集站点】配置。"
       type="warning"
       :closable="false"
       show-icon
@@ -90,7 +90,7 @@
               <el-tag v-else type="info" size="mini">未入库</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="120" fixed="right">
+          <el-table-column width="130" class-name="small-padding fixed-width op-column" label="操作" align="center" fixed="right">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -175,7 +175,7 @@
               <span style="color: #f56c6c">{{ scope.row._error }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="120" fixed="right">
+          <el-table-column width="80" class-name="small-padding fixed-width op-column" label="操作" align="center" fixed="right">
             <template slot-scope="scope">
               <el-button
                 v-if="!scope.row._error"

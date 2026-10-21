@@ -77,7 +77,7 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
+    <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" width="55" />
       <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
@@ -101,7 +101,7 @@
       <!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
       <!--        </template>-->
       <!--      </el-table-column>-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" width="130" label="操作" align="center" class-name="small-padding fixed-width op-column">
         <template slot-scope="scope">
           <el-button
             v-hasPermi="['system:dict:put']"
@@ -116,6 +116,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
+            class="text-danger"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>

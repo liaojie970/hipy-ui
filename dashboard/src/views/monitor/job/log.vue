@@ -127,7 +127,7 @@
         </template>
       </el-table-column>
       <el-table-column label="执行时间" align="center" prop="run_time" width="180" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" width="80" label="操作" align="center" class-name="small-padding fixed-width op-column">
         <template slot-scope="scope">
           <el-button
             v-hasPermi="['monitor:job:query']"

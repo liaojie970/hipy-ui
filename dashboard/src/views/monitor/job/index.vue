@@ -126,7 +126,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" width="260" label="操作" align="center" class-name="small-padding fixed-width op-column">
         <template slot-scope="scope">
           <el-button
             v-hasPermi="['monitor:job:put']"
@@ -141,6 +141,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
+            class="text-danger"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>

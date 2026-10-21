@@ -41,10 +41,11 @@
               :show-overflow-tooltip="true"
             />
             <el-table-column
+              fixed="right"
+              width="80"
               label="操作"
-              width="60"
               align="center"
-              class-name="small-padding fixed-width"
+              class-name="small-padding fixed-width op-column"
             >
               <template slot-scope="scope">
                 <el-button
@@ -52,6 +53,7 @@
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
+                  class="text-danger"
                   @click="handleClearCacheName(scope.row)"
                 />
               </template>
@@ -91,10 +93,11 @@
               :formatter="keyFormatter"
             />
             <el-table-column
+              fixed="right"
+              width="80"
               label="操作"
-              width="60"
               align="center"
-              class-name="small-padding fixed-width"
+              class-name="small-padding fixed-width op-column"
             >
               <template slot-scope="scope">
                 <el-button
@@ -102,6 +105,7 @@
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
+                  class="text-danger"
                   @click="handleClearCacheKey(scope.row)"
                 />
               </template>

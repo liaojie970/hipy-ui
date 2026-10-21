@@ -211,7 +211,7 @@
           <el-tag v-else type="info" size="mini">未校验</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width" fixed="right">
+      <el-table-column width="260" label="操作" align="center" class-name="small-padding fixed-width op-column" fixed="right">
         <template slot-scope="scope">
           <el-button
             v-has-permi="['curated:media:get']"
@@ -244,6 +244,7 @@
             type="text"
             icon="el-icon-delete"
             :disabled="!canWrite(scope.row)"
+            class="text-danger"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>

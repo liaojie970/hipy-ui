@@ -1,0 +1,65 @@
+/* ---------------- 表格操作列统一样式 ----------------
+ * 目标:
+ *  1) 操作列按钮不换行, 同排展示, "修改/删除" 等动作能一眼对比;
+ *  2) 危险操作(删除)用红色, 与普通操作形成视觉差异;
+ *  3) 各列表页操作列宽度/间距/内边距一致。
+ * 用法: <el-table-column label="操作" width="130" class-name="small-padding fixed-width op-column">
+ */
+.el-table {
+  // 只作用于数据单元格（td）：element 会把 class-name 同时挂到表头 th 上,
+  // 若直接写 .op-column 会把表头「操作」的 font-size: 0 也应用进去导致表头文字消失
+  td.op-column {
+    .cell {
+      padding-left: 6px;
+      padding-right: 6px;
+      white-space: nowrap;
+      // 模板里按钮之间的换行/缩进会渲染成空格, 4~5 个按钮能多占 20+px 导致末尾出现省略号
+      // 用 font-size: 0 消掉这些空白节点, 再在按钮上显式恢复字号
+      font-size: 0;
+
+      // 选择器里带 .cell 是为了压过 element-ui.scss / ruoyi.scss 里
+      // .fixed-width .el-button--mini 的 min-width:60px、padding 与 width:inherit
+      .el-button--text {
+        margin: 0;
+        padding: 4px 3px;
+        width: auto;
+        min-width: 0;
+        font-size: 12px;
+        line-height: 1.2;
+      }
+
+      .el-button--text + .el-button--text,
+      .el-button--text + .el-dropdown,
+      .el-dropdown + .el-button--text {
+        margin-left: 10px;
+      }
+
+      .el-dropdown .el-button--text {
+        padding: 4px 0;
+      }
+
+      // 危险操作: 删除 / 清空
+      .el-button--text.text-danger,
+      .el-button--text.text-danger i {
+        color: #f56c6c;
+      }
+
+      .el-button--text.text-danger:hover,
+      .el-button--text.text-danger:focus,
+      .el-button--text.text-danger:hover i {
+        color: #f78989;
+      }
+
+      // 次要操作: 更多 / 详情
+      .el-button--text.text-muted,
+      .el-button--text.text-muted i {
+        color: #909399;
+      }
+
+      .el-button--text.text-muted:hover,
+      .el-button--text.text-muted:hover i {
+        color: #606266;
+      }
+    }
+  }
+}

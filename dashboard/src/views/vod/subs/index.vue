@@ -150,7 +150,7 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="list" :default-sort="defaultSort" @selection-change="handleSelectionChange">i
+    <el-table v-loading="loading" :data="list" :default-sort="defaultSort" @selection-change="handleSelectionChange">
       <el-table-column fixed="left" type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="id" width="55" />
       <el-table-column label="订阅名称" align="center" prop="name" :show-overflow-tooltip="true" />
@@ -175,7 +175,7 @@
           <span>{{ parseTime(scope.row.modified_ts) }}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column width="260" fixed="right" label="操作" align="center" class-name="small-padding fixed-width op-column">
         <template slot-scope="scope">
           <el-button
             v-has-permi="['vod:subs:put']"
@@ -190,6 +190,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
+            class="text-danger"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>
