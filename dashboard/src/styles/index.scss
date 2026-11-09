@@ -6,6 +6,8 @@
 @import './sidebar.scss';
 @import './btn.scss';
 @import './reset.scss';
+// 移动端适配层放到最后，保证能压过上面的桌面样式
+@import './mobile.scss';
 
 label {
   font-weight: 700;

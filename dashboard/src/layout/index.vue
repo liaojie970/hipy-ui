@@ -37,9 +37,14 @@ export default {
       sidebar: state => state.app.sidebar,
       device: state => state.app.device,
       showSettings: state => state.settings.showSettings,
-      needTagsView: state => state.settings.tagsView,
+      tagsViewEnabled: state => state.settings.tagsView,
       fixedHeader: state => state.settings.fixedHeader
     }),
+    // 手机端不显示标签页：横向滚动的 tab 条在 390px 屏上只占地方，
+    // 而且回到上一步用抽屉菜单/浏览器返回就够了。
+    needTagsView() {
+      return this.tagsViewEnabled && this.device !== 'mobile'
+    },
     classObj() {
       return {
         hideSidebar: !this.sidebar.opened,
@@ -98,5 +103,12 @@ export default {
 
   .mobile .fixed-header {
     width: 100%;
+  }
+
+  /* 手机端标签页已被隐藏，主内容区高度改由 styles/mobile.scss 处理 */
+  @media (max-width: 992px) {
+    .drawer-bg {
+      z-index: 1000;
+    }
   }
 </style>

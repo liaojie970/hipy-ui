@@ -49,6 +49,8 @@ import VideoPlayer from 'vue-video-player/src'
 import 'vue-video-player/src/custom-theme.css'
 import 'video.js/dist/video-js.css'
 import 'videojs-contrib-hls'
+// 手机端把 el-table 重排成卡片列表（只在窄屏生效，桌面端无影响）
+import { installMobileTable } from '@/utils/mobile-table'
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
@@ -107,6 +109,9 @@ Vue.use(Element, {
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
+
+// 手机端表格卡片化：需在首个页面渲染前装好 MutationObserver
+installMobileTable()
 
 Vue.config.productionTip = false
 

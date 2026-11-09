@@ -2,7 +2,9 @@
   <div class="navbar">
     <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <!-- 手机端面包屑太占地，改成只说一个“当前页标题”；桌面端保持原样 -->
+    <breadcrumb v-if="device!=='mobile'" id="breadcrumb-container" class="breadcrumb-container" />
+    <div v-else class="mobile-title">{{ pageTitle }}</div>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
@@ -69,6 +71,11 @@ export default {
       'avatar',
       'device'
     ]),
+    // 手机端导航栏标题（取路由 meta.title，没有就取一级菜单名）
+    pageTitle() {
+      const m = this.$route.meta || {}
+      return m.title || this.$route.name || ''
+    },
     setting: {
       get() {
         return this.$store.state.settings.showSettings
@@ -116,6 +123,20 @@ export default {
 
   .breadcrumb-container {
     float: left;
+  }
+
+  /* 手机端：汉堡包后只显示当前页面标题，剩余空间让给右侧菜单 */
+  .mobile-title {
+    float: left;
+    max-width: calc(100% - 150px);
+    padding-left: 2px;
+    line-height: 50px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #303133;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .errLog-container {
@@ -170,6 +191,31 @@ export default {
           right: -20px;
           top: 25px;
           font-size: 12px;
+        }
+      }
+    }
+  }
+
+  /* 手机端：头像缩小、下拉箭头改为叠在头像内，右边的小箭头原本会飘到屏幕外 */
+  @media (max-width: 992px) {
+    .right-menu {
+      .avatar-container {
+        margin-right: 8px;
+
+        .avatar-wrapper {
+          margin-top: 9px;
+          padding-right: 14px;
+
+          .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+          }
+
+          .el-icon-caret-bottom {
+            right: 0;
+            top: 22px;
+          }
         }
       }
     }

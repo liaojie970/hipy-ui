@@ -1,0 +1,655 @@
+/* =============================================================================
+ * 移动端适配层
+ * -----------------------------------------------------------------------------
+ * 断点与 `layout/mixin/ResizeHandler.js` 的 WIDTH = 992 保持一致：
+ *   <= 992px 视为手机/窄屏（侧边栏变抽屉、本文件生效）
+ *
+ * 设计原则：
+ *  1. 不写死具体页面，只覆盖 element-ui 组件的“手机默认行为”，一次改全站生效。
+ *  2. 只放大、不缩小：所有可点元素 >= 32px 高（手指命中区），字 >= 12px。
+ *  3. 表格保留横向滚动（列太多时无法避免），但压缩内边距、操作列按钮放大。
+ *  4. 弹窗/抽屉/消息框一律不能超出视口。
+ *  5. 需要 !important 的地方都是因为 element-ui 写的是 inline style
+ *     （如 el-dialog 的 width、el-form-item 的 label width / content margin-left）。
+ * ========================================================================== */
+
+$mobile-breakpoint: 992px;
+$tap-min: 32px;
+
+@media (max-width: $mobile-breakpoint) {
+  /* ---------------------------------------------------------------------
+   * 1. 容器留白：20px 在 390px 屏上占掉 10%，收到 8~10px
+   * ---------------------------------------------------------------- */
+  .app-container {
+    padding: 10px 8px 20px !important;
+  }
+
+  .components-container {
+    margin: 10px 8px;
+  }
+
+  /* 内容区高度用 dvh，避免手机浏览器地址栏收起时 100vh 跳动 */
+  .app-main {
+    height: 100vh;
+    height: calc(100dvh - 50px);
+  }
+
+  .hasTagsView .app-main {
+    height: 100vh;
+    height: calc(100dvh - 84px);
+  }
+
+  /* ---------------------------------------------------------------------
+   * 2. 触摸目标：element-ui 的 mini 尺寸在手机上点不准
+   * ---------------------------------------------------------------- */
+  .el-button {
+    min-height: $tap-min;
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .el-button--mini {
+    min-height: $tap-min;
+    padding: 5px 10px;
+    font-size: 13px !important;
+  }
+
+  /* 只有图标的文字按钮（如刷新、删除图标）宽度只剩 15px，抠不到 */
+  .el-button--text {
+    min-width: $tap-min;
+    min-height: $tap-min;
+  }
+
+  .el-button--small {
+    min-height: $tap-min;
+    padding: 7px 12px;
+  }
+
+  /* 纯图标按钮（如关闭）不要被上面撑成椭圆 */
+  .el-button.is-circle {
+    padding: 8px;
+    min-width: $tap-min;
+  }
+
+  .el-input__inner,
+  .el-textarea__inner {
+    font-size: 14px;
+  }
+
+  .el-input--mini .el-input__inner,
+  .el-input--small .el-input__inner {
+    height: 34px;
+    line-height: 34px;
+  }
+
+  .el-checkbox,
+  .el-radio,
+  .el-switch {
+    min-height: $tap-min;
+  }
+
+  .el-checkbox__label,
+  .el-radio__label {
+    font-size: 13px;
+  }
+
+  /* 表格行内的小标签也别太挤 */
+  .el-tag {
+    height: 22px;
+    line-height: 20px;
+    font-size: 12px;
+  }
+
+  /* 文字链接：el-link 默认高 20px，行内编辑图标更是 13x15，手机上根本点不中 */
+  .el-link {
+    font-size: 13px;
+    min-height: $tap-min;
+    min-width: $tap-min;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 日期范围选择器：外层容器够高，但内部两个 input 只有 24px，撑满即可 */
+  .el-date-editor .el-range-input,
+  .el-date-editor .el-range-separator {
+    align-self: stretch;
+    height: auto;
+    line-height: 1;
+  }
+
+  .el-date-editor--daterange,
+  .el-date-editor--datetimerange {
+    min-height: $tap-min;
+    width: 100%;
+  }
+
+  /*
+   * 日期区间面板：桌面端写死 646px（左一月 + 右一月并排），在 390px 屏上
+   * 会向左溢出 256px，左边那个月彻底看不见也点不到。
+   * 这里改成单月模式：面板满宽，只留左月，靠 header 箭头翻月。
+   */
+  .el-picker-panel.el-date-range-picker {
+    left: 8px !important;
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px);
+
+    .el-picker-panel__body-wrapper {
+      width: 100%;
+    }
+
+    .el-date-range-picker__content {
+      float: none !important;
+      width: 100% !important;
+      border-right: none !important;
+    }
+
+    .el-date-range-picker__content.is-right {
+      display: none !important;
+    }
+
+    .el-date-range-picker__header {
+      padding: 0 4px;
+      line-height: 1.6;
+    }
+
+    .el-picker-panel__icon-btn {
+      min-width: $tap-min;
+      min-height: $tap-min;
+    }
+
+    .el-date-table td {
+      padding: 3px 0;
+
+      .el-date-table-cell {
+        height: 38px;
+        padding: 4px 0;
+      }
+    }
+  }
+
+  a.link-type {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: $tap-min;
+    min-height: $tap-min;
+    vertical-align: middle;
+    font-size: 13px;
+
+    /* 只有图标没有文字的链接（如行内的编辑图标）字号取图标大小 */
+    i[class^="el-icon-"] {
+      font-size: 16px;
+    }
+  }
+
+  /* 复选框/单选框本体只有 14px，靠 label 整体撑开可点区域 */
+  .el-checkbox,
+  .el-radio {
+    display: inline-flex;
+    align-items: center;
+    min-height: $tap-min;
+    margin-right: 12px;
+  }
+
+  /* ---------------------------------------------------------------------
+   * 3. 表格：列多时横向滚动不可避免，但要让“滑动”和“点按钮”都顺手
+   * ---------------------------------------------------------------- */
+  .el-table {
+    font-size: 13px;
+
+    th,
+    td {
+      padding: 6px 0;
+    }
+
+    th .cell {
+      font-size: 12px;
+      padding-left: 8px;
+      padding-right: 8px;
+      line-height: 1.35;
+    }
+
+    td .cell {
+      padding-left: 8px;
+      padding-right: 8px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    /* iOS/安卓惯性滚动，手指滑表格才跟手 */
+    .el-table__body-wrapper {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+    }
+
+    .el-table__empty-block {
+      min-height: 90px;
+    }
+  }
+
+  /* 操作列：hipy-table.scss 为桌面端把按钮压到 12px / padding 3px，
+     手机上必须放大，否则 157 个按钮全是 <32px 的点不中目标 */
+  .el-table td.op-column .cell {
+    .el-button--text,
+    .el-dropdown .el-button--text {
+      padding: 8px 6px !important;
+      font-size: 13px !important;
+      min-height: $tap-min;
+      min-width: $tap-min;
+    }
+
+    .el-button--text + .el-button--text,
+    .el-button--text + .el-dropdown,
+    .el-dropdown + .el-button--text {
+      margin-left: 6px;
+    }
+  }
+
+  /* 固定列（fixed="right"）在手机上是操作列的主要救星，保证阴影别太重 */
+  .el-table__fixed-right::before,
+  .el-table__fixed::before {
+    height: 1px;
+  }
+
+  /* ---------------------------------------------------------------------
+   * 3.1 表格卡片化（由 utils/mobile-table.js 挂 m-card-table 类）
+   *
+   * 背景：6~12 列的表格在 390px 屏上内容宽 1000~2700px，要左右滑三四屏，
+   *      而且滑到右边时表头早滚出视野，根本不知道每格是什么。
+   * 做法：把每行重排成“字段名 + 值”的竖排卡片，一屏看完一条记录。
+   * 逃生舱：给 el-table 加 class="no-card" 即保持原表格。
+   * ---------------------------------------------------------------- */
+  .el-table.m-card-table {
+    background: transparent;
+    font-size: 13px;
+
+    /* 表格底部的 1px 分隔线（element 用 ::before 画）不要了 */
+    &::before {
+      display: none;
+    }
+
+    /* 表头已在卡片里以字段名形式出现，隐藏整行 */
+    .el-table__header-wrapper,
+    .el-table__footer-wrapper {
+      display: none !important;
+    }
+
+    .el-table__body-wrapper {
+      overflow: visible !important;
+      height: auto !important;
+      max-height: none !important;
+
+      table {
+        display: block;
+        width: 100% !important;
+        table-layout: auto;
+      }
+
+      tbody {
+        display: block;
+      }
+
+      /* 每条记录 = 一张卡片 */
+      tr.el-table__row,
+      tr.el-table__row--striped {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        margin-bottom: 10px;
+        padding: 4px 0;
+        background: #fff;
+        border: 1px solid #ebeef5;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        overflow: hidden;
+
+        > td {
+          background: transparent !important;
+        }
+      }
+
+      td {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex: 0 0 100%;
+        width: auto !important;
+        padding: 4px 12px !important;
+        border-bottom: none !important;
+        background: transparent !important;
+        font-size: 13px;
+
+        /* 字段名（来自 mobile-table.js 注入的 data-label） */
+        &::before {
+          content: attr(data-label);
+          flex: 0 0 74px;
+          padding-right: 6px;
+          color: #909399;
+          font-size: 12px;
+          line-height: 1.55;
+          word-break: keep-all;
+        }
+
+        /* 选择列/展开列没有表头文字，不要留白 */
+        &[data-label=""]::before {
+          display: none;
+        }
+
+        .cell {
+          flex: 1 1 auto;
+          min-width: 0;
+          padding: 0 !important;
+          font-size: 13px;
+          line-height: 1.55;
+          white-space: normal;
+          word-break: break-word;
+        }
+      }
+
+      /* 短值（是/否、开关、排序号、ID）两列并排，否则 12 列的卡片会高到 490px */
+      td[data-short="1"] {
+        flex: 0 0 calc(50% - 6px);
+
+        &::before {
+          flex: 0 0 4.5em;
+        }
+      }
+
+      /* 操作列放到卡片底部：分隔线 + 按钮换行可点 */
+      td.op-column {
+        display: block;
+        flex: 0 0 100%;
+        padding-top: 8px !important;
+        padding-bottom: 6px !important;
+        margin-top: 4px;
+        border-top: 1px dashed #ebeef5 !important;
+
+        &::before {
+          display: none;
+        }
+
+        .cell {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 2px 8px;
+          /* 模板里的换行/缩进会变成空白节点，靠字号 0 消掉 */
+          font-size: 0;
+        }
+      }
+
+      /* 多选列靠左上，不占一整行高度 */
+      td.el-table-column--selection {
+        flex: 0 0 40px;
+        padding: 4px 12px !important;
+
+        &::before {
+          display: none;
+        }
+
+        /* 勾选框本体只有 14px，扩大到 32px 命中区 */
+        .el-checkbox {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: $tap-min;
+          min-height: $tap-min;
+          margin: 0;
+        }
+      }
+    }
+
+    /* 固定列在卡片模式下无意义（大屏才有左右滑动） */
+    .el-table__fixed,
+    .el-table__fixed-right {
+      display: none !important;
+    }
+
+    /*
+     * 关键：element-ui 对 fixed 列的处理是「主表保留一份 + 蒙层再渲染一份」，
+     * 主表那份会加 .is-hidden（内联样式 visibility: hidden），原本由蒙层顶着用。
+     * 卡片模式下蒙层被 display: none 了，若不把主表这份放出来，
+     * 操作列按钮就是彻底看不见、点不中的（2026-11 实测踩到）。
+     */
+    td.is-hidden > *,
+    th.is-hidden > * {
+      visibility: visible !important;
+    }
+
+    /* 空数据提示平铺 */
+    .el-table__empty-block {
+      display: block;
+      min-height: 120px;
+      padding: 40px 0;
+    }
+
+    .el-table__empty-text {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+   * 4. 弹窗：桌面端写死的 width=500px 等会溢出，统一改成“视口减边距”
+   * ---------------------------------------------------------------- */
+  .el-dialog:not(.is-fullscreen) {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px);
+    margin-top: 2vh !important;
+    margin-bottom: 2vh;
+
+    .el-dialog__header {
+      padding: 12px 14px 8px;
+    }
+
+    .el-dialog__title {
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    .el-dialog__headerbtn {
+      /* 右上角关闭按钮放大到可点 */
+      width: 44px;
+      height: 44px;
+      top: 0;
+      right: 0;
+      font-size: 18px;
+    }
+
+    .el-dialog__body {
+      padding: 12px 14px;
+      max-height: calc(100dvh - 170px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .el-dialog__footer {
+      padding: 10px 14px 14px;
+    }
+  }
+
+  .el-message-box {
+    width: calc(100vw - 32px) !important;
+    max-width: 420px;
+    padding-bottom: 12px;
+
+    .el-message-box__header {
+      padding: 12px 14px 5px;
+    }
+
+    .el-message-box__content {
+      padding: 10px 14px;
+    }
+
+    .el-message-box__btns {
+      padding: 6px 14px 0;
+
+      .el-button {
+        min-width: 72px;
+      }
+    }
+  }
+
+  .el-drawer {
+    width: 100% !important;
+
+    &.rtl,
+    &.ltr {
+      width: 100% !important;
+    }
+
+    .el-drawer__body {
+      -webkit-overflow-scrolling: touch;
+      padding: 12px;
+    }
+  }
+
+  .el-popover.el-popper,
+  .el-dropdown-menu {
+    max-width: calc(100vw - 24px);
+  }
+
+  /* ---------------------------------------------------------------------
+   * 5. 表单：label 定宽 100px 的话内容区只剩不到 300px，改为上下排布
+   * ---------------------------------------------------------------- */
+  .el-form-item {
+    display: block;
+    margin-bottom: 14px;
+
+    .el-form-item__label {
+      float: none;
+      display: block;
+      width: auto !important;
+      max-width: none;
+      text-align: left;
+      padding: 0 0 4px !important;
+      line-height: 1.4;
+      font-size: 13px;
+    }
+
+    .el-form-item__content {
+      margin-left: 0 !important;
+      line-height: 1.5;
+    }
+  }
+
+  /* 行内表单在手机上按行堆叠，每项占满一行 */
+  .el-form--inline .el-form-item {
+    display: block;
+    margin-right: 0;
+    width: 100%;
+  }
+
+  .el-form-item__error {
+    position: static;
+    padding-top: 2px;
+  }
+
+  /* ---------------------------------------------------------------------
+   * 5.1 栅格：桌面的 3 列/2 列布局（el-col span=8/12）在 390px 屏上会被
+   *      挤成 110px 一格，而 el-form 的 label-width 动辄 120px，内容全被压扁。
+   *      这里把 span >= 6 的列统统改成整行；span < 6 的小列（按钮组）保持并排。
+   * ---------------------------------------------------------------- */
+  @for $i from 6 through 24 {
+    .el-col-#{$i} {
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: 0 0 100% !important;
+    }
+  }
+
+  @for $i from 1 through 24 {
+    .el-col-offset-#{$i} {
+      margin-left: 0 !important;
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+   * 6. 查询条件区：桌面的 inline 输入框在手机上改成整行满宽
+   * ---------------------------------------------------------------- */
+  .filter-container {
+    padding-bottom: 4px;
+
+    .filter-item {
+      display: block;
+      width: 100% !important;
+      margin: 0 0 8px !important;
+
+      &.el-input,
+      &.el-select,
+      .el-input,
+      .el-select,
+      .el-date-editor {
+        width: 100% !important;
+      }
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+   * 7. 分页：桌面版绝对定位在右侧，手机上居中并隐藏不常用控件
+   * ---------------------------------------------------------------- */
+  .pagination-container {
+    height: auto;
+    margin: 12px 0;
+    padding: 8px 0 !important;
+    text-align: center;
+
+    .el-pagination {
+      position: static;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 0;
+
+      .el-pagination__jump,
+      .el-pagination__sizes {
+        display: none;
+      }
+
+      .btn-prev,
+      .btn-next,
+      .el-pager li {
+        min-width: $tap-min;
+        height: $tap-min;
+        line-height: $tap-min;
+      }
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+   * 8. 描述列表 / 卡片 / 标签页
+   * ---------------------------------------------------------------- */
+  .el-descriptions {
+    .el-descriptions__label {
+      width: 96px;
+      font-size: 12px;
+      padding: 8px 6px !important;
+    }
+
+    .el-descriptions__content {
+      font-size: 13px;
+      padding: 8px 6px !important;
+    }
+  }
+
+  .el-tabs__item {
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .el-card__body {
+    padding: 12px;
+  }
+
+  /* ---------------------------------------------------------------------
+   * 9. 可横向滑动的 tab/标签条不要触发整页横向滚动
+   * ---------------------------------------------------------------- */
+  .el-tabs__nav-scroll,
+  .el-radio-group,
+  .el-checkbox-group {
+    -webkit-overflow-scrolling: touch;
+  }
+}
