@@ -290,6 +290,26 @@ $tap-min: 32px;
         display: block;
       }
 
+      /*
+       * 空表格（还没查询/搜索无结果）时表头虽被隐藏，但 el-table 仍按 colgroup 里
+       * 每一列写死的 width 把 <table> 撑到全部列宽之和（如 /curated/import 的 875px），
+       * 于是 body 区仍能横向滑、还露出一片空白（2026-11 实测踩到）。
+       * 卡片模式下 td 已经是 flex 全宽，colgroup 的列宽完全无用，直接丢掉。
+       */
+      colgroup {
+        display: none !important;
+      }
+
+      /* element 用 inline-block 包住表格，会跟随表格宽度撑出横向滚动 */
+      .el-scrollbar__wrap {
+        overflow: visible !important;
+      }
+
+      .el-scrollbar__view {
+        display: block !important;
+        width: 100% !important;
+      }
+
       /* 每条记录 = 一张卡片 */
       tr.el-table__row,
       tr.el-table__row--striped {
@@ -420,6 +440,8 @@ $tap-min: 32px;
     /* 空数据提示平铺 */
     .el-table__empty-block {
       display: block;
+      width: 100% !important;
+      min-width: 0 !important;
       min-height: 120px;
       padding: 40px 0;
     }
